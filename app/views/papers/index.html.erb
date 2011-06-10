@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Papers</h1>
+
+<% @papers.each do |paper| %>
+	<p>
+	Title: <%= paper.title %><br>
+	Authors: NYI<br>
+	Journal: <%= paper.journal %><br>
+	Year: <%= paper.year %><br>
+	Volume: <%= paper.volume %><br>
+	Number: <%= paper.number %><br>
+	Pages: <%= paper.first_page %>-<%= paper.last_page %><br>
+	DOI: <%= paper.doi %><br>
+	URL: <a href="<%= paper.paper_url %>" target='_blank'><%= paper.paper_url %></a><br>
+	Times viewed: <%= paper.num_views %><br>
+	Status: <%= paper.status %><br>
+    <%= link_to 'Show', paper %>
+	<% if user_signed_in? && (current_user.id == paper.user_id || current_user.admin == true) %> <!-- or is an admin --!>
+	 | <%= link_to 'Edit', edit_paper_path(paper) %> | 
+    <%= link_to 'Destroy', paper, :confirm => 'Are you sure?', :method => :delete %><br>
+	<% end %>
+	</p>
+<% end %>
+
+<%= link_to 'Add New Entry', new_paper_path %>

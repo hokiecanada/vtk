@@ -1,0 +1,11 @@
+source 'http://rubygems.org'
+
+gem 'rails', '3.0.7'
+gem 'sqlite3'
+gem 'devise'
+gem 'dynamic_form'
+gem 'simple-navigation'
+gem 'will_paginate'
+gem 'acts_as_indexed'
+gem 'texticle'
+gem 'tlsmail'

@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Title: <%= @paper.title %></h1>
+<p>
+	Authors: NYI<br>
+	Journal: <%= @paper.journal %><br>
+	Year: <%= @paper.year %><br>
+	Volume: <%= @paper.volume %><br>
+	Number: <%= @paper.number %><br>
+	Pages: <%= @paper.first_page %>-<%= @paper.last_page %><br>
+	DOI: <%= @paper.doi %><br>
+	URL: <%= @paper.paper_url %><br>
+	Times viewed: <%= @paper.num_views %><br>
+	Status: <%= @paper.status %><br>
+	<% if user_signed_in? && (current_user.id == @paper.user_id || current_user.admin) %>
+	   <%= link_to 'Edit', edit_paper_path(@paper) %> | 
+	   <%= link_to 'Destroy', @paper, :confirm => 'Are you sure?', :method => :delete %><br>
+	<% end %>
+</p>
+<%= link_to 'Back', papers_path %>

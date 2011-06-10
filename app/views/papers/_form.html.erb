@@ -1,0 +1,81 @@
+<%= form_for @paper do |f| %> 
+	
+  <% if @paper.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@paper.errors.count, "error") %> prohibited this entry from being saved:</h2>
+
+      <ul>
+      <% @paper.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label "Title:" %>
+    <%= f.text_field :title, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Authors:" %>
+	<% f.fields_for :authors do |a| %>
+		<%= a.label "First Name:" %>
+		<%= a.text_field :first_name %>
+		<%= a.label "Initials:" %>
+		<%= a.text_field :initials %>
+		<%= a.label "Last Name:" %>
+		<%= a.text_field :last_name %>
+		
+		<% unless a.object.new_record? %>
+			<%= a.check_box '_destroy' %>
+			<%= a.label '_destroy', 'Remove' %>
+		<% end %>
+	<% end %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Journal:" %>
+    <%= f.text_field :journal, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Year:" %>
+    <%= f.date_select :year, :start_year => Time.now.year - 50, :end_year => Time.now.year, :discard_day => true, :discard_month => true %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Volume:" %>
+    <%= f.text_field :volume, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Number:" %>
+    <%= f.text_field :number, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "First page:" %>
+    <%= f.text_field :first_page, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Last page:" %>
+    <%= f.text_field :last_page, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "DOI:" %>
+    <%= f.text_field :doi, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label 'Paper URL:' %>
+    <%= f.text_field :paper_url, :size => 100 %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+  
+<% end %>
