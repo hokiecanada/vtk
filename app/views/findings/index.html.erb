@@ -1,0 +1,16 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Experiment Findings:</h1>
+
+<% @findings.each_with_index do |finding,i| %>
+	<% if finding.status == 1 %>
+		<%= "Finding " + (i+1).to_s + " Complete!" %>
+		<%= link_to "Edit", edit_paper_experiment_finding_path(@paper,@experiment,finding) %> | 
+		<%= link_to 'Destroy', [@paper,@experiment,finding], :confirm => 'Are you sure?', :method => :delete %><br><br>
+	<% else %>
+		<%= button_to "Finding " + (i+1).to_s, edit_paper_experiment_finding_path(@paper,@experiment,finding) %><br>
+	<% end %>
+<% end %>
+
+<%= link_to 'Add New Finding', new_paper_experiment_finding_path(@paper,@experiment) %><br>
+<%= link_to 'Back', paper_path(@paper) %>

@@ -1,0 +1,43 @@
+<%= form_for [@paper,@experiment,@finding] do |f| %>
+	<div>
+		<%= f.label 'Components of immersion involved:' %><br />
+		<% @comps.each do |comp| %>
+			<%= check_box_tag "finding[comp_ids][]", comp.id, @finding.comps.include?(comp) %><%= comp.comp_tag %><br>
+		<% end %>
+	</div>
+
+	<div>
+		<%= f.label 'Systems involved:' %><br />
+		<% @systems.each do |system| %>
+			<%= check_box_tag "finding[system_ids][]", system.id, @finding.systems.include?(system) %><%= system.system_tag %><br>
+		<% end %>
+	</div>
+
+	<div>
+		<%= f.label 'Metrics involved:' %><br />
+		<% @metrics.each do |metric| %>
+			<%= check_box_tag "finding[metric_ids][]", metric.id, @finding.metrics.include?(metric) %><%= metric.metric_tag %><br>
+		<% end %>
+	</div>
+
+	<div>
+		<%= f.label 'Finding (one sentence):' %><br />
+		<%= f.text_area :finding, :cols => 75, :rows => 6  %><br>
+	</div>
+
+	<div>
+		<%= f.label 'Specificity:' %><br />
+		<%= f.radio_button :specificity, "0" %>Highly specific<br>
+		<%= f.radio_button :specificity, "1" %>Somewhat specific<br>
+		<%= f.radio_button :specificity, "2" %>Neither<br>
+		<%= f.radio_button :specificity, "3" %>Somewhat general<br>
+		<%= f.radio_button :specificity, "4" %>Highly general<br>
+	</div>
+
+	<div>
+		<%= f.label 'Issues:' %><br />
+		<%= f.text_area :issues, :cols => 75, :rows => 6  %><br>
+	</div>
+	
+	<%= f.submit %>
+<% end %>

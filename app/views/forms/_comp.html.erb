@@ -1,0 +1,9 @@
+<%= form_for Comp.new do |f| %> 
+  <% f.error_messages %>
+
+  <div class="field">
+    <%= f.text_field :comp_tag, :size => 50 %>
+    <%= f.submit "Add new component" %>
+  </div>
+  
+<% end %>

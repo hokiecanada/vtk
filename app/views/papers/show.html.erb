@@ -2,7 +2,10 @@
 
 <h1>Title: <%= @paper.title %></h1>
 <p>
-	Authors: NYI<br>
+	Authors:<br />
+	<% @paper.authors.each do |author| %>
+		<%= author.last_name %>, <%= author.first_name %> <%= author.initials %><br />
+	<% end %>
 	Journal: <%= @paper.journal %><br>
 	Year: <%= @paper.year %><br>
 	Volume: <%= @paper.volume %><br>

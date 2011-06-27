@@ -1,0 +1,28 @@
+  <div class="field">
+    <% @authors.each do |author| %>
+	  <%= check_box_tag "paper[author_ids][]", author.id, @paper.authors.include?(author) %><%= author.last_name %>, <%= author.first_name %>, <%= author.initials %><br />
+    <% end %>
+  </div>
+
+<%= form_for([@paper,@paper.authors.build]) do |g| %>
+	<% g.error_messages %>
+
+	<div class="field">
+		<%= g.label 'Last name:' %>
+		<%= g.text_field :last_name %>
+	</div>
+
+	<div class="field">
+		<%= g.label 'First name:' %>
+		<%= g.text_field :first_name %>
+	</div>
+
+	<div class="field">
+		<%= g.label 'Initials:' %>
+		<%= g.text_field :initials %>
+	</div>
+	
+	<div class="actions">
+		<%= g.submit "Add Author" %>
+	</div>
+<% end %>

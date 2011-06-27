@@ -1,0 +1,11 @@
+<%= semantic_form_for @paper do |f| %> 
+
+	<%= f.inputs :title, :journal, :year, :volume, :first_page, :last_page, :doi, :paper_url %>
+	<% Author.all do |author| %>
+		<%= semantic_fields_for :authors,author do |g| %>
+			<% g.input :last_name, :as => :check_boxes %>
+		<% end %>
+	<% end %>
+	<%= f.buttons %>
+  
+<% end %>

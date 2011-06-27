@@ -1,0 +1,11 @@
+<%= form_for @author do |f| %> 
+  <% f.error_messages %>
+
+  <div class="field">
+    <%= f.text_field :first_name, :size => 25 %>
+	<%= f.text_field :initials, :size => 5 %>
+	<%= f.text_field :last_name, :size => 25 %>
+    <%= f.submit %>
+  </div>
+  
+<% end %>

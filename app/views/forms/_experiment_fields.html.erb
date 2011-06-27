@@ -1,0 +1,22 @@
+<p>	
+	<%= f.label "Experiment title:" %>
+	<%= f.text_field :title %>
+</p>
+
+<p>
+	<%= f.label "Experiment type:" %><br />
+	<%= f.radio_button :exp_type, "0" %>Controlled experiment<br />
+	<%= f.radio_button :exp_type, "1" %>Practical comparison<br />
+</p>
+
+<p>
+	<%= f.label "Task:" %><br />
+	<% Task.all.each do |task| %>
+		<%= check_box_tag "experiment[task_ids][]", task.id, { :checked => false } %><%= task.task_tag %><br>
+	<% end %>
+</p>
+
+<p>
+	<%= f.label "Task description:" %><br />
+	<%= f.text_area :task_desc, :cols => 75, :rows => 6 %>
+</p>

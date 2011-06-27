@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Add Experiment Details</h1>
+
+<% @experiments.each_with_index do |exp,i| %>
+	<% if exp.status == 1 %>
+		<%= "Experiment " + (i+1).to_s + " Complete!" %>
+		<%= link_to "Edit", edit_paper_experiment_path(exp.paper_id,exp) %> | 
+		<%= link_to 'Destroy', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %><br><br>
+	<% else %>
+		<%= button_to "Experiment " + (i+1).to_s, edit_paper_experiment_path(exp.paper_id,exp) %><br>
+	<% end %>
+<% end %>
+
+<%= link_to 'Back', paper_path(@paper) %>

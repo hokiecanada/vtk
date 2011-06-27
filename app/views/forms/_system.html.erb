@@ -1,0 +1,9 @@
+<%= form_for System.new do |f| %> 
+  <% f.error_messages %>
+
+  <div class="field">
+    <%= f.text_field :system_tag, :size => 50 %>
+    <%= f.submit "Add new system" %>
+  </div>
+  
+<% end %>

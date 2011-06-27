@@ -1,0 +1,9 @@
+<%= form_for Metric.new do |f| %> 
+  <% f.error_messages %>
+
+  <div class="field">
+    <%= f.text_field :metric_tag, :size => 50 %>
+    <%= f.submit "Add new metric" %>
+  </div>
+  
+<% end %>

@@ -1,0 +1,64 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Entries</h1>
+
+<% @papers.each do |paper| %>
+	<p>
+	Title: <%= paper.title %><br>
+	Authors:<br />
+	<% paper.authors.each do |author| %>
+		<%= author.last_name %>, <%= author.first_name %> <%= author.initials %><br />
+	<% end %>
+	Journal: <%= paper.journal %><br>
+	Year: <%= paper.year %><br>
+	Volume: <%= paper.volume %><br>
+	Number: <%= paper.number %><br>
+	Pages: <%= paper.first_page %>-<%= paper.last_page %><br>
+	DOI: <%= paper.doi %><br>
+	URL: <a href="<%= paper.paper_url %>" target='_blank'><%= paper.paper_url %></a><br>
+	Times viewed: <%= paper.num_views %><br>
+	Status: <%= paper.status %><br>
+    <%= link_to 'Show', paper %>
+	<% if user_signed_in? && (current_user.id == paper.user_id || current_user.admin == true) %> <!-- or is an admin --!>
+	 | <%= link_to 'Edit', edit_paper_path(paper) %> | 
+    <%= link_to 'Destroy', paper, :confirm => 'Are you sure?', :method => :delete %><br>
+	<% end %>
+	</p>
+<% end %>
+
+<h1>Authors</h1>
+<% @authors.each do |author| %>
+	<%= author.last_name %>, <%= author.first_name %> <%= author.initials %>
+	<%= link_to 'Edit', edit_author_path(author) %> | 
+	<%= link_to 'Delete', author, :confirm => 'This action will delete this author from all associated records. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+
+<h1>Tasks</h1>
+<% @tasks.each do |task| %>
+	<%= task.task_tag %>
+	<%= link_to 'Delete', task, :confirm => 'This action will delete the task from all associated records. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+<%= render '/forms/task' %>
+
+<h1>Comps</h1>
+<% @comps.each do |comp| %>
+	<%= comp.comp_tag %>
+	<%= link_to 'Delete', comp, :confirm => 'This action will delete the component from all associated records. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+<%= render '/forms/comp' %>
+
+<h1>Metrics</h1>
+<% @metrics.each do |metric| %>
+	<%= metric.metric_tag %>
+	<%= link_to 'Delete', metric, :confirm => 'This action will delete the metric from all associated records. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+<%= render '/forms/metric' %>
+
+<h1>Systems</h1>
+<% @systems.each do |system| %>
+	<%= system.system_tag %>
+	<%= link_to 'Delete', system, :confirm => 'This action will delete the system from all associated records. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+<%= render '/forms/system' %>
+	
+<%= link_to 'Add New Entry', new_paper_path %>

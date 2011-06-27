@@ -1,0 +1,13 @@
+<p>
+	<%= f.label "First Name:" %>
+	<%= f.text_field :first_name %>
+	<%= f.label "Initials:" %>
+	<%= f.text_field :initials %>
+	<%= f.label "Last Name:" %>
+	<%= f.text_field :last_name %>
+	
+	<% unless f.object.new_record? %>
+		<%= f.check_box '_destroy' %>
+		<%= f.label '_destroy', 'Remove' %>
+	<% end %>
+</p>
