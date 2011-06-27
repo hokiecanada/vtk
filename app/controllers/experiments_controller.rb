@@ -60,11 +60,29 @@ class ExperimentsController < ApplicationController
 	params[:experiment][:metric_ids] ||= []
 	params[:experiment][:task_ids] ||= []
 	@experiment.status = 1
+	@experiment.save
+	
+	if @paper.status = 0
+		complete = true
+		@paper.experiments.each do |exp|
+			if exp.status == 0 || exp.status == 1
+				complete = false
+			end
+		end
+		if complete == true
+			@paper.status = 1
+			@paper.save
+		end
+	end
 	
     respond_to do |format|
       if @experiment.update_attributes(params[:experiment])
-        format.html { redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Experiment details were successfully updated.' }
-      else
+	    if @paper.status == 0
+			format.html { redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Experiment details were successfully added.' }
+		else
+			format.html { redirect_to @paper, :notice => 'Experiment details were successfully updated.' }
+		end
+	  else
         format.html { render :action => "edit" }
       end
     end

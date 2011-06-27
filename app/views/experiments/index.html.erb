@@ -1,6 +1,6 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Add Experiment Details</h1>
+<h1>Add Experiments Details</h1>
 
 <% @experiments.each_with_index do |exp,i| %>
 	<% if exp.status == 1 %>
@@ -10,6 +10,10 @@
 	<% else %>
 		<%= button_to "Experiment " + (i+1).to_s, edit_paper_experiment_path(exp.paper_id,exp) %><br>
 	<% end %>
+<% end %>
+
+<% if @paper.status == 1 %>
+	<%= button_to 'Complete submission', paper_path(@paper), :method => :put %><br><br>
 <% end %>
 
 <%= link_to 'Back', paper_path(@paper) %>

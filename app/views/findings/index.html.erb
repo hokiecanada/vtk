@@ -12,5 +12,9 @@
 	<% end %>
 <% end %>
 
-<%= link_to 'Add New Finding', new_paper_experiment_finding_path(@paper,@experiment) %><br>
+<%= link_to 'Add New Finding', new_paper_experiment_finding_path(@paper,@experiment) %><br><br>
+
+<%= button_to "Confirm findings", paper_experiments_path(@paper), :method => :put %><br><br>
+
+
 <%= link_to 'Back', paper_path(@paper) %>

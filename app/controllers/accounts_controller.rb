@@ -22,6 +22,7 @@ class AccountsController < ApplicationController
 		@comps = Comp.all
 		@metrics = Metric.all
 		@systems = System.all
+		@relationships = Relationship.all
 		@users = User.all
 		
 		respond_to do |format|

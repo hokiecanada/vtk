@@ -23,7 +23,8 @@ class PapersController < ApplicationController
   def show
 	@paper = Paper.find(params[:id])
 	@paper.num_views += 1
-	@paper.update_attributes(params[:id])
+	@paper.save #update_attributes(params[:id])
+	@experiments = @paper.experiments.all
     respond_to do |format|
       format.html # show.html.erb
     end
@@ -50,6 +51,7 @@ class PapersController < ApplicationController
 	1.upto(@paper.status) do
 		temp = @paper.experiments.build
 		temp.exp_type = 0
+		temp.status = 0
 	end
 	@paper.status = 0
     respond_to do |format|
@@ -68,7 +70,7 @@ class PapersController < ApplicationController
   def update
 	#params[:paper][:author_ids] ||= []
 	#params[:paper][:author_ids].collect{|s| s.to_i}
-	@paper.status = "Pending"
+
     respond_to do |format|
       if @paper.update_attributes(params[:paper])
 		#Emailer.entry_updated(current_user.email, @entry).deliver

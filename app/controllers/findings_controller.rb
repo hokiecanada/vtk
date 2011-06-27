@@ -37,6 +37,7 @@ class FindingsController < ApplicationController
 	@comps = Comp.all
 	@metrics = Metric.all
 	@systems = System.all
+	@relationships = Relationship.all
 	
 	respond_to do |format|
 		format.html # new.html.erb
@@ -49,6 +50,7 @@ class FindingsController < ApplicationController
 	@comps = Comp.all
 	@systems = System.all
 	@metrics = Metric.all
+	@relationships = Relationship.all
 	
 	respond_to do |format|
 		format.html # edit.html.erb
@@ -71,11 +73,12 @@ class FindingsController < ApplicationController
 
   
   def update
-	@finding = @experiment.find(params[:id])
+	@finding = @experiment.findings.find(params[:id])
 	params[:finding][:system_ids] ||= []
 	params[:finding][:comp_ids] ||= []
 	params[:finding][:metric_ids] ||= []
 	params[:finding][:task_ids] ||= []
+	params[:finding][:relationship_ids] ||= []
 	@finding.status = 1
 	
     respond_to do |format|

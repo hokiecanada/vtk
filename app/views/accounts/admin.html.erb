@@ -60,5 +60,12 @@
 	<%= link_to 'Delete', system, :confirm => 'This action will delete the system from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
 <%= render '/forms/system' %>
+
+<h1>Relationships</h1>
+<% @relationships.each do |relationship| %>
+	<%= relationship.rel_tag %>
+	<%= link_to 'Delete', relationship, :confirm => 'This action will delete the relationship from all associated records. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+<%= render '/forms/relationship' %>
 	
 <%= link_to 'Add New Entry', new_paper_path %>

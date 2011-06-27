@@ -14,10 +14,24 @@
 	DOI: <%= @paper.doi %><br>
 	URL: <%= @paper.paper_url %><br>
 	Times viewed: <%= @paper.num_views %><br>
-	Status: <%= @paper.status %><br>
 	<% if user_signed_in? && (current_user.id == @paper.user_id || current_user.admin) %>
-	   <%= link_to 'Edit', edit_paper_path(@paper) %> | 
-	   <%= link_to 'Destroy', @paper, :confirm => 'Are you sure?', :method => :delete %><br>
+	   <%= button_to 'Edit paper details', edit_paper_path(@paper) %>
 	<% end %>
+	
+	<% @experiments.each_with_index do |exp,i| %>
+		<h2>Experiment #<%= i+1 %>:	<%= exp.title %></h2>
+		<% if user_signed_in? && (current_user.id == @paper.user_id || current_user.admin) %>
+			<%= link_to 'Edit experiment details', edit_paper_experiment_path(@paper,exp) %>
+		<% end %>
+		
+		<% exp.findings.each_with_index do |finding,j| %>
+			<h3>Finding #<%= j+1 %>:</h3>
+			<%= finding.finding %><br>
+		<% end %>
+	<% end %>
+
+	
+	<br><br>
+
 </p>
 <%= link_to 'Back', papers_path %>

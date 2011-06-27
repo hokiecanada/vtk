@@ -1,0 +1,58 @@
+<%= form_for @paper do |f| %> 
+
+  <%= f.error_messages %>
+
+  <div class="field">
+    <%= f.label "Title:" %>
+    <%= f.text_field :title, :size => 100 %>
+  </div>
+  
+  <div>
+    <!--%= link_to_add_fields "Add a new author that is not already in the database", f, :authors %--!>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Journal:" %>
+    <%= f.text_field :journal, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Year:" %>
+    <%= f.date_select :year, :start_year => Time.now.year - 50, :end_year => Time.now.year, :discard_day => true, :discard_month => true %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Volume:" %>
+    <%= f.text_field :volume, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Number:" %>
+    <%= f.text_field :number, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "First page:" %>
+    <%= f.text_field :first_page, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "Last page:" %>
+    <%= f.text_field :last_page, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label "DOI:" %>
+    <%= f.text_field :doi, :size => 100 %>
+  </div>
+  
+  <div class="field">
+    <%= f.label 'Paper URL:' %>
+    <%= f.text_field :paper_url, :size => 100 %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit "Submit" %>
+  </div>
+  
+<% end %>
