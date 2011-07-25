@@ -1,0 +1,86 @@
+<p id="notice"><%= notice %></p>
+<h1>Search knowledgebase</h1>
+
+Search by: <%= select_tag "search option", options_for_select(["Task","Component of immersion","Metric","System"],"Metric"), html_options = {:onchange => "search_type(this.value)"} %>
+
+	<div id="task" style="display:none">
+		<%= form_tag search_tasks_path, :method => 'get' do %>
+			<input type="hidden" name="search_tasks[]"> 
+			<table>
+			<% @tasks.each_with_index do |task,i| %>
+				<% if i%3 == 0 %>
+					<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
+				<% elsif i%3 == 1 %>
+					<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
+				<% else %>
+					<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td></tr>
+				<% end %>
+			<% end %>
+			<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
+			</table>
+		<% end %>
+	</div>
+
+	<div id="comp" style="display:none">
+		<%= form_tag search_comps_path, :method => 'get' do %>
+			<input type="hidden" name="search_comps[]"> 
+			<table>
+				<% @comps.each_with_index do |comp,i| %>
+					<% if i%3 == 0 %>
+						<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></td>
+					<% elsif i%3 == 1 %>
+						<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></td>
+					<% else %>
+						<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></td></tr>
+					<% end %>
+				<% end %>
+				<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
+			</table>
+		<% end %>
+	</div>
+
+	<div id="metric">
+		<%= form_tag search_metrics_path, :method => 'get' do %>
+			<input type="hidden" name="search_metrics[]"> 
+			<table>
+				<% @metrics.each_with_index do |metric,i| %>
+					<% if i%3 == 0 %>
+						<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_metrics[]", metric.id, @search_metrics.include?(metric.id.to_s()) %><%= metric.metric_tag %></td>
+					<% elsif i%3 == 1 %>
+						<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, @search_metrics.include?(metric.id.to_s()) %><%= metric.metric_tag %></td>
+					<% else %>
+						<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, @search_metrics.include?(metric.id.to_s()) %><%= metric.metric_tag %></td></tr>
+					<% end %>
+				<% end %>
+				<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
+			</table>
+		<% end %>
+	</div>
+
+	<div id="system" style="display:none">
+		<%= form_tag search_systems_path, :method => 'get' do %>
+			<input type="hidden" name="search_systems[]"> 
+			<table>
+				<% @systems.each_with_index do |system,i| %>
+					<% if i%3 == 0 %>
+						<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_systems[]", system.id, @search_systems.include?(system.id.to_s()) %><%= system.system_tag %></td>
+					<% elsif i%3 == 1 %>
+						<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_systems[]", system.id, @search_systems.include?(system.id.to_s()) %><%= system.system_tag %></td>
+					<% else %>
+						<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_systems[]", system.id, @search_systems.include?(system.id.to_s()) %><%= system.system_tag %></td></tr>
+					<% end %>
+				<% end %>
+				<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
+			</table>
+		<% end %>
+	</div>
+</div>
+
+<div id="search_results">
+	<h1>Results:</h1>
+	<div id="finding">
+		<% @findings.each do |finding| %>
+			<%= finding.finding %><br>
+		<% end %>
+	</div>
+</div>

@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Browse Topic: <i><%= @task.task_tag %></i></h1>
+
+<div id="findings">
+	<h2>Findings:</h2>
+	<% @findings.each_with_index do |finding,i| %>
+		<%= i+1 %>: <%= finding.finding %><br>
+	<% end %>
+</div>
+
+<div id
+<% @experiments.each_with_index do |exp,i| %>
+	<%= exp.title %><br>
+<% end %>
+
+<% @papers.each_with_index do |paper,i| %>
+	<%= paper.title %><br>
+<% end %>

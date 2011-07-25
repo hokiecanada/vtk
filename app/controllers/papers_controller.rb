@@ -85,8 +85,10 @@ class PapersController < ApplicationController
 
   def destroy
     @paper.destroy
-	respond_to do |format|
-		format.html { redirect_to root_path, :notice => 'Entry was successfully deleted.' }
+	if current_user.admin
+		redirect_to admin_path, :notice => 'Entry was successfully deleted.'
+	else
+		redirect_to root_path, :notice => 'Entry was successfully deleted.'
 	end
   end
 

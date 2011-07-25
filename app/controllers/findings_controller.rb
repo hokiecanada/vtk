@@ -33,10 +33,10 @@ class FindingsController < ApplicationController
   
   def new
 	@finding = @experiment.findings.build
-	@tasks = Task.all
-	@comps = Comp.all
-	@metrics = Metric.all
-	@systems = System.all
+	@tasks = @experiment.tasks.all
+	@comps = @experiment.comps.all
+	@metrics = @experiment.metrics.all
+	@systems = @experiment.systems.all
 	@relationships = Relationship.all
 	
 	respond_to do |format|
@@ -47,9 +47,10 @@ class FindingsController < ApplicationController
   
   def edit
     @finding = @experiment.findings.find(params[:id])
-	@comps = Comp.all
-	@systems = System.all
-	@metrics = Metric.all
+	@tasks = @experiment.tasks.all
+	@comps = @experiment.comps.all
+	@metrics = @experiment.metrics.all
+	@systems = @experiment.systems.all
 	@relationships = Relationship.all
 	
 	respond_to do |format|
@@ -60,6 +61,7 @@ class FindingsController < ApplicationController
   
   def create
 	@finding = @experiment.findings.create(params[:finding])
+	@finding.tasks = Experiment.find(@finding.experiment_id).tasks
 	@finding.status = 1
 	
     respond_to do |format|
@@ -92,10 +94,12 @@ class FindingsController < ApplicationController
   
 
   def destroy
-    @experiment = @paper.experiments.find(params[:id])
-	@experiment.destroy
-	respond_to do |format|
-		format.html { redirect_to paper_experiments_path(@paper), :notice => 'Experiment was successfully deleted.' }
+    @finding = @experiment.findings.find(params[:id])
+	@finding.destroy
+	if current_user.admin
+		redirect_to user_root_path, :notice => 'Finding was successfully deleted.'
+	else
+		redirect_to paper_experiment_path(@experiment), :notice => 'Finding was successfully deleted.'
 	end
   end
   

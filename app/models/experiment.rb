@@ -8,8 +8,10 @@ class Experiment < ActiveRecord::Base
 	has_and_belongs_to_many :systems,
 							:join_table => :experiments_systems
 	belongs_to :paper
-	has_many :findings
-	accepts_nested_attributes_for	:tasks, :findings,
-									:reject_if => :all_blank,
-									:allow_destroy => true;
+	has_many :findings, :dependent => :destroy
+	#accepts_nested_attributes_for	:tasks,
+	#								:reject_if => :all_blank,
+	#accepts_nested_attributes_for	:findings,
+	#								:reject_if => :all_blank,
+	#								:allow_destroy => true;
 end

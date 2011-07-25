@@ -1,24 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Vtk</title>
+  <title>VR Knowledgebase</title>
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
   <%= csrf_meta_tag %>
 </head>
 <body>
-
-	<div id="sign_in">
-		<% if user_signed_in? %>
-			Signed in as <%= current_user.email %>. Not you?
-			<%= link_to "Sign out", destroy_user_session_path %>.
-		<% else %>
-			<%= link_to "Sign up", new_user_registration_path %> or 
-			<%= link_to "Sign in", new_user_session_path %>
-		<% end %>
+	<div id="banner">
+		<div id="sign_in">
+			<% if user_signed_in? %>
+				Signed in as <%= current_user.email %>. Not you?
+				<%= link_to "Sign out", destroy_user_session_path %>.
+			<% else %>
+				<%= link_to "Sign Up", new_user_registration_path %> or 
+				<%= link_to "Sign In", new_user_session_path %>
+			<% end %>
+		</div>
+		
+		<div id="title">
+			VR Knowledgbase
+		</div>
+		
+		<div id="new_entry">
+			<%= link_to '+ Add New Entry', new_paper_path %>
+		</div>
+	
 	</div>
 
-<%= yield %>
-
+	<div id="navigation">
+		<ul>
+			<li><%= link_to 'Search Knowledgebase', search_path %></li>
+			<li><%= link_to 'Browse by Topic', browse_path %></li>
+			<li><a href="#">About?</a></li>
+			<li><a href="#">Instructions?</a></li>
+			<li><a href="#">Contact?</a></li>
+		</ul>
+	</div>
+	
+	<div id="body">
+		<%= yield %>
+	</div>
+	
+	<div id="footer">
+		Copyright 2011 VR Knowledgebase
+	</div>
 </body>
 </html>

@@ -92,8 +92,10 @@ class ExperimentsController < ApplicationController
   def destroy
     @experiment = @paper.experiments.find(params[:id])
 	@experiment.destroy
-	respond_to do |format|
-		format.html { redirect_to paper_experiments_path(@paper), :notice => 'Experiment was successfully deleted.' }
+	if current_user.admin
+		redirect_to user_root_path, :notice => 'Experiment was successfully deleted.'
+	else
+		redirect_to paper_experiments_path(@paper), :notice => 'Experiment was successfully deleted.'
 	end
   end
   

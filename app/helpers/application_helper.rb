@@ -14,5 +14,4 @@ module ApplicationHelper
 		end
 		button_to_function(name, "add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")")
 	end
-	
 end

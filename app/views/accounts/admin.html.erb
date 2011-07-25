@@ -26,6 +26,20 @@
 	</p>
 <% end %>
 
+<h1>Experiments</h1>
+<% Experiment.all.each_with_index do |exp,i| %>
+	Experiment #<%= i %>: <%= exp.title %>
+	<%= link_to 'Edit', edit_paper_experiment_path(exp.paper_id,exp) %> | 
+	<%= link_to 'Delete', paper_experiment_path(exp.paper_id,exp), :confirm => 'This action will delete this experiment and all involved findings from the associated record. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+
+<h1>Findings</h1>
+<% Finding.all.each_with_index do |find,i| %>
+	Finding #<%= i %>: <%= find.finding %>
+	<%= link_to 'Edit', edit_paper_experiment_finding_path(Experiment.find(find.experiment_id).paper_id,find.experiment_id,find) %> | 
+	<%= link_to 'Delete', paper_experiment_finding_path(Experiment.find(find.experiment_id).paper_id,find.experiment_id,find), :confirm => 'This action will delete this finding from the associated record. Are you sure you want to delete?', :method => :delete %><br />
+<% end %>
+	
 <h1>Authors</h1>
 <% @authors.each do |author| %>
 	<%= author.last_name %>, <%= author.first_name %> <%= author.initials %>

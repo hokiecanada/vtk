@@ -1,0 +1,61 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Browse the Knowledgebase</h1>
+
+<div id="browse_col_1">
+	<h2>Components of Immersion:</h2>
+	<ul>
+	<% @comps.each do |comp| %>
+		<li>
+			<%= link_to comp.comp_tag, browse_comp_path(comp) %>
+			<small>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
+					<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
+					<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
+			</small><br>
+		</li>
+	<% end %>
+	</ul>
+	
+	<h2>Metrics:</h2>
+	<ul>
+	<% @metrics.each do |metric| %>
+		<li>
+			<%= link_to metric.metric_tag, browse_metric_path(metric) %>
+			<small>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
+					<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
+					<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
+			</small><br>
+		</li>
+	<% end %>
+	</ul>
+</div>
+
+
+<div id="browse_col_2">
+	<h2>Tasks:</h2>
+	<ul>
+	<% @tasks.each do |task| %>
+		<li>
+			<%= link_to task.task_tag, browse_task_path(:task => task) %>
+			<small>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
+					<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
+					<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
+			</small><br>
+		</li>
+	<% end %>
+	</ul>
+	
+	<h2>Systems:</h2>
+	<ul>
+	<% @systems.each do |system| %>
+		<li>
+			<%= link_to system.system_tag, browse_system_path(system) %>
+			<small>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
+					<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
+					<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
+			</small><br>
+		</li>
+	<% end %>
+	</ul>
+
+</div>

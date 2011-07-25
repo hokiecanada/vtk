@@ -1,0 +1,18 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Browse the Knowledgebase</h1>
+
+<div id="task">
+	<% @tasks.each do |task| %>
+		<%= link_to task.task_tag, browse_task_path(task) %> (<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings)<br>
+	<% end %>
+</div>
+
+<div id="comp">
+</div>
+
+<div id="metric">
+</div>
+
+<div id="system">
+</div>
