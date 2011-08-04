@@ -1,11 +1,11 @@
 <p id="notice"><%= notice %></p>
 
 <div id="filters">
-	<%= form_tag browse_task_path, :method => 'get' do %>
-		<input type="hidden" name="task" value="<%= @task.id %>">
-		<input type="hidden" name="filter_comps[]"> 
-		<input type="hidden" name="filter_metrics[]"> 
-		<input type="hidden" name="filter_systems[]"> 
+	<%= form_tag browse_system_path, :method => 'get' do %>
+		<input type="hidden" name="system" value="<%= @system.id %>">
+		<input type="hidden" name="filter_comps[]">
+		<input type="hidden" name="filter_tasks[]"> 
+		<input type="hidden" name="filter_metrics[]">  
 	
 		<%= hidden_field_tag "display_as", @display_as %>
 		
@@ -21,6 +21,17 @@
 				<%= check_box_tag "filter_comps[]", comp.id, @filter_comps.include?(comp.id) %><%= comp.comp_tag %><br>
 			<% end %>
 		</div>
+		<div id="filter_tasks_hidden">
+			<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_tasks_list');Element.show('filter_tasks_expanded');Element.hide('filter_tasks_hidden');", :remote => true %> Components of Immersion<br>
+		</div>
+		<div id="filter_tasks_expanded" style="display:none">
+			<%= link_to '[-]', "#", :onclick => "Effect.BlindUp('filter_tasks_list');Element.show('filter_tasks_hidden');Element.hide('filter_tasks_expanded');", :remote => true %> Components of Immersion<br>
+		</div>
+		<div id="filter_tasks_list" style="display:none">
+			<% @tasks.each do |task| %>
+				<%= check_box_tag "filter_tasks[]", task.id, @filter_tasks.include?(task.id) %><%= task.task_tag %><br>
+			<% end %>
+		</div>
 		<div id="filter_metrics_hidden">
 			<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_metrics_list');Element.show('filter_metrics_expanded');Element.hide('filter_metrics_hidden');", :remote => true %> Metrics<br>
 		</div>
@@ -32,17 +43,6 @@
 				<%= check_box_tag "filter_metrics[]", metric.id, @filter_metrics.include?(metric.id) %><%= metric.metric_tag %><br>
 			<% end %>
 		</div>
-		<div id="filter_systems_hidden">
-			<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_systems_list');Element.show('filter_systems_expanded');Element.hide('filter_systems_hidden');", :remote => true %> Systems<br>
-		</div>
-		<div id="filter_systems_expanded" style="display:none">
-			<%= link_to '[-]', "#", :onclick => "Effect.BlindUp('filter_systems_list');Element.show('filter_systems_hidden');Element.hide('filter_systems_expanded');", :remote => true %> Systems<br>
-		</div>
-		<div id="filter_systems_list" style="display:none">
-			<% @systems.each do |system| %>
-				<%= check_box_tag "filter_systems[]", system.id, @filter_systems.include?(system.id) %><%= system.system_tag %><br>
-			<% end %>
-		</div>
 		<br>
 		<%= submit_tag "Filter Results", :name => nil %>
 	<% end %>
@@ -51,9 +51,7 @@
 
 <div id="browse_results">	
 	
-	<div id="topic">
-		<h1><%= @task.task_tag %></h1>
-	</div>
+	<h1>Topic: <i><%= @system.system_tag %></i></h1>
 	<div id="browse_findings" style="display:<% if @display_as == 'Findings' %>inline<% else %>none<% end %>">
 	<center><small>Display results as:</small><br>
 		Findings | <%= link_to 'Experiments', "#", :onclick => "browse_results_display_as('experiments')" %> | <%= link_to 'Papers', "#", :onclick => "browse_results_display_as('papers')" %></center>

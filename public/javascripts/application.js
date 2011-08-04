@@ -12,10 +12,7 @@ function search_type(option)
 		document.getElementById("comp").style.display = 'none';
 		document.getElementById("metric").style.display = 'none';
 		document.getElementById("system").style.display = 'none';
-		document.getElementById("task_search_option").value = 'Task';
-		document.getElementById("comp_search_option").value = 'Task';
-		document.getElementById("metric_search_option").value = 'Task';
-		document.getElementById("system_search_option").value = 'Task';
+		document.getElementById("search_option").value = 'Task';
 	}
 	else if (option == 'Component of immersion')
 	{
@@ -23,10 +20,7 @@ function search_type(option)
 		document.getElementById("comp").style.display = 'block';
 		document.getElementById("metric").style.display = 'none';
 		document.getElementById("system").style.display = 'none';
-		document.getElementById("task_search_option").value = 'Component of immersion';
-		document.getElementById("comp_search_option").value = 'Component of immersion';
-		document.getElementById("metric_search_option").value = 'Component of immersion';
-		document.getElementById("system_search_option").value = 'Component of immersion';
+		document.getElementById("search_option").value = 'Component of immersion';
 	}
 	else if (option == 'Metric')
 	{
@@ -34,10 +28,7 @@ function search_type(option)
 		document.getElementById("comp").style.display = 'none';
 		document.getElementById("metric").style.display = 'block';
 		document.getElementById("system").style.display = 'none';
-		document.getElementById("task_search_option").value = 'Metric';
-		document.getElementById("comp_search_option").value = 'Metric';
-		document.getElementById("metric_search_option").value = 'Metric';
-		document.getElementById("system_search_option").value = 'Metric';
+		document.getElementById("search_option").value = 'Metric';
 	}
 	else
 	{
@@ -45,10 +36,7 @@ function search_type(option)
 		document.getElementById("comp").style.display = 'none';
 		document.getElementById("metric").style.display = 'none';
 		document.getElementById("system").style.display = 'block';
-		document.getElementById("task_search_option").value = 'System';
-		document.getElementById("comp_search_option").value = 'System';
-		document.getElementById("metric_search_option").value = 'System';
-		document.getElementById("system_search_option").value = 'System';
+		document.getElementById("search_option").value = 'System';
 	}
 }
 
@@ -59,18 +47,58 @@ function search_results_display_as(option)
 		document.getElementById("search_findings").style.display = 'block';
 		document.getElementById("search_experiments").style.display = 'none';
 		document.getElementById("search_papers").style.display = 'none';
+		document.getElementById("filter_display_as").value = 'Findings';
+		document.getElementById("task_display_as").value = 'Findings';
+		document.getElementById("comp_display_as").value = 'Findings';
+		document.getElementById("metric_display_as").value = 'Findings';
+		document.getElementById("system_display_as").value = 'Findings';
 	}
 	else if (option == 'experiments')
 	{
 		document.getElementById("search_findings").style.display = 'none';
 		document.getElementById("search_experiments").style.display = 'block';
 		document.getElementById("search_papers").style.display = 'none';
+		document.getElementById("filter_display_as").value = 'Experiments';
+		document.getElementById("task_display_as").value = 'Experiments';
+		document.getElementById("comp_display_as").value = 'Experiments';
+		document.getElementById("metric_display_as").value = 'Experiments';
+		document.getElementById("system_display_as").value = 'Experiments';
 	}
 	else
 	{
 		document.getElementById("search_findings").style.display = 'none';
 		document.getElementById("search_experiments").style.display = 'none';
 		document.getElementById("search_papers").style.display = 'block';
+		document.getElementById("filter_display_as").value = 'Papers';
+		document.getElementById("task_display_as").value = 'Papers';
+		document.getElementById("comp_display_as").value = 'Papers';
+		document.getElementById("metric_display_as").value = 'Papers';
+		document.getElementById("system_display_as").value = 'Papers';
+	}
+}
+
+function browse_results_display_as(option)
+{
+	if (option == 'findings')
+	{
+		document.getElementById("browse_findings").style.display = 'block';
+		document.getElementById("browse_experiments").style.display = 'none';
+		document.getElementById("browse_papers").style.display = 'none';
+		document.getElementById("display_as").value = 'Findings';
+	}
+	else if (option == 'experiments')
+	{
+		document.getElementById("browse_findings").style.display = 'none';
+		document.getElementById("browse_experiments").style.display = 'block';
+		document.getElementById("browse_papers").style.display = 'none';
+		document.getElementById("display_as").value = 'Experiments';
+	}
+	else
+	{
+		document.getElementById("browse_findings").style.display = 'none';
+		document.getElementById("browse_experiments").style.display = 'none';
+		document.getElementById("browse_papers").style.display = 'block';
+		document.getElementById("display_as").value = 'Papers';
 	}
 }
 

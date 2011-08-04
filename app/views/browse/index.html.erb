@@ -7,7 +7,7 @@
 	<ul>
 	<% @comps.each do |comp| %>
 		<li>
-			<%= link_to comp.comp_tag, browse_comp_path(comp) %>
+			<%= link_to comp.comp_tag, browse_comp_path(:comp => comp) %>
 			<small>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
 					<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
 					<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
@@ -20,7 +20,7 @@
 	<ul>
 	<% @metrics.each do |metric| %>
 		<li>
-			<%= link_to metric.metric_tag, browse_metric_path(metric) %>
+			<%= link_to metric.metric_tag, browse_metric_path(:metric => metric) %>
 			<small>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
 					<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
 					<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
@@ -49,7 +49,7 @@
 	<ul>
 	<% @systems.each do |system| %>
 		<li>
-			<%= link_to system.system_tag, browse_system_path(system) %>
+			<%= link_to system.system_tag, browse_system_path(:system => system) %>
 			<small>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
 					<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
 					<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
