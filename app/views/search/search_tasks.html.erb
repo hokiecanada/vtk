@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <div id="filters">
-	<%= form_tag search_tasks_path, :method => 'get' do %>
+	<%= form_tag search_tasks_path, :method => :post do %>
 		<input type="hidden" name="filter_comps[]"> 
 		<input type="hidden" name="filter_metrics[]"> 
 		<input type="hidden" name="filter_systems[]">
@@ -55,7 +55,7 @@
 		</div>
 
 		<div id="task">
-			<%= form_tag search_tasks_path, :method => 'get' do %>
+			<%= form_tag search_tasks_path, :method => :post do %>
 				<input type="hidden" name="search_tasks[]">
 				<% @filter_comps.each do |f_c| %>
 					<input type="hidden" name="filter_comps[]" value="<%= f_c.id %>">
@@ -84,7 +84,7 @@
 		</div>
 			
 		<div id="comp" style="display:none">
-			<%= form_tag search_comps_path, :method => 'get' do %>
+			<%= form_tag search_comps_path, :method => :post do %>
 				<input type="hidden" name="search_comps[]">
 				<input type="hidden" name="comp_display_as" id="comp_display_as" value="<%= @display_as %>">
 				
@@ -104,7 +104,7 @@
 		</div>
 
 		<div id="metric" style="display:none">		
-			<%= form_tag search_metrics_path, :method => 'get' do %>
+			<%= form_tag search_metrics_path, :method => :post do %>
 				<input type="hidden" name="search_metrics[]">
 				<input type="hidden" name="metric_display_as" id="metric_display_as" value="<%= @display_as %>">
 				
@@ -124,7 +124,7 @@
 		</div>
 
 		<div id="system" style="display:none">	
-			<%= form_tag search_systems_path, :method => 'get' do %>
+			<%= form_tag search_systems_path, :method => :post do %>
 				<input type="hidden" name="search_systems[]"> 
 				<input type="hidden" name="system_display_as" id="system_display_as" value="<%= @display_as %>">
 				

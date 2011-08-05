@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <div id="filters">
-	<%= form_tag browse_comp_path, :method => 'get' do %>
+	<%= form_tag browse_comp_path, :method => :post do %>
 		<input type="hidden" name="comp" value="<%= @comp.id %>">
 		<input type="hidden" name="filter_tasks[]"> 
 		<input type="hidden" name="filter_metrics[]"> 

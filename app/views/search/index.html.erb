@@ -8,7 +8,7 @@
 	</div>
 
 	<div id="task">
-		<%= form_tag search_tasks_path, :method => 'get' do %>
+		<%= form_tag search_tasks_path, :method => 'post' do %>
 			<input type="hidden" name="search_tasks[]"> 
 			<table>
 				<% @tasks.each_with_index do |task,i| %>
@@ -26,7 +26,7 @@
 	</div>
 
 	<div id="comp" style="display:none">
-		<%= form_tag search_comps_path, :method => 'get' do %>
+		<%= form_tag search_comps_path, :method => 'post' do %>
 			<input type="hidden" name="search_comps[]"> 
 			<table>
 				<% @comps.each_with_index do |comp,i| %>

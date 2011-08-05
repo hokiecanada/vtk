@@ -77,7 +77,7 @@ class SearchController < ApplicationController
 		@display_as = "Findings"
 	end
 	@search_comps = params[:search_comps]
-	@findings = Finding.joins(:comps).where(:comps => {:id => @search_comps}) && Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Finding.joins(:systems).where(:systems => {:id => @filter_systems})
+	@findings = Finding.joins(:comps).where(:comps => {:id => @search_comps}) & Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Finding.joins(:systems).where(:systems => {:id => @filter_systems})
 	@experiments = Experiment.where(:id => @findings.map{|x| x.experiment_id})
 	@papers = Paper.where(:id => @experiments.map{|x| x.paper_id})
 
@@ -115,7 +115,7 @@ class SearchController < ApplicationController
 		@display_as = "Findings"
 	end
 	@search_metrics = params[:search_metrics]
-	@findings = Finding.joins(:metrics).where(:metrics => {:id => @search_metrics}) && Finding.joins(:comps).where(:comps => {:id => @filter_comps}) && Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Finding.joins(:systems).where(:systems => {:id => @filter_systems})
+	@findings = Finding.joins(:metrics).where(:metrics => {:id => @search_metrics}) & Finding.joins(:comps).where(:comps => {:id => @filter_comps}) & Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Finding.joins(:systems).where(:systems => {:id => @filter_systems})
 	@experiments = Experiment.where(:id => @findings.map{|x| x.experiment_id})
 	@papers = Paper.where(:id => @experiments.map{|x| x.paper_id})
 
@@ -153,7 +153,7 @@ class SearchController < ApplicationController
 		@display_as = "Findings"
 	end
 	@search_systems = params[:search_systems]
-	@findings = Finding.joins(:systems).where(:systems => {:id => @search_systems}) && Finding.joins(:comps).where(:comps => {:id => @filter_comps}) && Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks})
+	@findings = Finding.joins(:systems).where(:systems => {:id => @search_systems}) & Finding.joins(:comps).where(:comps => {:id => @filter_comps}) & Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks})
 	@experiments = Experiment.where(:id => @findings.map{|x| x.experiment_id})
 	@papers = Paper.where(:id => @experiments.map{|x| x.paper_id})
 
