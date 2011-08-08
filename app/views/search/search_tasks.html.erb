@@ -203,8 +203,8 @@
 				<th style="width:15%">Year</th>
 				<th style="width:70%">Details</th></tr>
 				<% @findings.each do |finding| %>
-					<tr><td><%= finding.experiment.exp_type %></td>
-					<td><%= finding.experiment.paper.year %></td>
+					<tr><td><center><% if finding.experiment.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
+					<td><center><%= finding.experiment.paper.year.strftime("%Y") %></center></td>
 					<td>Finding: <%= finding.finding %></b><br>
 					Task: <% finding.tasks.each do |task| %>
 						<%= task.task_tag %>
@@ -232,8 +232,8 @@
 				<th style="width:15%">Year</th>
 				<th style="width:70%">Details</th></tr>
 				<% @experiments.each do |exp| %>
-					<tr><td><%= exp.exp_type %></td>
-					<td><%= exp.paper.year %></td>
+					<tr><<td><center><% if exp.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
+					<td><center><%= exp.paper.year.strftime("%Y") %></center></td>
 					<td>Experiment: <%= exp.title %></b><br>
 					Task: <% exp.tasks.each do |task| %>
 						<%= task.task_tag %>
@@ -261,8 +261,8 @@
 				<th style="width:15%">Year</th>
 				<th style="width:70%">Details</th></tr>
 				<% @papers.each do |paper| %>
-					<tr><td><%= paper.title %></td>
-					<td><%= paper.year %></td>
+					<tr><td><center><%= paper.title %></center></td>
+					<td><center><%= paper.year.strftime("%Y") %></center></td>
 					<td>Paper: <%= paper.title %></b><br>
 					Task(s): <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
 						<%= task.task_tag %>, 
