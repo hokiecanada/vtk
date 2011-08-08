@@ -48,100 +48,100 @@
 	<% end %>
 </div>
 
+<div id="content">
+	<div id="browse_results">	
+		<h1>Topic: <i><%= @metric.metric_tag %></i></h1>
+		<div id="browse_findings" style="display:<% if @display_as == 'Findings' %>inline<% else %>none<% end %>">
+			<center><small>Display results as:</small><br>
+			Findings | <%= link_to 'Experiments', "#", :onclick => "browse_results_display_as('experiments')" %> | <%= link_to 'Papers', "#", :onclick => "browse_results_display_as('papers')" %></center>
+			<h1>Results:</h1>
+			
+			<table cellspacing="0" cellpadding="0">
+				<tr><th style="width:5%"></th>
+				<th style="width:15%">Experiment Type</th>
+				<th style="width:10%">Year</th>
+				<th style="width:70%">Details</th></tr>
+				<% @findings.each_with_index do |finding,i| %>
+					<tr><td><center><%= i+1 %></center></td>
+					<td><center><% if finding.experiment.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
+					<td><center><%= finding.experiment.paper.year.strftime("%Y") %></td></center>
+					<td>Finding: <%= finding.finding %></b><br>
+					Task: <% finding.tasks.each do |task| %>
+						<%= task.task_tag %>
+					<% end %><br>
+					Components of immersion: <% finding.comps.each do |comp| %>
+						<%= comp.comp_tag %>, 
+					<% end %><br>
+					Metrics: <% finding.metrics.each do |metric| %>
+						<%= metric.metric_tag %>, 
+					<% end %><br>
+					Systems: <% finding.systems.each do |system| %>
+						<%= system.system_tag %>, 
+					<% end %><br></td></tr>
+				<% end %>
+			</table>
+		</div>
 
-<div id="browse_results">	
-	
-	<h1>Topic: <i><%= @metric.metric_tag %></i></h1>
-	<div id="browse_findings" style="display:<% if @display_as == 'Findings' %>inline<% else %>none<% end %>">
-	<center><small>Display results as:</small><br>
-		Findings | <%= link_to 'Experiments', "#", :onclick => "browse_results_display_as('experiments')" %> | <%= link_to 'Papers', "#", :onclick => "browse_results_display_as('papers')" %></center>
-		<h1>Results:</h1>
-		
-		<table cellspacing="0" cellpadding="0">
-			<tr><th style="width:5%"></th>
-			<th style="width:15%">Experiment Type</th>
-			<th style="width:15%">Year</th>
-			<th style="width:65%">Details</th></tr>
-			<% @findings.each_with_index do |finding,i| %>
-				<tr><td><center><%= i+1 %></center></td>
-				<td><%= finding.experiment.exp_type %></td>
-				<td><%= finding.experiment.paper.year %></td>
-				<td>Finding: <%= finding.finding %></b><br>
-				Task: <% finding.tasks.each do |task| %>
-					<%= task.task_tag %>
-				<% end %><br>
-				Components of immersion: <% finding.comps.each do |comp| %>
-					<%= comp.comp_tag %>, 
-				<% end %><br>
-				Metrics: <% finding.metrics.each do |metric| %>
-					<%= metric.metric_tag %>, 
-				<% end %><br>
-				Systems: <% finding.systems.each do |system| %>
-					<%= system.system_tag %>, 
-				<% end %><br></td></tr>
-			<% end %>
-		</table>
-	</div>
+		<div id="browse_experiments" style="display:<% if @display_as == 'Experiments' %>inline<% else %>none<% end %>">
+			<center><small>Display results as:</small><br>
+			<%= link_to 'Findings', "#", :onclick => "browse_results_display_as('findings')" %> | Experiments | <%= link_to 'Papers', "#", :onclick => "browse_results_display_as('papers')" %></center>
+			<h1>Results:</h1>
+			
+			<table cellspacing="0" cellpadding="0">
+				<tr><th style="width:5%"></th>
+				<th style="width:15%">Experiment Type</th>
+				<th style="width:10%">Year</th>
+				<th style="width:70%">Details</th></tr>
+				<% @experiments.each_with_index do |exp,i| %>
+					<tr><td><center><%= i+1 %></center></td>
+					<td><center><% if exp.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
+					<td><center><%= exp.paper.year.strftime("%Y") %></center></td>
+					<td>Experiment: <%= exp.title %></b><br>
+					Task: <% exp.tasks.each do |task| %>
+						<%= task.task_tag %>
+					<% end %><br>
+					Components of immersion: <% exp.comps.each do |comp| %>
+						<%= comp.comp_tag %>, 
+					<% end %><br>
+					Metrics: <% exp.metrics.each do |metric| %>
+						<%= metric.metric_tag %>, 
+					<% end %><br>
+					Systems: <% exp.systems.each do |system| %>
+						<%= system.system_tag %>, 
+					<% end %><br></td></tr>
+				<% end %>
+			</table>
+		</div>
 
-	<div id="browse_experiments" style="display:<% if @display_as == 'Experiments' %>inline<% else %>none<% end %>">
-		<center><small>Display results as:</small><br>
-		<%= link_to 'Findings', "#", :onclick => "browse_results_display_as('findings')" %> | Experiments | <%= link_to 'Papers', "#", :onclick => "browse_results_display_as('papers')" %></center>
-		<h1>Results:</h1>
-		
-		<table cellspacing="0" cellpadding="0">
-			<tr><th style="width:5%"></th>
-			<th style="width:15%">Experiment Type</th>
-			<th style="width:15%">Year</th>
-			<th style="width:65%">Details</th></tr>
-			<% @experiments.each_with_index do |exp,i| %>
-				<tr><td><center><%= i+1 %></center></td>
-				<td><%= exp.exp_type %></td>
-				<td><%= exp.paper.year %></td>
-				<td>Experiment: <%= exp.title %></b><br>
-				Task: <% exp.tasks.each do |task| %>
-					<%= task.task_tag %>
-				<% end %><br>
-				Components of immersion: <% exp.comps.each do |comp| %>
-					<%= comp.comp_tag %>, 
-				<% end %><br>
-				Metrics: <% exp.metrics.each do |metric| %>
-					<%= metric.metric_tag %>, 
-				<% end %><br>
-				Systems: <% exp.systems.each do |system| %>
-					<%= system.system_tag %>, 
-				<% end %><br></td></tr>
-			<% end %>
-		</table>
-	</div>
-
-	<div id="browse_papers" style="display:<% if @display_as == 'Papers' %>inline<% else %>none<% end %>">
-		<center><small>Display results as:</small><br>
-		<%= link_to 'Findings', "#", :onclick => "browse_results_display_as('findings')" %> | <%= link_to 'Experiments', "#", :onclick => "browse_results_display_as('experiments')" %>  | Papers</center>
-		<h1>Results:</h1>
-		
-		<table cellspacing="0" cellpadding="0">
-			<tr><th style="width:5%"></th>
-			<th style="width:15%">Paper Title</th>
-			<th style="width:15%">Year</th>
-			<th style="width:65%">Details</th></tr>
-			<% @papers.each_with_index do |paper,i| %>
-				<tr><td><center><%= i+1 %></center></td>
-				<td><%= paper.title %></td>
-				<td><%= paper.year %></td>
-				<td>Paper: <%= paper.title %></b><br>
-				Task: <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
-					<%= task.task_tag %>
-				<% end %><br>
-				Components of immersion: <% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
-					<%= comp.comp_tag %>, 
-				<% end %><br>
-				Metrics: <% Metric.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |metric| %>
-					<%= metric.metric_tag %>, 
-				<% end %><br>
-				Systems: <% System.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |system| %>
-					<%= system.system_tag %>, 
-				<% end %><br></td></tr>
-			<% end %>
-		</table>
+		<div id="browse_papers" style="display:<% if @display_as == 'Papers' %>inline<% else %>none<% end %>">
+			<center><small>Display results as:</small><br>
+			<%= link_to 'Findings', "#", :onclick => "browse_results_display_as('findings')" %> | <%= link_to 'Experiments', "#", :onclick => "browse_results_display_as('experiments')" %>  | Papers</center>
+			<h1>Results:</h1>
+			
+			<table cellspacing="0" cellpadding="0">
+				<tr><th style="width:5%"></th>
+				<th style="width:25%">Paper Title</th>
+				<th style="width:10%">Year</th>
+				<th style="width:60%">Details</th></tr>
+				<% @papers.each_with_index do |paper,i| %>
+					<tr><td><center><%= i+1 %></center></td>
+					<td><center><%= paper.title %></center></td>
+					<td><center><%= paper.year.strftime("%Y") %></center></td>
+					<td>Paper: <%= paper.title %></b><br>
+					Task: <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
+						<%= task.task_tag %>
+					<% end %><br>
+					Components of immersion: <% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
+						<%= comp.comp_tag %>, 
+					<% end %><br>
+					Metrics: <% Metric.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |metric| %>
+						<%= metric.metric_tag %>, 
+					<% end %><br>
+					Systems: <% System.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |system| %>
+						<%= system.system_tag %>, 
+					<% end %><br></td></tr>
+				<% end %>
+			</table>
+		</div>
 	</div>
 </div>

@@ -152,8 +152,6 @@ div.field, div.actions {
 	width: 100%;
 }
 
-
-
 #search_results table, #search_results td, #search_results th {
 	table-layout: fixed;
 	border: 0px;
@@ -161,16 +159,14 @@ div.field, div.actions {
 	width: 100%;
 }
 
-#search_findings {
+#search_findings, #search_experiments, #search_papers {
 	display: inline;
 }
 
-#search_experiments {
-	display: inline;
-}
-
-#search_papers {
-	display: inline;
+#search_findings table, #search_findings th, #search_findings td, #search_experiments table, #search_experiments th, #search_experiments td, #search_papers table, #search_papers th, #search_papers td{
+	border: 1px solid black;
+	table-layout: fixed;
+	width: 100%;
 }
 
 #browse_col_1 {
@@ -184,24 +180,25 @@ div.field, div.actions {
 }
 
 #browse_results table, #browse_results td, #browse_results th {
-	table-layout: auto;
-	border: 1px solid black;
+	table-layout: fixed;
+	border: 0px;
+	border-style: none;
 	width: 100%;
-}
-
-#browse_results {
-	display: inline;
-	width: 80%;
-	float: right;
 }
 
 #browse_findings, #browse_experiments, #browse_papers {
 	display: inline;
 }
 
+#browse_findings table, #browse_findings th, #browse_findings td, #browse_experiments table, #browse_experiments th, #browse_experiments td, #browse_papers table, #browse_papers th, #browse_papers td{
+	border: 1px solid black;
+	table-layout: fixed;
+	width: 100%;
+}
+
 #filters {
 	float: left;
-	width: 15%;
+	width: 20%;
 	margin: 10px;
 	padding: 10px;
 	background-color: #FFC1C1;
@@ -209,25 +206,7 @@ div.field, div.actions {
 
 #content {
 	float: right;
-	width: 80%;
-}
-
-#search_findings table, #search_findings th, #search_findings td{
-	border: 1px solid black;
-	table-layout: fixed;
-	width: 100%;
-}
-
-#search_experiments table, #search_experiments th, #search_experiments td{
-	border: 1px solid black;
-	table-layout: fixed;
-	width: 100%;
-}
-
-#search_papers table, #search_papers th, #search_papers td{
-	border: 1px solid black;
-	table-layout: fixed;
-	width: 100%;
+	width: 75%;
 }
 
 #footer {

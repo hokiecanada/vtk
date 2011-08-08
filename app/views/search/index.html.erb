@@ -4,28 +4,10 @@
 	<h1>Search the Knowledgebase:</h1>
 	
 	<div id="search_type">
-		Search by: <%= select_tag "search option", options_for_select(["Task","Component of immersion","Metric","System"],"Task"), html_options = {:onchange => "search_type(this.value)"} %>
+		Search by: <%= select_tag "search option", options_for_select(["Component of immersion","Task","Metric","System"],"Component of immersion"), html_options = {:onchange => "search_type(this.value)"} %>
 	</div>
 
-	<div id="task">
-		<%= form_tag search_tasks_path, :method => 'post' do %>
-			<input type="hidden" name="search_tasks[]"> 
-			<table>
-				<% @tasks.each_with_index do |task,i| %>
-					<% if i%3 == 0 %>
-						<tr><td><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
-					<% elsif i%3 == 1 %>
-						<td><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
-					<% else %>
-						<td><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td></tr>
-					<% end %>
-				<% end %>
-				<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
-			</table>
-		<% end %>
-	</div>
-
-	<div id="comp" style="display:none">
+	<div id="comp">
 		<%= form_tag search_comps_path, :method => 'post' do %>
 			<input type="hidden" name="search_comps[]"> 
 			<table>
@@ -36,6 +18,24 @@
 						<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></td>
 					<% else %>
 						<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></td></tr>
+					<% end %>
+				<% end %>
+				<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
+			</table>
+		<% end %>
+	</div>
+
+	<div id="task" style="display:none">
+		<%= form_tag search_tasks_path, :method => 'post' do %>
+			<input type="hidden" name="search_tasks[]"> 
+			<table>
+				<% @tasks.each_with_index do |task,i| %>
+					<% if i%3 == 0 %>
+						<tr><td><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
+					<% elsif i%3 == 1 %>
+						<td><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
+					<% else %>
+						<td><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td></tr>
 					<% end %>
 				<% end %>
 				<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
