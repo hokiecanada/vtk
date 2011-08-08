@@ -51,7 +51,7 @@
 		<h1>Search the Knowledgebase:</h1>
 
 		<div id="search_type">
-			Search by: <%= select_tag "search_option", options_for_select(["Task","Component of immersion","Metric","System"],"Component of immersion"), html_options = {:onchange => "search_type(this.value)"} %>
+			Search by: <%= select_tag "search_option", options_for_select(["Component of immersion","Task","Metric","System"],"Component of immersion"), html_options = {:onchange => "search_type(this.value)"} %>
 		</div>
 
 		<div id="comp">
@@ -71,11 +71,23 @@
 				<table>
 					<% @comps.each_with_index do |comp,i| %>
 						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_comps[]", comp.id, @search_comps.include?(comp.id.to_s()) %><%= comp.comp_tag %></td>
+							<tr><td style="padding:0px 10px 0px 0px"><b><%= check_box_tag "search_comps[]", comp.id, @search_comps.include?(comp.id.to_s()) %><%= comp.comp_tag %></b>
+							<small><i>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
+								<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_comps[]", comp.id, @search_comps.include?(comp.id.to_s()) %><%= comp.comp_tag %></td>
+							<td style="padding:0px 10px 0px 10px"><b><%= check_box_tag "search_comps[]", comp.id, @search_comps.include?(comp.id.to_s()) %><%= comp.comp_tag %></b>
+							<small><i>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
+								<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_comps[]", comp.id, @search_comps.include?(comp.id.to_s()) %><%= comp.comp_tag %></td></tr>
+							<td style="padding:0px 0px 0px 10px"><b><%= check_box_tag "search_comps[]", comp.id, @search_comps.include?(comp.id.to_s()) %><%= comp.comp_tag %></b>
+							<small><i>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
+								<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td></tr>
 						<% end %>
 					<% end %>
 					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
@@ -91,11 +103,23 @@
 				<table>
 					<% @tasks.each_with_index do |task,i| %>
 						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
+							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_tasks[]", task.id, false %><b><%= task.task_tag %></b>
+							<small><i>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
+								<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td>
+							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, false %><b><%= task.task_tag %></b>
+							<small><i>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
+								<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, false %><%= task.task_tag %></td></tr>
+							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, false %><b><%= task.task_tag %></b>
+							<small><i>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
+								<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td></tr>
 						<% end %>
 					<% end %>
 					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
@@ -111,11 +135,23 @@
 				<table>
 					<% @metrics.each_with_index do |metric,i| %>
 						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_metrics[]", metric.id, false %><%= metric.metric_tag %></td>
+							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_metrics[]", metric.id, false %><b><%= metric.metric_tag %></b>
+							<small><i>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
+								<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, false %><%= metric.metric_tag %></td>
+							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, false %><b><%= metric.metric_tag %></b>
+							<small><i>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
+								<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, false %><%= metric.metric_tag %></td></tr>
+							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, false %><b><%= metric.metric_tag %></b>
+							<small><i>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
+								<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td></tr>
 						<% end %>
 					<% end %>
 					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
@@ -131,11 +167,23 @@
 				<table>
 					<% @systems.each_with_index do |system,i| %>
 						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_systems[]", system.id, false %><%= system.system_tag %></td>
+							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_systems[]", system.id, false %><b><%= system.system_tag %></b>
+							<small><i>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
+								<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_systems[]", system.id, false %><%= system.system_tag %></td>
+							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_systems[]", system.id, false %><b><%= system.system_tag %></b>
+							<small><i>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
+								<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td>
 						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_systems[]", system.id, false %><%= system.system_tag %></td></tr>
+							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_systems[]", system.id, false %><b><%= system.system_tag %></b>
+							<small><i>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
+								<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
+								<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
+							</i></small></td></tr>
 						<% end %>
 					<% end %>
 					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
