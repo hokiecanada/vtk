@@ -59,6 +59,10 @@ class ExperimentsController < ApplicationController
 	params[:experiment][:comp_ids] ||= []
 	params[:experiment][:metric_ids] ||= []
 	params[:experiment][:task_ids] ||= []
+	@experiment.findings.each do |finding|
+		finding.tasks = @experiment.tasks
+		finding.save
+	end
 	@experiment.status = 1
 	@experiment.save
 	

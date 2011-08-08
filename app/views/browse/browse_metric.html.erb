@@ -66,8 +66,8 @@
 					<td><center><% if finding.experiment.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
 					<td><center><%= finding.experiment.paper.year.strftime("%Y") %></td></center>
 					<td>Finding: <%= finding.finding %></b><br>
-					Task: <% finding.tasks.each do |task| %>
-						<%= task.task_tag %>
+					Task(s): <% finding.tasks.each do |task| %>
+						<%= task.task_tag %>, 
 					<% end %><br>
 					Components of immersion: <% finding.comps.each do |comp| %>
 						<%= comp.comp_tag %>, 
@@ -128,8 +128,8 @@
 					<td><center><%= paper.title %></center></td>
 					<td><center><%= paper.year.strftime("%Y") %></center></td>
 					<td>Paper: <%= paper.title %></b><br>
-					Task: <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
-						<%= task.task_tag %>
+					Task(s): <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
+						<%= task.task_tag %>, 
 					<% end %><br>
 					Components of immersion: <% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
 						<%= comp.comp_tag %>, 

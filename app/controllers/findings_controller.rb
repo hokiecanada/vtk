@@ -79,7 +79,8 @@ class FindingsController < ApplicationController
 	params[:finding][:system_ids] ||= []
 	params[:finding][:comp_ids] ||= []
 	params[:finding][:metric_ids] ||= []
-	params[:finding][:task_ids] ||= []
+	#params[:finding][:task_ids] ||= []
+	@finding.tasks = Experiment.find(@finding.experiment_id).tasks
 	params[:finding][:relationship_ids] ||= []
 	@finding.status = 1
 	

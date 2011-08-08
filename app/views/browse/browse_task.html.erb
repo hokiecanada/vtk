@@ -128,8 +128,8 @@
 					<td><center><%= paper.title %></center></td>
 					<td><center><%= paper.year.strftime("%Y") %></center></td>
 					<td>Paper: <%= paper.title %></b><br>
-					Task: <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
-						<%= task.task_tag %>
+					Task(s): <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
+						<%= task.task_tag %>, 
 					<% end %><br>
 					Components of immersion: <% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
 						<%= comp.comp_tag %>, 

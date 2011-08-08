@@ -38,9 +38,9 @@ class BrowseController < ApplicationController
 		@display_as = params[:display_as]
 	end
 	
-	@findings = Finding.joins(:tasks).where(:tasks => {:id => @task}) && Finding.joins(:comps).where(:comps => {:id => @filter_comps}) && Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Finding.joins(:systems).where(:systems => {:id => @filter_systems})
-	@experiments = Experiment.joins(:tasks).where(:tasks => {:id => @task}) && Experiment.joins(:comps).where(:comps => {:id => @filter_comps}) && Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Experiment.joins(:systems).where(:systems => {:id => @filter_systems})
-	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => @filter_comps}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => @filter_systems}).collect{|x| x.paper_id})
+	@findings = Finding.joins(:tasks).where(:tasks => {:id => @task}) & Finding.joins(:comps).where(:comps => {:id => @filter_comps}) & Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Finding.joins(:systems).where(:systems => {:id => @filter_systems})
+	@experiments = Experiment.joins(:tasks).where(:tasks => {:id => @task}) & Experiment.joins(:comps).where(:comps => {:id => @filter_comps}) & Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Experiment.joins(:systems).where(:systems => {:id => @filter_systems})
+	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => @filter_comps}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => @filter_systems}).collect{|x| x.paper_id})
 
 	respond_to do |format|
 	  format.html # browse_task.html.erb
@@ -74,9 +74,9 @@ class BrowseController < ApplicationController
 		@display_as = params[:display_as]
 	end
 	
-	@findings = Finding.joins(:comps).where(:comps => {:id => @comp}) && Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Finding.joins(:systems).where(:systems => {:id => @filter_systems})
-	@experiments = Experiment.joins(:comps).where(:comps => {:id => @comp}) && Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Experiment.joins(:systems).where(:systems => {:id => @filter_systems})
-	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => @filter_systems}).collect{|x| x.paper_id})
+	@findings = Finding.joins(:comps).where(:comps => {:id => @comp}) & Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Finding.joins(:systems).where(:systems => {:id => @filter_systems})
+	@experiments = Experiment.joins(:comps).where(:comps => {:id => @comp}) & Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Experiment.joins(:systems).where(:systems => {:id => @filter_systems})
+	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => @filter_systems}).collect{|x| x.paper_id})
 	
 	respond_to do |format|
 	  format.html # browse_comp.html.erb
@@ -110,9 +110,9 @@ class BrowseController < ApplicationController
 		@display_as = params[:display_as]
 	end
 	
-	@findings = Finding.joins(:metrics).where(:metrics => {:id => @metric}) && Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Finding.joins(:comps).where(:comps => {:id => @filter_comps}) && Finding.joins(:systems).where(:systems => {:id => @filter_systems})
-	@experiments = Experiment.joins(:metrics).where(:metrics => {:id => @metric}) && Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Experiment.joins(:comps).where(:comps => {:id => @filter_comps}) && Experiment.joins(:systems).where(:systems => {:id => @filter_systems})
-	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => @filter_comps}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => @filter_systems}).collect{|x| x.paper_id})
+	@findings = Finding.joins(:metrics).where(:metrics => {:id => @metric}) & Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Finding.joins(:comps).where(:comps => {:id => @filter_comps}) & Finding.joins(:systems).where(:systems => {:id => @filter_systems})
+	@experiments = Experiment.joins(:metrics).where(:metrics => {:id => @metric}) & Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Experiment.joins(:comps).where(:comps => {:id => @filter_comps}) & Experiment.joins(:systems).where(:systems => {:id => @filter_systems})
+	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => @filter_comps}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => @filter_systems}).collect{|x| x.paper_id})
 
 	respond_to do |format|
 	  format.html # browse_metric.html.erb
@@ -146,9 +146,9 @@ class BrowseController < ApplicationController
 		@display_as = params[:display_as]
 	end
 	
-	@findings = Finding.joins(:systems).where(:systems => {:id => @system}) && Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Finding.joins(:comps).where(:comps => {:id => @filter_comps})
-	@experiments = Experiment.joins(:systems).where(:systems => {:id => @system}) && Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}) && Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}) && Experiment.joins(:comps).where(:comps => {:id => @filter_comps})
-	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}).collect{|x| x.paper_id}) && Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => @filter_comps}).collect{|x| x.paper_id})
+	@findings = Finding.joins(:systems).where(:systems => {:id => @system}) & Finding.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Finding.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Finding.joins(:comps).where(:comps => {:id => @filter_comps})
+	@experiments = Experiment.joins(:systems).where(:systems => {:id => @system}) & Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}) & Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}) & Experiment.joins(:comps).where(:comps => {:id => @filter_comps})
+	@papers = 	Paper.where(:id => @experiments.collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => @filter_tasks}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => @filter_metrics}).collect{|x| x.paper_id}) & Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => @filter_comps}).collect{|x| x.paper_id})
 
 	respond_to do |format|
 	  format.html # browse_system.html.erb
