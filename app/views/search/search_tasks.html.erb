@@ -1,12 +1,14 @@
 <p id="notice"><%= notice %></p>
 
 <div id="filters">
-	<%= form_tag search_tasks_path, :method => :post do %>
+	<h3>Displaying results for:</h3>
+	"<%= @task.task_tag %>"<br>
+	<%= form_tag search_tasks_path(:search_task => @search_task), :method => :post do %>
 		<input type="hidden" name="filter_comps[]"> 
 		<input type="hidden" name="filter_metrics[]"> 
 		<input type="hidden" name="filter_systems[]">
 		<input type="hidden" name="filter_display_as" id="filter_display_as" value="<%= @display_as %>">
-		<%= hidden_field_tag "search_tasks", @search_tasks %>
+		<%= hidden_field_tag "search_task", @search_task %>
 	
 		<h3>Filter by:</h3>
 		<div id="filter_comps_hidden">
@@ -17,7 +19,7 @@
 		</div>
 		<div id="filter_comps_list" style="display:none">
 			<% @comps.each do |comp| %>
-				<%= check_box_tag "filter_comps[]", comp.id, @filter_comps.include?(comp) %><%= comp.comp_tag %><br>
+				<%= check_box_tag "filter_comps[]", comp.id, !@filter_comps.nil?&&@filter_comps.include?(comp) %><%= comp.comp_tag %><br>
 			<% end %>
 		</div>
 		<div id="filter_metrics_hidden">
@@ -28,7 +30,7 @@
 		</div>
 		<div id="filter_metrics_list" style="display:none">
 			<% @metrics.each do |metric| %>
-				<%= check_box_tag "filter_metrics[]", metric.id, @filter_metrics.include?(metric) %><%= metric.metric_tag %><br>
+				<%= check_box_tag "filter_metrics[]", metric.id, !@filter_metrics.nil?&&@filter_metrics.include?(metric) %><%= metric.metric_tag %><br>
 			<% end %>
 		</div>
 		<div id="filter_systems_hidden">
@@ -39,7 +41,7 @@
 		</div>
 		<div id="filter_systems_list" style="display:none">
 			<% @systems.each do |system| %>
-				<%= check_box_tag "filter_systems[]", system.id, @filter_systems.include?(system) %><%= system.system_tag %><br>
+				<%= check_box_tag "filter_systems[]", system.id, !@filter_systems.nil?&&@filter_systems.include?(system) %><%= system.system_tag %><br>
 			<% end %>
 		</div>
 		<%= submit_tag "Filter Results", :name => nil %>
@@ -47,155 +49,10 @@
 </div>
 
 <div id="content">		
-	<div id="search_options">
-		<h1>Search the Knowledgebase:</h1>
-
-		<div id="search_type">
-			Search by: <%= select_tag "search_option", options_for_select(["Component of immersion","Task","Metric","System"],"Task"), html_options = {:onchange => "search_type(this.value)"} %>
-		</div>
-
-		<div id="task">
-			<%= form_tag search_tasks_path, :method => :post do %>
-				<input type="hidden" name="search_tasks[]">
-				<% @filter_comps.each do |f_c| %>
-					<input type="hidden" name="filter_comps[]" value="<%= f_c.id %>">
-				<% end %>
-				<% @filter_metrics.each do |f_m| %>
-					<input type="hidden" name="filter_metrics[]" value="<%= f_m.id %>">
-				<% end %>
-				<% @filter_systems.each do |f_s| %>
-					<input type="hidden" name="filter_systems[]" value="<%= f_s.id %>">
-				<% end %>
-				<input type="hidden" name="task_display_as" id="task_display_as" value="<%= @display_as %>">
-
-				<table>
-					<% @tasks.each_with_index do |task,i| %>
-						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_tasks[]", task.id, @search_tasks.include?(task.id.to_s()) %><b><%= task.task_tag %></b>
-							<small><i>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
-								<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, @search_tasks.include?(task.id.to_s()) %><b><%= task.task_tag %></b>
-							<small><i>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
-								<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_tasks[]", task.id, @search_tasks.include?(task.id.to_s()) %><b><%= task.task_tag %></b>
-							<small><i>(<%= Finding.joins(:tasks).where(:tasks => {:id => task.id}).count() %> findings, 
-								<%= Experiment.joins(:tasks).where(:tasks => {:id => task.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:tasks).where(:tasks => {:id => task.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td></tr>
-						<% end %>
-					<% end %>
-					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
-				</table>
-			<% end %>
-		</div>
-			
-		<div id="comp" style="display:none">
-			<%= form_tag search_comps_path, :method => :post do %>
-				<input type="hidden" name="search_comps[]">
-				<input type="hidden" name="comp_display_as" id="comp_display_as" value="<%= @display_as %>">
-				
-				<table>
-					<% @comps.each_with_index do |comp,i| %>
-						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><b><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></b>
-							<small><i>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
-								<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><b><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></b>
-							<small><i>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
-								<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% else %>
-							<td style="padding:0px 0px 0px 10px"><b><%= check_box_tag "search_comps[]", comp.id, false %><%= comp.comp_tag %></b>
-							<small><i>(<%= Finding.joins(:comps).where(:comps => {:id => comp.id}).count() %> findings, 
-								<%= Experiment.joins(:comps).where(:comps => {:id => comp.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:comps).where(:comps => {:id => comp.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td></tr>
-						<% end %>
-					<% end %>
-					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
-				</table>
-			<% end %>
-		</div>
-
-		<div id="metric" style="display:none">		
-			<%= form_tag search_metrics_path, :method => :post do %>
-				<input type="hidden" name="search_metrics[]">
-				<input type="hidden" name="metric_display_as" id="metric_display_as" value="<%= @display_as %>">
-				
-				<table>
-					<% @metrics.each_with_index do |metric,i| %>
-						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_metrics[]", metric.id, false %><b><%= metric.metric_tag %></b>
-							<small><i>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
-								<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, false %><b><%= metric.metric_tag %></b>
-							<small><i>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
-								<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_metrics[]", metric.id, false %><b><%= metric.metric_tag %></b>
-							<small><i>(<%= Finding.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> findings, 
-								<%= Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:metrics).where(:metrics => {:id => metric.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td></tr>
-						<% end %>
-					<% end %>
-					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
-				</table>
-			<% end %>
-		</div>
-
-		<div id="system" style="display:none">	
-			<%= form_tag search_systems_path, :method => :post do %>
-				<input type="hidden" name="search_systems[]"> 
-				<input type="hidden" name="system_display_as" id="system_display_as" value="<%= @display_as %>">
-				
-				<table>
-					<% @systems.each_with_index do |system,i| %>
-						<% if i%3 == 0 %>
-							<tr><td style="padding:0px 10px 0px 0px"><%= check_box_tag "search_systems[]", system.id, false %><b><%= system.system_tag %></b>
-							<small><i>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
-								<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% elsif i%3 == 1 %>
-							<td style="padding:0px 10px 0px 10px"><%= check_box_tag "search_systems[]", system.id, false %><b><%= system.system_tag %></b>
-							<small><i>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
-								<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td>
-						<% else %>
-							<td style="padding:0px 0px 0px 10px"><%= check_box_tag "search_systems[]", system.id, false %><b><%= system.system_tag %></b>
-							<small><i>(<%= Finding.joins(:systems).where(:systems => {:id => system.id}).count() %> findings, 
-								<%= Experiment.joins(:systems).where(:systems => {:id => system.id}).count() %> experiments, 
-								<%= Paper.where(:id => Experiment.joins(:systems).where(:systems => {:id => system.id}).collect!{|x| x.paper_id}).count() %> papers)
-							</i></small></td></tr>
-						<% end %>
-					<% end %>
-					<tr><td colspan="3" align="right"><%= submit_tag "Search", :name => nil %></td></tr>
-				</table>
-			<% end %>
-		</div>	
-	</div>	
-
 	<div id="search_results">
 		<div id="search_findings" style="display:<% if @display_as == 'Findings' %>inline<% else %>none<% end %>">
 			<center><small>Display results as:</small><br>
-			Findings | <%= link_to 'Experiments', "#", :onclick => "search_results_display_as('experiments')" %> | <%= link_to 'Papers', "#", :onclick => "search_results_display_as('papers')" %></center>
+			Findings | <%= link_to 'Experiments', "#", :html_options => { @display_as => 'Experiments'}, :onclick => "search_results_display_as('experiments')" %> | <%= link_to 'Papers', "#", :html_options => { @display_as => 'Papers'},:onclick => "search_results_display_as('papers')" %></center>
 			<h1>Results:</h1>
 			
 			<table cellspacing="0" cellpadding="0">
@@ -207,16 +64,16 @@
 					<td><center><%= finding.experiment.paper.year.strftime("%Y") %></center></td>
 					<td>Finding: <%= finding.finding %></b><br>
 					Task: <% finding.tasks.each do |task| %>
-						<%= task.task_tag %>
+						<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
 					<% end %><br>
 					Components of immersion: <% finding.comps.each do |comp| %>
-						<%= comp.comp_tag %>, 
+						<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
 					<% end %><br>
 					Metrics: <% finding.metrics.each do |metric| %>
-						<%= metric.metric_tag %>, 
+						<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
 					<% end %><br>
 					Systems: <% finding.systems.each do |system| %>
-						<%= system.system_tag %>, 
+						<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
 					<% end %><br></td></tr>
 				<% end %>
 			</table>
@@ -224,7 +81,7 @@
 		
 		<div id="search_experiments" style="display:<% if @display_as == 'Experiments' %>inline<% else %>none<% end %>">
 			<center><small>Display results as:</small><br>
-			<%= link_to 'Findings', "#", :onclick => "search_results_display_as('findings')" %> | Experiments | <%= link_to 'Papers', "#", :onclick => "search_results_display_as('papers')" %></center>
+			<%= link_to 'Findings', "#", :html_options => { @display_as => 'Findings'}, :onclick => "search_results_display_as('findings')" %> | Experiments | <%= link_to 'Papers', "#", :html_options => { @display_as => 'Papers'}, :onclick => "search_results_display_as('papers')" %></center>
 			<h1>Results:</h1>
 			
 			<table cellspacing="0" cellpadding="0">
@@ -232,20 +89,20 @@
 				<th style="width:15%">Year</th>
 				<th style="width:70%">Details</th></tr>
 				<% @experiments.each do |exp| %>
-					<tr><<td><center><% if exp.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
+					<tr><td><center><% if exp.exp_type == 0 %>Controlled<% else %>Practical<% end %></center></td>
 					<td><center><%= exp.paper.year.strftime("%Y") %></center></td>
 					<td>Experiment: <%= exp.title %></b><br>
 					Task: <% exp.tasks.each do |task| %>
-						<%= task.task_tag %>
+						<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
 					<% end %><br>
 					Components of immersion: <% exp.comps.each do |comp| %>
-						<%= comp.comp_tag %>, 
+						<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
 					<% end %><br>
 					Metrics: <% exp.metrics.each do |metric| %>
-						<%= metric.metric_tag %>, 
+						<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
 					<% end %><br>
 					Systems: <% exp.systems.each do |system| %>
-						<%= system.system_tag %>, 
+						<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
 					<% end %><br></td></tr>
 				<% end %>
 			</table>
@@ -253,7 +110,7 @@
 		
 		<div id="search_papers" style="display:<% if @display_as == 'Papers' %>inline<% else %>none<% end %>">
 			<center><small>Display results as:</small><br>
-			<%= link_to 'Findings', "#", :onclick => "search_results_display_as('findings')" %> | <%= link_to 'Experiments', "#", :onclick => "search_results_display_as('experiments')" %>  | Papers</center>
+			<%= link_to 'Findings', "#", :html_options => { @display_as => 'Findings'}, :onclick => "search_results_display_as('findings')" %> | <%= link_to 'Experiments', "#", :html_options => { @display_as => 'Experiments'}, :onclick => "search_results_display_as('experiments')" %>  | Papers</center>
 			<h1>Results:</h1>
 			
 			<table cellspacing="0" cellpadding="0">
@@ -265,16 +122,16 @@
 					<td><center><%= paper.year.strftime("%Y") %></center></td>
 					<td>Paper: <%= paper.title %></b><br>
 					Task(s): <% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
-						<%= task.task_tag %>, 
+						<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>, 
 					<% end %><br>
 					Components of immersion: <% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
-						<%= comp.comp_tag %>, 
+						<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
 					<% end %><br>
 					Metrics: <% Metric.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |metric| %>
-						<%= metric.metric_tag %>, 
+						<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
 					<% end %><br>
 					Systems: <% System.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |system| %>
-						<%= system.system_tag %>, 
+						<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
 					<% end %><br></td></tr>
 				<% end %>
 			</table>

@@ -14,4 +14,32 @@ module ApplicationHelper
 		end
 		button_to_function(name, "add_fields(this, \"#{association}\", \"#{escape_javascript(fields)}\")")
 	end
+	
+	def sortable_comp(title, column, search_comp, filter_tasks, filter_metrics, filter_systems, display_as)
+		#title ||= column.titleize
+		#css_class = column == sort_column ? "current #{sort_direction}" : nil
+		direction = column == sort_column(display_as) && sort_direction == "asc" ? "desc" : "asc"
+		link_to title, :search_comp => search_comp, :sort => column, :direction => direction, :filter_tasks => filter_tasks, :filter_metrics => filter_metrics, :filter_systems => filter_systems, :display_as => display_as
+	end
+
+	def sortable_task(column, search_comp, filter_comps, filter_metrics, filter_systems, display_as)
+		title ||= column.titleize
+		#css_class = column == sort_column ? "current #{sort_direction}" : nil
+		direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
+		link_to title, :search_comp => search_comp, :sort => column, :direction => direction, :filter_comps => filter_comps, :filter_metrics => filter_metrics, :filter_systems => filter_systems, :display_as => display_as
+	end
+	
+	def sortable_metric(column, search_comp, filter_comps, filter_tasks, filter_systems, display_as)
+		title ||= column.titleize
+		#css_class = column == sort_column ? "current #{sort_direction}" : nil
+		direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
+		link_to title, :search_comp => search_comp, :sort => column, :direction => direction, :filter_comps => filter_comps, :filter_tasks => filter_tasks, :filter_systems => filter_systems, :display_as => display_as
+	end
+	
+	def sortable_system(column, search_comp, filter_comps, filter_tasks, filter_metrics, display_as)
+		title ||= column.titleize
+		#css_class = column == sort_column ? "current #{sort_direction}" : nil
+		direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
+		link_to title, :search_comp => search_comp, :sort => column, :direction => direction, :filter_comps => filter_comps, :filter_tasks => filter_tasks, :filter_metrics => filter_metrics, :display_as => display_as
+	end
 end

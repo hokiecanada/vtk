@@ -217,6 +217,20 @@ div.field, div.actions {
 	text-align: center;
 }
 
+.pretty th .current {
+  padding-right: 12px;
+  background-repeat: no-repeat;
+  background-position: right center;
+}
+
+.pretty th .asc {
+  background-image: url(/images/arrow_up.gif);
+}
+
+.pretty th .desc {
+  background-image: url(/images/arrow_down.gif);
+}
+
 .css1 {font-size: 1.0em; color: white; text-decoration: none; padding: 10px; }
 .css2 {font-size: 1.2em; color: magenta; text-decoration: none; padding: 10px; }
 .css3 {font-size: 1.4em; color: green; text-decoration: none; padding: 10px; }
