@@ -15,27 +15,23 @@ class SearchController < ApplicationController
   def search_comps
 	@search_comp = params[:search_comp]
 	@comp = Comp.find(params[:search_comp].to_i())
-	@tasks = Task.all
-	#@comps = Comp.all
-	@metrics = Metric.all
-	@systems = System.all
 
 	if params[:filter_tasks].nil? || params[:filter_tasks] == [""]
-		f_tasks = @tasks
+		f_tasks = Task.all
 		@filter_tasks = nil
 	else
 		f_tasks = Task.where(:id => params[:filter_tasks])
 		@filter_tasks = params[:filter_tasks]
 	end
 	if params[:filter_metrics].nil? || params[:filter_metrics] == [""]
-		f_metrics = @metrics
+		f_metrics = Metric.all
 		@filter_metrics = nil
 	else
 		f_metrics = Metric.where(:id => params[:filter_metrics])
 		@filter_metrics = params[:filter_metrics]
 	end
 	if params[:filter_systems].nil? || params[:filter_systems] == [""]
-		f_systems = @systems
+		f_systems = System.all
 		@filter_systems = nil
 	else
 		f_systems = System.where(:id => params[:filter_systems])
@@ -51,14 +47,22 @@ class SearchController < ApplicationController
 	if @display_as == "Findings"
 		@findings = Finding.joins(:comps).where(:comps => {:id => @search_comp}).merge(Finding.joins(:tasks).where(:tasks => {:id => f_tasks}).merge(Finding.joins(:metrics).where(:metrics => {:id => f_metrics}).merge(Finding.joins(:systems).where(:systems => {:id => f_systems}))))
 		if params[:sort] == "relationship"
-			@findings = @findings.joins(:relationships).order("rel_tag " + sort_direction)
+			@findings = @findings.order("rel_tag " + sort_direction)
+		elsif params[:sort] == "year"
+			@findings = @findings.sort_by{|f| f.experiment.paper.year}.reverse
 		else
 			@findings = @findings.order(sort_column(@display_as) + " " + sort_direction)
 		end
+		@tasks = Task.joins(:findings).where(:findings => {:id => @findings})
+		@metrics = Metric.joins(:findings).where(:findings => {:id => @findings})
+		@systems = System.joins(:findings).where(:findings => {:id => @findings})
 		#@findings_ranks = @findings.map{|x| [x, x.tasks.where(:tasks => {:id => @filter_tasks}).count()+x.metrics.where(:metrics => {:id => @filter_metrics}).count()+x.systems.where(:systems => {:id => @filter_systems}).count()]}
 	elsif @display_as == "Experiments"
 		@experiments = Experiment.joins(:comps).where(:comps => {:id => @search_comp}).merge(Experiment.joins(:tasks).where(:tasks => {:id => f_tasks}).merge(Experiment.joins(:metrics).where(:metrics => {:id => f_metrics}).merge(Experiment.joins(:systems).where(:systems => {:id => f_systems}))))
 		@experiments = @experiments.order(sort_column(@display_as) + " " + sort_direction)
+		@tasks = Task.joins(:experiments).where(:experiments => {:id => @experiments})
+		@metrics = Metric.joins(:experiments).where(:experiments => {:id => @experiments})
+		@systems = System.joins(:experiments).where(:experiments => {:id => @experiments})
 		#@experiments_ranks = @experiments.map{|x| [x, x.tasks.where(:tasks => {:id => @filter_tasks}).count()+x.metrics.where(:metrics => {:id => @filter_metrics}).count()+x.systems.where(:systems => {:id => @filter_systems}).count()]}
 	else
 		experiments = Experiment.joins(:comps).where(:comps => {:id => @search_comp}).merge(Experiment.joins(:tasks).where(:tasks => {:id => f_tasks}).merge(Experiment.joins(:metrics).where(:metrics => {:id => f_metrics}).merge(Experiment.joins(:systems).where(:systems => {:id => f_systems}))))
@@ -68,6 +72,9 @@ class SearchController < ApplicationController
 		else
 			@papers = @papers.order(sort_column(@display_as) + " " + sort_direction)
 		end
+		@tasks = Task.joins(:experiments).where(:experiments => {:id => experiments})
+		@metrics = Metric.joins(:experiments).where(:experiments => {:id => experiments})
+		@systems = System.joins(:experiments).where(:experiments => {:id => experiments_id})
 		#@papers_ranks = @papers.map{|x| [x, Task.where(:id => @filter_tasks).joins(:experiments).where(:experiments => {:id => x.experiments}).count()+Metric.where(:id => @filter_metrics).joins(:experiments).where(:experiments => {:id => x.experiments}).count()+System.where(:id => @filter_systems).joins(:experiments).where(:experiments => {:id => x.experiments}).count()]}
 	end
 
@@ -215,7 +222,7 @@ class SearchController < ApplicationController
   
   def sort_column(display_as)
     if display_as == "Findings"
-		%w[finding specificity relationship].include?(params[:sort]) ? params[:sort] : "finding"
+		%w[finding specificity relationship year].include?(params[:sort]) ? params[:sort] : "finding"
 	elsif display_as == "Experiments"
 		%w[title exp_type env_scale env_realism part_num].include?(params[:sort]) ? params[:sort] : "title"
 	else

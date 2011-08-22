@@ -53,17 +53,19 @@
 		<% if @display_as == "Findings" %>
 			<div id="search_findings">
 				<center><small>Display results as:</small><br>
-				Findings | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %> | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %></center>
+				Findings | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments' %> | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %></center>
 				<h1>Results:</h1>
 				
 				<table cellspacing="0" cellpadding="0">
 					<tr><th style="width:30%"><%= sortable_comp "Finding", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-					<th style="width:40%">Tags</th>
+					<th style="width:10%"><%= sortable_comp "Year", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+					<th style="width:30%">Tags</th>
 					<th style="width:15%"><%= sortable_comp "Specificity", "specificity", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
 					<th style="width:15%"><%= sortable_comp "Relationship", "relationship", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th></tr>
 					<% @findings.each do |finding| %>
 						<tr>
 							<td><%= finding.finding %></b></td>
+							<td><center><%= finding.experiment.paper.year.strftime("%Y") %></center></td>
 							<td><i>Task: </i><% finding.tasks.each do |task| %>
 								<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
 							<% end %><br>
