@@ -64,6 +64,7 @@ class ExperimentsController < ApplicationController
 		finding.save
 	end
 	@experiment.status = 1
+	@experiment.title = @experiment.paper.authors.first.last_name + " et al, " + @experiment.paper.year.strftime("%Y") + ", Experiment #" + @experiment.num.to_s
 	@experiment.num_views = 0
 	@experiment.save
 	
@@ -82,8 +83,7 @@ class ExperimentsController < ApplicationController
 	
     respond_to do |format|
       if @experiment.update_attributes(params[:experiment])
-	    @experiment.title = @experiment.paper.authors.first.last_name + " et al, " + @experiment.paper.year.strftime("%Y") + ", Experiment #" + @experiment.num.to_s
-		if @paper.status == 0
+	    if @paper.status == 0
 			format.html { redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Experiment details were successfully added.' }
 		else
 			format.html { redirect_to @paper, :notice => 'Experiment details were successfully updated.' }
