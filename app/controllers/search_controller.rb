@@ -16,25 +16,34 @@ class SearchController < ApplicationController
 	@search_comp = params[:search_comp]
 	@comp = Comp.find(params[:search_comp].to_i())
 
-	if params[:filter_tasks].nil? || params[:filter_tasks] == [""]
-		f_tasks = Task.all
-		@filter_tasks = nil
+	if (params[:filter_tasks].nil? || params[:filter_tasks] == [""]) && params[:f_tasks].nil?
+		tasks = Task.all
+		@f_tasks = @filter_tasks = nil
+	elsif !params[:f_tasks].nil?
+		tasks = @f_tasks = params[:f_tasks]
+		@filter_tasks = @f_tasks.map {|x| x.id.to_s()}
 	else
-		f_tasks = Task.where(:id => params[:filter_tasks])
+		tasks = @f_tasks = Task.where(:id => params[:filter_tasks])
 		@filter_tasks = params[:filter_tasks]
 	end
-	if params[:filter_metrics].nil? || params[:filter_metrics] == [""]
-		f_metrics = Metric.all
-		@filter_metrics = nil
+	if (params[:filter_metrics].nil? || params[:filter_metrics] == [""]) && params[:f_metrics].nil?
+		metrics = Metric.all
+		@f_metrics = @filter_metrics = nil
+	elsif !params[:f_metrics].nil?
+		metrics = @f_metrics = params[:f_metrics]
+		@filter_metrics = @f_metrics.map {|x| x.id.to_s()}
 	else
-		f_metrics = Metric.where(:id => params[:filter_metrics])
+		metrics = @f_metrics = Metric.where(:id => params[:filter_metrics])
 		@filter_metrics = params[:filter_metrics]
 	end
-	if params[:filter_systems].nil? || params[:filter_systems] == [""]
-		f_systems = System.all
-		@filter_systems = nil
+	if (params[:filter_systems].nil? || params[:filter_systems] == [""]) && params[:f_systems].nil?
+		systems = System.all
+		@f_systems = @filter_systems = nil
+	elsif !params[:f_systems].nil?
+		systems = @f_systems = params[:f_systems]
+		@filter_systems = @f_systems.map {|x| x.id.to_s()}
 	else
-		f_systems = System.where(:id => params[:filter_systems])
+		systems = @f_systems = System.where(:id => params[:filter_systems])
 		@filter_systems = params[:filter_systems]
 	end
 	
@@ -44,38 +53,48 @@ class SearchController < ApplicationController
 		@display_as = "Findings"
 	end
 	
+	@sort = sort_column(@display_as)
+	@direction = sort_direction
+	
 	if @display_as == "Findings"
-		@findings = Finding.joins(:comps).where(:comps => {:id => @search_comp}).merge(Finding.joins(:tasks).where(:tasks => {:id => f_tasks}).merge(Finding.joins(:metrics).where(:metrics => {:id => f_metrics}).merge(Finding.joins(:systems).where(:systems => {:id => f_systems}))))
-		if params[:sort] == "relationship"
-			@findings = @findings.order("rel_tag " + sort_direction)
-		elsif params[:sort] == "year"
-			@findings = @findings.sort_by{|f| f.experiment.paper.year}.reverse
+		if @sort == "finding"
+			@findings = Finding.all(:include => [:comps,:tasks,:metrics,:systems], :conditions => {"comps.id" => @comp, "tasks.id" => tasks, "systems.id" => systems, "metrics.id" => metrics}, :order => [@sort + " " + @direction])
 		else
-			@findings = @findings.order(sort_column(@display_as) + " " + sort_direction)
+			@findings = Finding.all(:include => [:comps,:tasks,:metrics,:systems], :conditions => {"comps.id" => @comp, "tasks.id" => tasks, "systems.id" => systems, "metrics.id" => metrics})
+			if @sort == "year"
+				@findings = @findings.sort_by{|f| f.experiment.paper.year}
+			elsif @sort == "author"
+				@findings = @findings.sort_by{|f| f.experiment.paper.authors.first.last_name}
+			elsif @sort == "paper"
+				@findings = @findings.sort_by{|f| f.experiment.paper.title}
+			end
+			if @direction == "desc"
+				@findings = @findings.reverse
+			end
 		end
-		@tasks = Task.joins(:findings).where(:findings => {:id => @findings})
-		@metrics = Metric.joins(:findings).where(:findings => {:id => @findings})
-		@systems = System.joins(:findings).where(:findings => {:id => @findings})
-		#@findings_ranks = @findings.map{|x| [x, x.tasks.where(:tasks => {:id => @filter_tasks}).count()+x.metrics.where(:metrics => {:id => @filter_metrics}).count()+x.systems.where(:systems => {:id => @filter_systems}).count()]}
+		@tasks = Task.all#(:include => [:findings], :conditions => {"findings.id" => @findings})
+		@metrics = Metric.all#(:include => [:findings], :conditions => {"findings.id" => @findings})
+		@systems = System.all#(:include => [:findings], :conditions => {"findings.id" => @findings})
 	elsif @display_as == "Experiments"
-		@experiments = Experiment.joins(:comps).where(:comps => {:id => @search_comp}).merge(Experiment.joins(:tasks).where(:tasks => {:id => f_tasks}).merge(Experiment.joins(:metrics).where(:metrics => {:id => f_metrics}).merge(Experiment.joins(:systems).where(:systems => {:id => f_systems}))))
-		@experiments = @experiments.order(sort_column(@display_as) + " " + sort_direction)
-		@tasks = Task.joins(:experiments).where(:experiments => {:id => @experiments})
-		@metrics = Metric.joins(:experiments).where(:experiments => {:id => @experiments})
-		@systems = System.joins(:experiments).where(:experiments => {:id => @experiments})
-		#@experiments_ranks = @experiments.map{|x| [x, x.tasks.where(:tasks => {:id => @filter_tasks}).count()+x.metrics.where(:metrics => {:id => @filter_metrics}).count()+x.systems.where(:systems => {:id => @filter_systems}).count()]}
-	else
-		experiments = Experiment.joins(:comps).where(:comps => {:id => @search_comp}).merge(Experiment.joins(:tasks).where(:tasks => {:id => f_tasks}).merge(Experiment.joins(:metrics).where(:metrics => {:id => f_metrics}).merge(Experiment.joins(:systems).where(:systems => {:id => f_systems}))))
-		@papers = Paper.where(:id => experiments.map{|x| x.paper_id})
-		if params[:sort] == "authors"
-			@papers = @papers.joins(:authors).first.order("last_name " + sort_direction)
+		if @sort != "author"
+			@experiments = Experiment.all(:include => [:comps,:tasks,:systems,:metrics], :joins => :paper, :conditions => {"comps.id" => @search_comp, "tasks.id" => tasks, "systems.id" => systems, "metrics.id" => metrics}, :order => [@sort + " " + @direction])
 		else
-			@papers = @papers.order(sort_column(@display_as) + " " + sort_direction)
+			@experiments = Experiment.all(:include => [:comps,:tasks,:systems,:metrics], :joins => :paper, :conditions => {"comps.id" => @search_comp, "tasks.id" => tasks, "systems.id" => systems, "metrics.id" => metrics})
+			@experiments = @experiments.sort_by{|f| f.paper.authors.first.last_name}
+			if @direction == "desc"
+				@experiments = @experiments.reverse
+			end
 		end
-		@tasks = Task.joins(:experiments).where(:experiments => {:id => experiments})
-		@metrics = Metric.joins(:experiments).where(:experiments => {:id => experiments})
-		@systems = System.joins(:experiments).where(:experiments => {:id => experiments_id})
-		#@papers_ranks = @papers.map{|x| [x, Task.where(:id => @filter_tasks).joins(:experiments).where(:experiments => {:id => x.experiments}).count()+Metric.where(:id => @filter_metrics).joins(:experiments).where(:experiments => {:id => x.experiments}).count()+System.where(:id => @filter_systems).joins(:experiments).where(:experiments => {:id => x.experiments}).count()]}
+		@tasks = Task.all#(:include => [:experiments], :conditions => {"experiments.id" => @experiments})
+		@metrics = Metric.all#(:include => [:experiments], :conditions => {"experiments.id" => @experiments})
+		@systems = System.all#(:include => [:experiments], :conditions => {"experiments.id" => @experiments})
+	else
+		@experiments = Experiment.all(:include => [:comps,:tasks,:systems,:metrics], :conditions => {"comps.id" => @search_comp, "tasks.id" => tasks, "systems.id" => systems, "metrics.id" => metrics})
+		ids = @experiments.map{|x| x.paper_id}
+		@papers = Paper.all(:include => [:authors], :conditions => {"id" => ids}, :order => [@sort + " " + @direction])
+		@tasks = Task.all#(:include => [:findings], :conditions => {"findings.id" => @findings})
+		@metrics = Metric.all#(:include => [:findings], :conditions => {"findings.id" => @findings})
+		@systems = System.all#(:include => [:findings], :conditions => {"findings.id" => @findings})
 	end
 
 	respond_to do |format|
@@ -85,43 +104,84 @@ class SearchController < ApplicationController
   
   
   def search_tasks
-	@tasks = Task.all
 	@comps = Comp.all
 	@metrics = Metric.all
 	@systems = System.all
-	if params[:filter_comps].nil? || params[:filter_comps] == [""]
-		f_comps = @comps
-		@filter_comps = nil
+	
+	@search_task = params[:search_task]
+	@task = Task.find(params[:search_task].to_i())
+
+	if (params[:filter_comps].nil? || params[:filter_comps] == [""]) && params[:f_comps].nil?
+		comps = Comp.all
+		@f_comps = @filter_comps = nil
+	elsif !params[:f_comps].nil?
+		comps = @f_comps = params[:f_comps]
+		@filter_comps = @f_comps.map {|x| x.id.to_s()}
 	else
-		f_comps = Comp.where(:id => params[:filter_comps])
-		@filter_comps = f_comps
+		comps = @f_comps = Comp.where(:id => params[:filter_comps])
+		@filter_comps = params[:filter_comps]
 	end
-	if params[:filter_metrics].nil? || params[:filter_metrics] == [""]
-		f_metrics = @metrics
-		@filter_metrics = nil
+	if (params[:filter_metrics].nil? || params[:filter_metrics] == [""]) && params[:f_metrics].nil?
+		metrics = Metric.all
+		@f_metrics = @filter_metrics = nil
+	elsif !params[:f_metrics].nil?
+		metrics = @f_metrics = params[:f_metrics]
+		@filter_metrics = @f_metrics.map {|x| x.id.to_s()}
 	else
-		f_metrics = Metric.where(:id => params[:filter_metrics])
-		@filter_metrics = f_metrics
+		metrics = @f_metrics = Metric.where(:id => params[:filter_metrics])
+		@filter_metrics = params[:filter_metrics]
 	end
-	if params[:filter_systems].nil? || params[:filter_systems] == [""]
-		f_systems = @systems
-		@filter_systems = nil
+	if (params[:filter_systems].nil? || params[:filter_systems] == [""]) && params[:f_systems].nil?
+		systems = System.all
+		@f_systems = @filter_systems = nil
+	elsif !params[:f_systems].nil?
+		systems = @f_systems = params[:f_systems]
+		@filter_systems = @f_systems.map {|x| x.id.to_s()}
 	else
-		f_systems = System.where(:id => params[:filter_systems])
-		@filter_systems = f_systems
+		systems = @f_systems = System.where(:id => params[:filter_systems])
+		@filter_systems = params[:filter_systems]
 	end
-	if !params[:filter_display_as].nil?
-		@display_as = params[:filter_display_as]
-	elsif !params[:task_display_as].nil?
-		@display_as = params[:task_display_as]
+	
+	if !params[:display_as].nil?
+		@display_as = params[:display_as]
 	else
 		@display_as = "Findings"
 	end
-	@search_task = params[:search_task]
-	@task = Task.find(params[:search_task])
-	@findings = Finding.joins(:tasks).where(:tasks => {:id => @search_task}) & Finding.joins(:comps).where(:comps => {:id => f_comps}) & Finding.joins(:metrics).where(:metrics => {:id => f_metrics}) & Finding.joins(:systems).where(:systems => {:id => f_systems})
-	@experiments = Experiment.where(:id => @findings.map{|x| x.experiment_id})
-	@papers = Paper.where(:id => @experiments.map{|x| x.paper_id})
+	
+	@sort = sort_column(@display_as)
+	@direction = sort_direction
+	
+	if @display_as == "Findings"
+		if @sort == "finding"
+			@findings = Finding.all(:include => [:tasks,:comps,:metrics,:systems], :conditions => {"tasks.id" => @task, "comps.id" => comps, "systems.id" => systems, "metrics.id" => metrics}, :order => [@sort + " " + @direction])
+		else
+			@findings = Finding.all(:include => [:tasks,:comps,:metrics,:systems], :conditions => {"tasks.id" => @task, "comps.id" => comps, "systems.id" => systems, "metrics.id" => metrics})
+			if @sort == "year"
+				@findings = @findings.sort_by{|f| f.experiment.paper.year}
+			elsif @sort == "author"
+				@findings = @findings.sort_by{|f| f.experiment.paper.authors.first.last_name}
+			elsif @sort == "paper"
+				@findings = @findings.sort_by{|f| f.experiment.paper.title}
+			end
+			if @direction == "desc"
+				@findings = @findings.reverse
+			end
+		end
+	elsif @display_as == "Experiments"
+		if @sort != "author"
+			@experiments = Experiment.all(:include => [:tasks,:comps,:systems,:metrics], :joins => :paper, :conditions => {"tasks.id" => @search_task, "comps.id" => comps, "systems.id" => systems, "metrics.id" => metrics}, :order => [@sort + " " + @direction])
+		else
+			@experiments = Experiment.all(:include => [:tasks,:comps,:systems,:metrics], :joins => :paper, :conditions => {"tasks.id" => @search_task, "comps.id" => comps, "systems.id" => systems, "metrics.id" => metrics})
+			@experiments = @experiments.sort_by{|f| f.paper.authors.first.last_name}
+			if @direction == "desc"
+				@experiments = @experiments.reverse
+			end
+		end
+	else
+		@experiments = Experiment.all(:include => [:tasks,:comps,:systems,:metrics], :conditions => {"tasks.id" => @search_task, "comps.id" => comps, "systems.id" => systems, "metrics.id" => metrics})
+		ids = @experiments.map{|x| x.paper_id}
+		@papers = Paper.all(:include => [:authors], :conditions => {"id" => ids}, :order => [@sort + " " + @direction])
+	end
 
 	respond_to do |format|
 	  format.html # search_tasks.html.erb
@@ -222,11 +282,11 @@ class SearchController < ApplicationController
   
   def sort_column(display_as)
     if display_as == "Findings"
-		%w[finding specificity relationship year].include?(params[:sort]) ? params[:sort] : "finding"
+		%w[finding year author paper].include?(params[:sort]) ? params[:sort] : "finding"
 	elsif display_as == "Experiments"
-		%w[title exp_type env_scale env_realism part_num].include?(params[:sort]) ? params[:sort] : "title"
+		%w[experiments.task_desc papers.year author papers.title].include?(params[:sort]) ? params[:sort] : "experiments.task_desc"
 	else
-		%w[title year authors].include?(params[:sort]) ? params[:sort] : "title"
+		%w[title year authors.last_name].include?(params[:sort]) ? params[:sort] : "title"
 	end
   end
   

@@ -2,13 +2,52 @@
 
 <div id="filters">
 	<h3>Displaying results for:</h3>
-	"<%= @comp.comp_tag %>"<br>
+	<center>"<%= @comp.comp_tag %>"</center>
+	<h4>Current Filters:</h4>
+	<ul>
+		<li>Tasks:
+			<% if @f_tasks.nil? %>n/a
+			<% else %>
+				<ul>
+					<% @f_tasks.each do |f_t| %>
+						<li><i><%= f_t.task_tag %></i> <%= link_to '[X]', :search_comp => @search_comp, :filter_tasks => @f_tasks.reject{|n| n == f_t}, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => @display_as, :sort => @sort, :direction => @direction %></li>
+					<% end %>
+				</ul></i>
+			<% end %>
+		</li>
+		<li>Metrics:
+			<% if @f_metrics.nil? %>n/a
+			<% else %>
+				<ul>
+					<% @f_metrics.each do |f_m| %>
+						<li><i><%= f_m.metric_tag %></i> <%= link_to '[X]', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @f_metrics.reject{|n| n == f_m}, :filter_systems => @filter_systems, :display_as => @display_as, :sort => @sort, :direction => @direction %></li>
+					<% end %>
+				</ul></i>		
+			<% end %>
+		</li>
+		<li>Systems:
+			<% if @f_systems.nil? %>n/a
+			<% else %>
+				<ul>
+					<% @f_systems.each do |f_s| %>
+						<li><i><%= f_s.system_tag %></i> <%= link_to '[X]', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @f_systems.reject{|n| n == f_s}, :display_as => @display_as, :sort => @sort, :direction => @direction %></li>
+					<% end %>
+				</ul>
+			<% end %>
+		</li>
+	</ul>
+	<% if !@f_tasks.nil?||!@f_metrics.nil?||!@f_systems.nil? %>
+		<div align="right"><%= link_to 'Clear filters', :search_comp => @search_comp, :display_as => @display_as, :sort => @sort, :direction => @direction %></div>
+	<% end %>
+	
 	<%= form_tag search_comps_path(:search_comp => @search_comp), :method => :post do %>
 		<input type="hidden" name="filter_tasks[]"> 
 		<input type="hidden" name="filter_metrics[]"> 
 		<input type="hidden" name="filter_systems[]">
 		<input type="hidden" name="display_as" id="display_as" value="<%= @display_as %>">
 		<%= hidden_field_tag "search_comp", @search_comp %>
+		<%= hidden_field_tag "sort", @sort %>
+		<%= hidden_field_tag "direction", @direction %>
 	
 		<h3>Filter by:</h3>
 		<div id="filter_tasks_hidden">
@@ -19,7 +58,14 @@
 		</div>
 		<div id="filter_tasks_list" style="display:none">
 			<% @tasks.each do |task| %>
-				<%= check_box_tag "filter_tasks[]", task.id, !@filter_tasks.nil?&&@filter_tasks.include?(task.id) %><%= task.task_tag %><br>
+				<%= check_box_tag "filter_tasks[]", task.id, !@f_tasks.nil?&&@f_tasks.include?(task) %><%= task.task_tag %>
+				<% if @display_as == "Findings" %>
+					(<%= Finding.all(:include => [:comps,:tasks], :conditions => {"comps.id" => @search_comp, "tasks.id" => task}).count() %>)<br>
+				<% elsif @display_as == "Experiments" %>
+					(<%= Experiment.all(:include => [:comps,:tasks], :conditions => {"comps.id" => @search_comp, "tasks.id" => task}).count() %>)<br>
+				<% else %>
+					(<%= Paper.where(:id => Experiment.all(:include => [:comps,:tasks], :conditions => {"comps.id" => @search_comp, "tasks.id" => task}).map{|x| x.paper_id}).count() %>)<br>
+				<% end %>
 			<% end %>
 		</div>
 		<div id="filter_metrics_hidden">
@@ -30,7 +76,14 @@
 		</div>
 		<div id="filter_metrics_list" style="display:none">
 			<% @metrics.each do |metric| %>
-				<%= check_box_tag "filter_metrics[]", metric.id, !@filter_metrics.nil?&&@filter_metrics.include?(metric.id) %><%= metric.metric_tag %><br>
+				<%= check_box_tag "filter_metrics[]", metric.id, !@f_metrics.nil?&&@f_metrics.include?(metric) %><%= metric.metric_tag %> 
+				<% if @display_as == "Findings" %>
+					(<%= Finding.all(:include => [:comps,:metrics], :conditions => {"comps.id" => @search_comp, "metrics.id" => metric}).count() %>)<br>
+				<% elsif @display_as == "Experiments" %>
+					(<%= Experiment.all(:include => [:comps,:metrics], :conditions => {"comps.id" => @search_comp, "metrics.id" => metric}).count() %>)<br>
+				<% else %>
+					(<%= Paper.where(:id => Experiment.all(:include => [:comps,:metrics], :conditions => {"comps.id" => @search_comp, "metrics.id" => metric}).map{|x| x.paper_id}).count() %>)<br>
+				<% end %>
 			<% end %>
 		</div>
 		<div id="filter_systems_hidden">
@@ -41,11 +94,19 @@
 		</div>
 		<div id="filter_systems_list" style="display:none">
 			<% @systems.each do |system| %>
-				<%= check_box_tag "filter_systems[]", system.id, !@filter_systems.nil?&&@filter_systems.include?(system.id) %><%= system.system_tag %><br>
+				<%= check_box_tag "filter_systems[]", system.id, !@f_systems.nil?&&@f_systems.include?(system) %><%= system.system_tag %> 
+				<% if @display_as == "Findings" %>
+					(<%= Finding.all(:include => [:comps,:systems], :conditions => {"comps.id" => @search_comp, "systems.id" => system}).count() %>)<br>
+				<% elsif @display_as == "Experiments" %>
+					(<%= Experiment.all(:include => [:comps,:systems], :conditions => {"comps.id" => @search_comp, "systems.id" => system}).count() %>)<br>
+				<% else %>
+					(<%= Paper.where(:id => Experiment.all(:include => [:comps,:systems], :conditions => {"comps.id" => @search_comp, "systems.id" => system}).map{|x| x.paper_id}).count() %>)<br>
+				<% end %>			
 			<% end %>
 		</div>
-		<%= submit_tag "Filter Results", :name => nil %>
+		<div align="right"><%= submit_tag "Filter Results", :name => nil %></div>
 	<% end %>
+	<div align="right"><%= link_to 'Reset All', search_path %></div>
 </div>
 
 <div id="content">		
@@ -53,19 +114,22 @@
 		<% if @display_as == "Findings" %>
 			<div id="search_findings">
 				<center><small>Display results as:</small><br>
-				Findings | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments' %> | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %></center>
+				Findings | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments', :sort => @sort, :direction => @direction %> | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers', :sort => @sort, :direction => @direction %></center>
 				<h1>Results:</h1>
 				
 				<table cellspacing="0" cellpadding="0">
-					<tr><th style="width:30%"><%= sortable_comp "Finding", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-					<th style="width:10%"><%= sortable_comp "Year", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-					<th style="width:30%">Tags</th>
-					<th style="width:15%"><%= sortable_comp "Specificity", "specificity", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-					<th style="width:15%"><%= sortable_comp "Relationship", "relationship", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th></tr>
+					<tr><th style="width:25%"><%= sortable_comp "+", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Finding <%= sortable_comp "-", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:10%"><%= sortable_comp "+", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Year <%= sortable_comp "-", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:15%"><%= sortable_comp "+", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Author <%= sortable_comp "-", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:20%"><%= sortable_comp "+", "paper", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Paper <%= sortable_comp "-", "paper", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:30%">Details</th>
+					</tr>
 					<% @findings.each do |finding| %>
 						<tr>
 							<td><%= finding.finding %></b></td>
 							<td><center><%= finding.experiment.paper.year.strftime("%Y") %></center></td>
+							<td><center><%= finding.experiment.paper.authors.first.last_name + " et al" %></center></td>
+							<td><center><%= finding.experiment.paper.title %></center></td>
 							<td><i>Task: </i><% finding.tasks.each do |task| %>
 								<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
 							<% end %><br>
@@ -77,14 +141,8 @@
 							<% end %><br>
 							<i>System(s): </i><% finding.systems.each do |system| %>
 								<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
-							<% end %></td>
-							<td><% if finding.specificity == 0 %>Highly specific
-								<% elsif finding.specificity == 1 %>Somewhat specific
-								<% elsif finding.specificity == 2 %>Neither specific nor general
-								<% elsif finding.specificity == 3 %>Somewhat general
-								<% else %>Highly general<% end %>
-							</td>
-							<td><% finding.relationships.each do |rel| %><%= rel.rel_tag %><% end %></td>
+							<% end %>
+							<div align="right"><%= button_to "More", paper_experiment_finding_path(finding.experiment.paper,finding.experiment,finding) %></div></td>
 						</tr>
 					<% end %>
 				</table>
@@ -93,45 +151,22 @@
 		<% elsif @display_as == "Experiments" %>
 			<div id="search_experiments">
 				<center><small>Display results as:</small><br>
-				<%= link_to 'Findings', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Findings' %> | Experiments | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %></center>
+				<%= link_to 'Findings', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Findings', :sort => @sort, :direction => @direction %> | Experiments | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers', :sort => @sort, :direction => @direction %></center>
 				<h1>Results:</h1>
 				
 				<table cellspacing="0" cellpadding="0">
-					<tr>
-						<th style="width:30%"><%= sortable_comp "Title", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:10%"><%= sortable_comp "Type", "exp_type", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:10%"><%= sortable_comp "# Part.", "part_num", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:10%"><%= sortable_comp "Scale", "env_scale", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:10%"><%= sortable_comp "Realism", "env_realism", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:30%">Tags</th>
+					<tr><th style="width:25%"><%= sortable_comp "+", "experiments.task_desc", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Task Description <%= sortable_comp "-", "experiments.task_desc", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:10%"><%= sortable_comp "+", "papers.year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Year <%= sortable_comp "-", "papers.year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:15%"><%= sortable_comp "+", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Author <%= sortable_comp "-", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:20%"><%= sortable_comp "+", "papers.title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Paper <%= sortable_comp "-", "papers.title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:30%">Details</th>
 					</tr>
 					<% @experiments.each do |exp| %>
 						<tr>
-							<td><% exp.title %></td>
-							<td>
-								<center><% if exp.exp_type == 0 %>Controlled
-								<% else %>Practical<% end %></center>
-							</td>
-							<td>
-								<center><% if exp.part_num == 0 %>None
-								<% elsif exp.part_num == 1 %>1-5
-								<% elsif exp.part_num == 2 %>6-10
-								<% elsif exp.part_num == 3 %>11-20
-								<% elsif exp.part_num == 4 %>21-50
-								<% else %>50+<% end %></center>
-							</td>
-							<td>
-								<center><% if exp.env_scale == 0 %>Small
-								<% elsif exp.env_scale == 1 %>Medium
-								<% elsif exp.env_scale == 2 %>Large
-								<% else %>Not reported<% end %></center>
-							</td>
-							<td>
-								<center><% if exp.env_realism == 0 %>Low
-								<% elsif exp.env_realism == 1 %>Medium
-								<% elsif exp.env_realism == 2 %>High
-								<% else %>Not reported<% end %></center>
-							</td>
+							<td><%= exp.title %><br><%= exp.task_desc %></td>
+							<td><center><%= exp.paper.year.strftime("%Y") %></center></td>
+							<td><center><%= exp.paper.authors.first.last_name + " et al" %></center></td>
+							<td><%= exp.paper.title %></td>
 							<td>
 								<i>Task: </i><% exp.tasks.each do |task| %>
 									<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
@@ -144,7 +179,9 @@
 								<% end %><br>
 								<i>System(s): </i><% exp.systems.each do |system| %>
 									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
-								<% end %>
+								<% end %><br>
+								(<i># of Findings: </i><%= exp.findings.count %>)
+								<div align="right"><%= button_to "More", paper_experiment_path(exp.paper,exp) %></div>
 							</td>
 						</tr>
 					<% end %>
@@ -154,15 +191,15 @@
 		<% else %>
 			<div id="search_papers">
 				<center><small>Display results as:</small><br>
-				<%= link_to 'Findings', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Findings' %> | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments' %>  | Papers</center>
+				<%= link_to 'Findings', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Findings', :sort => @sort, :direction => @direction %> | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments', :sort => @sort, :direction => @direction %>  | Papers</center>
 				<h1>Results:</h1>
 				
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<th style="width:25%"><%= sortable_comp "Title", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:10%"><%= sortable_comp "Year", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
-						<th style="width:25%">Authors</th>
-						<th style="width:40%">Tags</th>
+						<th style="width:25%"><%= sortable_comp "+", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Title <%= sortable_comp "-", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:10%"><%= sortable_comp "+", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Year <%= sortable_comp "-", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:25%"><%= sortable_comp "+", "authors.last_name", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Authors <%= sortable_comp "-", "authors.last_name", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:40%">Details</th>
 					</tr>
 					<% @papers.each do |paper| %>
 						<tr>
@@ -182,6 +219,9 @@
 								<i>System(s): </i><% System.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |system| %>
 									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
 								<% end %><br>
+								(<i># of Experiments: </i><%= paper.experiments.count %>, 
+								<i># of Findings: </i><% count = 0 %><% paper.experiments.each do |exp| %><% count = count + exp.findings.count %><% end %><%= count %>)
+								<div align="right"><%= button_to "More", paper_path(paper) %></div>
 							</td>
 						</tr>
 					<% end %>

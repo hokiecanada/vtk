@@ -23,7 +23,8 @@
 	<div>
 		<%= f.label 'Relationship:' %><br />
 		<% @relationships.each do |relationship| %>
-			<%= f.radio_button :rel_id, relationship.id %><%= relationship.rel_tag %><br>
+			<%= f.radio_button :relationship, relationship.id %>
+			<%= radio_button_tag "finding[relationship_ids][]", relationship.id, @finding.relationships.include?(relationship) %><%= relationship.rel_tag %><br>
 		<% end %>
 	</div>
 	

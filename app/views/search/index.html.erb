@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <div id="filters">
-	<h3>Topics:</h3>
+	<h3>Search entries related to:</h3>
 	<div id="filter_comps_hidden">
 		<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_comps_list');Element.show('filter_comps_expanded');Element.hide('filter_comps_hidden');", :remote => true %> Components of Immersion<br>
 	</div>
@@ -10,7 +10,7 @@
 	</div>
 	<div id="filter_comps_list" style="display:none">
 		<% @comps.each do |comp| %>
-			<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %><br>
+			<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %> (<%= Finding.all(:include => [:comps], :conditions => {"comps.id" => comp}).count %>)<br>
 		<% end %>
 	</div>
 	<div id="filter_tasks_hidden">
@@ -21,7 +21,7 @@
 	</div>
 	<div id="filter_tasks_list" style="display:none">
 		<% @tasks.each do |task| %>
-			<%= link_to task.task_tag, search_tasks_path(:search_task => task) %><br>
+			<%= link_to task.task_tag, search_tasks_path(:search_task => task) %> (<%= Finding.all(:include => [:tasks], :conditions => {"tasks.id" => task}).count %>)<br>
 		<% end %>
 	</div>
 	<div id="filter_metrics_hidden">
@@ -32,7 +32,7 @@
 	</div>
 	<div id="filter_metrics_list" style="display:none">
 		<% @metrics.each do |metric| %>
-			<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %><br>
+			<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %> (<%= Finding.all(:include => [:metrics], :conditions => {"metrics.id" => metric}).count %>)<br>
 		<% end %>
 	</div>
 	<div id="filter_systems_hidden">
@@ -43,7 +43,7 @@
 	</div>
 	<div id="filter_systems_list" style="display:none">
 		<% @systems.each do |system| %>
-			<%= link_to system.system_tag, search_systems_path(:search_system => system) %><br>
+			<%= link_to system.system_tag, search_systems_path(:search_system => system) %> (<%= Finding.all(:include => [:systems], :conditions => {"systems.id" => system}).count %>)<br>
 		<% end %>
 	</div>
 </div>

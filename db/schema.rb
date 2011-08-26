@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110627155346) do
+ActiveRecord::Schema.define(:version => 20110826054908) do
 
   create_table "authors", :force => true do |t|
     t.string   "first_name"
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20110627155346) do
     t.integer  "paper_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "num"
   end
 
   create_table "experiments_comps", :id => false, :force => true do |t|
@@ -88,6 +89,7 @@ ActiveRecord::Schema.define(:version => 20110627155346) do
     t.integer  "experiment_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "rel_id"
   end
 
   create_table "findings_comps", :id => false, :force => true do |t|
@@ -98,11 +100,6 @@ ActiveRecord::Schema.define(:version => 20110627155346) do
   create_table "findings_metrics", :id => false, :force => true do |t|
     t.integer "finding_id"
     t.integer "metric_id"
-  end
-
-  create_table "findings_relationships", :id => false, :force => true do |t|
-    t.integer "finding_id"
-    t.integer "relationship_id"
   end
 
   create_table "findings_systems", :id => false, :force => true do |t|

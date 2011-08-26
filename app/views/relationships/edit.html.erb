@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Edit Relationship Details</h1>
+
+<%= form_for @relationship do |f| %> 
+  <% f.error_messages %>
+
+  <div class="field">
+    <%= f.text_field :rel_tag, :size => 50 %>
+    <%= f.submit "Submit" %>
+  </div>
+  
+<% end %>
+
+<%= link_to 'Back', admin_path %>

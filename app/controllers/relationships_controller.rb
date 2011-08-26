@@ -8,6 +8,22 @@ class RelationshipsController < ApplicationController
 	end
   end
   
+  def edit
+	@relationship = Relationship.find(params[:id])
+  end
+  
+  def update
+	@relationship = Relationship.find(params[:id])
+	
+	respond_to do |format|
+		if @relationship.update_attributes(params[:relationship])
+			format.html { redirect_to admin_path, :notice => 'Relationship details were successfully updated.' }
+		else
+			format.html { render :action => "edit" }
+		end
+    end
+  end
+  
   def create
 	@relationship = Relationship.create(params[:relationship])
 	@relationship.save

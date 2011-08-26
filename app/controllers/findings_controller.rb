@@ -22,9 +22,15 @@ class FindingsController < ApplicationController
 
   
   def show
+	@paper = Paper.find(params[:paper_id])
+	@experiment = @paper.experiments.find(params[:experiment_id])
 	@finding = @experiment.findings.find(params[:id])
-	@finding.num_views += 1
-	@finding.update_attributes(params[:id])
+	if @finding.num_views.nil?
+		@finding.num_views = 1
+	else
+		@finding.num_views += 1
+	end
+	@finding.save
     respond_to do |format|
       format.html # show.html.erb
     end
@@ -63,6 +69,7 @@ class FindingsController < ApplicationController
 	@finding = @experiment.findings.create(params[:finding])
 	@finding.tasks = Experiment.find(@finding.experiment_id).tasks
 	@finding.status = 1
+	@finding.num_views = 0
 	
     respond_to do |format|
       if @finding.save
@@ -80,8 +87,8 @@ class FindingsController < ApplicationController
 	params[:finding][:comp_ids] ||= []
 	params[:finding][:metric_ids] ||= []
 	#params[:finding][:task_ids] ||= []
-	@finding.tasks = Experiment.find(@finding.experiment_id).tasks
-	params[:finding][:relationship_ids] ||= []
+	#@finding.tasks = Experiment.find(@finding.experiment_id).tasks
+	#params[:finding][:relationship_ids] ||= []
 	@finding.status = 1
 	
     respond_to do |format|

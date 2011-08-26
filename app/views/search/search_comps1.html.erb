@@ -1,0 +1,192 @@
+<p id="notice"><%= notice %></p>
+
+<div id="filters">
+	<h3>Displaying results for:</h3>
+	"<%= @comp.comp_tag %>"<br>
+	<%= form_tag search_comps_path(:search_comp => @search_comp), :method => :post do %>
+		<input type="hidden" name="filter_tasks[]"> 
+		<input type="hidden" name="filter_metrics[]"> 
+		<input type="hidden" name="filter_systems[]">
+		<input type="hidden" name="display_as" id="display_as" value="<%= @display_as %>">
+		<%= hidden_field_tag "search_comp", @search_comp %>
+	
+		<h3>Filter by:</h3>
+		<div id="filter_tasks_hidden">
+			<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_tasks_list');Element.show('filter_tasks_expanded');Element.hide('filter_tasks_hidden');", :remote => true %> Task<br>
+		</div>
+		<div id="filter_tasks_expanded" style="display:none">
+			<%= link_to '[-]', "#", :onclick => "Effect.BlindUp('filter_tasks_list');Element.show('filter_tasks_hidden');Element.hide('filter_tasks_expanded');", :remote => true %> Task<br>
+		</div>
+		<div id="filter_tasks_list" style="display:none">
+			<% @tasks.each do |task| %>
+				<%= check_box_tag "filter_tasks[]", task.id, !@filter_tasks.nil?&&@filter_tasks.include?(task.id.to_s()) %><%= task.task_tag %><br>
+			<% end %>
+		</div>
+		<div id="filter_metrics_hidden">
+			<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_metrics_list');Element.show('filter_metrics_expanded');Element.hide('filter_metrics_hidden');", :remote => true %> Metrics<br>
+		</div>
+		<div id="filter_metrics_expanded" style="display:none">
+			<%= link_to '[-]', "#", :onclick => "Effect.BlindUp('filter_metrics_list');Element.show('filter_metrics_hidden');Element.hide('filter_metrics_expanded');", :remote => true %> Metrics<br>
+		</div>
+		<div id="filter_metrics_list" style="display:none">
+			<% @metrics.each do |metric| %>
+				<%= check_box_tag "filter_metrics[]", metric.id, !@filter_metrics.nil?&&@filter_metrics.include?(metric.id.to_s()) %><%= metric.metric_tag %><br>
+			<% end %>
+		</div>
+		<div id="filter_systems_hidden">
+			<%= link_to '[+]', "#", :onclick => "Effect.BlindDown('filter_systems_list');Element.show('filter_systems_expanded');Element.hide('filter_systems_hidden');", :remote => true %> Systems<br>
+		</div>
+		<div id="filter_systems_expanded" style="display:none">
+			<%= link_to '[-]', "#", :onclick => "Effect.BlindUp('filter_systems_list');Element.show('filter_systems_hidden');Element.hide('filter_systems_expanded');", :remote => true %> Systems<br>
+		</div>
+		<div id="filter_systems_list" style="display:none">
+			<% @systems.each do |system| %>
+				<%= check_box_tag "filter_systems[]", system.id, !@filter_systems.nil?&&@filter_systems.include?(system.id.to_s()) %><%= system.system_tag %><br>
+			<% end %>
+		</div>
+		<%= submit_tag "Filter Results", :name => nil %>
+	<% end %>
+</div>
+
+<div id="content">		
+	<div id="search_results">
+		<% if @display_as == "Findings" %>
+			<div id="search_findings">
+				<center><small>Display results as:</small><br>
+				Findings | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments' %> | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %></center>
+				<h1>Results:</h1>
+				
+				<table cellspacing="0" cellpadding="0">
+					<tr><th style="width:30%"><%= sortable_comp "Finding", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+					<th style="width:10%"><%= sortable_comp "Year", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+					<th style="width:30%">Tags</th>
+					<th style="width:15%"><%= sortable_comp "Specificity", "specificity", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+					<th style="width:15%"><%= sortable_comp "Relationship", "rel_id", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th></tr>
+					<% @findings.each do |finding| %>
+						<tr>
+							<td><%= finding.finding %></b></td>
+							<td><center><%= finding.experiment.paper.year.strftime("%Y") %></center></td>
+							<td><i>Task: </i><% finding.tasks.each do |task| %>
+								<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
+							<% end %><br>
+							<i>Component(s) of immersion: </i><% finding.comps.each do |comp| %>
+								<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
+							<% end %><br>
+							<i>Metric(s): </i><% finding.metrics.each do |metric| %>
+								<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
+							<% end %><br>
+							<i>System(s): </i><% finding.systems.each do |system| %>
+								<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
+							<% end %></td>
+							<td><% if finding.specificity == 0 %>Highly specific
+								<% elsif finding.specificity == 1 %>Somewhat specific
+								<% elsif finding.specificity == 2 %>Neither specific nor general
+								<% elsif finding.specificity == 3 %>Somewhat general
+								<% else %>Highly general<% end %>
+							</td>
+							<td><%= Relationship.find(finding.rel_id).rel_tag %></td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		
+		<% elsif @display_as == "Experiments" %>
+			<div id="search_experiments">
+				<center><small>Display results as:</small><br>
+				<%= link_to 'Findings', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Findings' %> | Experiments | <%= link_to 'Papers', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Papers' %></center>
+				<h1>Results:</h1>
+				
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<th style="width:30%"><%= sortable_comp "Title", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:10%"><%= sortable_comp "Type", "exp_type", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:10%"><%= sortable_comp "# Part.", "part_num", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:10%"><%= sortable_comp "Scale", "env_scale", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:10%"><%= sortable_comp "Realism", "env_realism", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:30%">Tags</th>
+					</tr>
+					<% @experiments.each do |exp| %>
+						<tr>
+							<td><% exp.title %></td>
+							<td>
+								<center><% if exp.exp_type == 0 %>Controlled
+								<% else %>Practical<% end %></center>
+							</td>
+							<td>
+								<center><% if exp.part_num == 0 %>None
+								<% elsif exp.part_num == 1 %>1-5
+								<% elsif exp.part_num == 2 %>6-10
+								<% elsif exp.part_num == 3 %>11-20
+								<% elsif exp.part_num == 4 %>21-50
+								<% else %>50+<% end %></center>
+							</td>
+							<td>
+								<center><% if exp.env_scale == 0 %>Small
+								<% elsif exp.env_scale == 1 %>Medium
+								<% elsif exp.env_scale == 2 %>Large
+								<% else %>Not reported<% end %></center>
+							</td>
+							<td>
+								<center><% if exp.env_realism == 0 %>Low
+								<% elsif exp.env_realism == 1 %>Medium
+								<% elsif exp.env_realism == 2 %>High
+								<% else %>Not reported<% end %></center>
+							</td>
+							<td>
+								<i>Task: </i><% exp.tasks.each do |task| %>
+									<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
+								<% end %><br>
+								<i>Component(s) of immersion: </i><% exp.comps.each do |comp| %>
+									<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
+								<% end %><br>
+								<i>Metric(s): </i><% exp.metrics.each do |metric| %>
+									<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
+								<% end %><br>
+								<i>System(s): </i><% exp.systems.each do |system| %>
+									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
+								<% end %>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		
+		<% else %>
+			<div id="search_papers">
+				<center><small>Display results as:</small><br>
+				<%= link_to 'Findings', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Findings' %> | <%= link_to 'Experiments', :search_comp => @search_comp, :filter_tasks => @filter_tasks, :filter_metrics => @filter_metrics, :filter_systems => @filter_systems, :display_as => 'Experiments' %>  | Papers</center>
+				<h1>Results:</h1>
+				
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<th style="width:25%"><%= sortable_comp "Title", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:10%"><%= sortable_comp "Year", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as %></th>
+						<th style="width:25%">Authors</th>
+						<th style="width:40%">Tags</th>
+					</tr>
+					<% @papers.each do |paper| %>
+						<tr>
+							<td><%= paper.title %></td>
+							<td><center><%= paper.year.strftime("%Y") %></center></td>
+							<td><% paper.authors.each do |author| %><%= author.last_name %>, <%= author.first_name %> <%= author.initials %>, <% end %></td>
+							<td>
+								<i>Task(s): </i><% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
+									<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>, 
+								<% end %><br>
+								<i>Component(s) of immersion: </i><% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
+									<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
+								<% end %><br>
+								<i>Metric(s): </i><% Metric.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |metric| %>
+									<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
+								<% end %><br>
+								<i>System(s): </i><% System.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |system| %>
+									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
+								<% end %><br>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		<% end %>
+	</div>
+</div>

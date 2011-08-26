@@ -24,6 +24,20 @@
     <%= link_to 'Destroy', paper, :confirm => 'Are you sure?', :method => :delete %><br>
 	<% end %>
 	</p>
+	<h2>Experiments</h2>
+	<% paper.experiments.each_with_index do |exp,i| %>
+		Experiment #<%= i %>: <%= exp.title %>
+		<%= link_to 'Edit', edit_paper_experiment_path(paper,exp) %> | 
+		<%= link_to 'Delete', paper_experiment_path(paper,exp), :confirm => 'This action will delete this experiment and all involved findings from the associated record. Are you sure you want to delete?', :method => :delete %><br />
+	
+		<h3>Findings</h3>
+		<% exp.findings.each_with_index do |find,i| %>
+			Finding #<%= i %>: <%= find.finding %>
+			Task: <% find.tasks.each do |task| %><%= task.task_tag %>, <% end %><br>
+			<%= link_to 'Edit', edit_paper_experiment_finding_path(Experiment.find(find.experiment_id).paper_id,find.experiment_id,find) %> | 
+			<%= link_to 'Delete', paper_experiment_finding_path(Experiment.find(find.experiment_id).paper_id,find.experiment_id,find), :confirm => 'This action will delete this finding from the associated record. Are you sure you want to delete?', :method => :delete %><br />
+		<% end %>	
+	<% end %>
 <% end %>
 
 <h1>Experiments</h1>
@@ -78,6 +92,7 @@
 <h1>Relationships</h1>
 <% @relationships.each do |relationship| %>
 	<%= relationship.rel_tag %>
+	<%= link_to 'Edit', edit_relationship_path(relationship) %> | 
 	<%= link_to 'Delete', relationship, :confirm => 'This action will delete the relationship from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
 <%= render '/forms/relationship' %>

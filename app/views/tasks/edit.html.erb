@@ -1,0 +1,15 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Edit Task Details</h1>
+
+<%= form_for @task do |f| %> 
+  <% f.error_messages %>
+
+  <div class="field">
+    <%= f.text_field :task_tag, :size => 50 %>
+    <%= f.submit "Submit" %>
+  </div>
+  
+<% end %>
+
+<%= link_to 'Back', admin_path %>

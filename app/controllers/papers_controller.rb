@@ -48,10 +48,13 @@ class PapersController < ApplicationController
   def create
     @paper = current_user.papers.create(params[:paper])
 	@paper.num_views = 0
+	i = 1
 	1.upto(@paper.status) do
 		temp = @paper.experiments.build
 		temp.exp_type = 0
 		temp.status = 0
+		temp.num = i		#used as exp_num for now....
+		i = i+1
 	end
 	@paper.status = 0
     respond_to do |format|

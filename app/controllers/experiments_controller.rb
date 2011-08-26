@@ -64,6 +64,8 @@ class ExperimentsController < ApplicationController
 		finding.save
 	end
 	@experiment.status = 1
+	@experiment.title = @experiment.paper.authors.first.last_name + " et al, " + @experiment.paper.year.strftime("%Y") + ", Experiment #" + @experiment.num.to_s
+	@experiment.num_views = 0
 	@experiment.save
 	
 	if @paper.status = 0
@@ -95,6 +97,13 @@ class ExperimentsController < ApplicationController
 
   def destroy
     @experiment = @paper.experiments.find(params[:id])
+	@paper.experiments.each do |exp|
+		if exp.num > @experiment.num
+			exp.num = exp.num - 1
+			exp.title = exp.paper.authors.first.last_name + " et al, " + exp.paper.year.strftime("%Y") + ", Experiment #" + exp.num.to_s
+			exp.save
+		end
+	end
 	@experiment.destroy
 	if current_user.admin
 		redirect_to user_root_path, :notice => 'Experiment was successfully deleted.'
