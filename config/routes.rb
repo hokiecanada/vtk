@@ -30,6 +30,7 @@ Vtk::Application.routes.draw do
 	match "search_tasks" => "search#search_tasks"
 	match "search_metrics" => "search#search_metrics"
 	match "search_systems" => "search#search_systems"
+	match "full_text_search" => "search#full_text_search"
 	match "browse" => "browse#index"
 	match "browse_comp" => "browse#browse_comp"
 	match "browse_task" => "browse#browse_task"

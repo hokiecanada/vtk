@@ -278,6 +278,65 @@ class SearchController < ApplicationController
 	end
   end
   
+  
+  def full_text_search
+	@search_text = params[:search_text]
+  	if !params[:display_as].nil?
+		@display_as = params[:display_as]
+	else
+		@display_as = "Findings"
+	end
+	
+	@sort = sort_column(@display_as)
+	@direction = sort_direction
+	
+	if @display_as == "Findings"
+		@findings = Finding.find_with_index(@search_text, {:include => [:experiment]})
+		if @sort == "finding"
+			@findings = @findings.sort_by{|f| f.finding}
+		elsif @sort == "year"
+			@findings = @findings.sort_by{|f| f.experiment.paper.year}
+		elsif @sort == "author"
+			@findings = @findings.sort_by{|f| f.experiment.paper.authors.first.last_name}
+		elsif @sort == "paper"
+			@findings = @findings.sort_by{|f| f.experiment.paper.title}
+		end
+		if @direction == "desc"
+			@findings = @findings.reverse
+		end
+	elsif @display_as == "Experiments"
+		@experiments = Experiment.find_with_index(@search_text)
+		if @sort == "task"
+			@experiments = @experiments.sort_by{|f| f.task_desc}
+		elsif @sort == "year"
+			@experiments = @experiments.sort_by{|f| f.paper.year}
+		elsif @sort == "title"
+			@experiments = @experiments.sort_by{|f| f.paper.title}
+		else
+			@experiments = @experiments.sort_by{|f| f.paper.authors.first.last_name}
+		end
+		if @direction == "desc"
+			@experiments = @experiments.reverse
+		end
+	else
+		@papers = Paper.find_with_index(@search_text)
+		if @sort == "title"
+			@papers = @papers.sort_by{|f| f.title}
+		elsif @sort == "author"
+			@papers = @papers.sort_by{|f| f.author.first.last_name}
+		else
+			@papers = @papers.sort_by{|f| f.year}
+		end
+		if @direction == "desc"
+			@papers = @papers.reverse
+		end
+	end
+	
+	respond_to do |format|
+	  format.html # search_comps.html.erb
+	end
+  end
+  
   private
   
   def sort_column(display_as)

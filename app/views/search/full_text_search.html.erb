@@ -1,0 +1,121 @@
+<p id="notice"><%= notice %></p>
+	
+	<div id="search_results">
+		<% if @display_as == "Findings" %>
+			<div id="search_findings">
+				<center><small>Display results as:</small><br>
+				Findings | <%= link_to 'Experiments', :search_text => @search_text, :display_as => 'Experiments', :sort => @sort, :direction => @direction %> | <%= link_to 'Papers', :search_text => @search_text, :display_as => 'Papers', :sort => @sort, :direction => @direction %></center>
+				<h1>Results:</h1>
+				
+				<table cellspacing="0" cellpadding="0">
+					<tr><th style="width:25%"><%= sortable_text "+", "finding", @search_text, @display_as, "asc" %> Finding <%= sortable_text "-", "finding", @search_text, @display_as, "desc" %></th>
+						<th style="width:10%"><%= sortable_text "+", "year", @search_text, @display_as, "asc" %> Year <%= sortable_text "-", "year", @search_text, @display_as, "desc" %></th>
+						<th style="width:15%"><%= sortable_text "+", "author", @search_text, @display_as, "asc" %> Author <%= sortable_text "-", "author", @search_text, @display_as, "desc" %></th>
+						<th style="width:20%"><%= sortable_text "+", "paper", @search_text, @display_as, "asc" %> Paper <%= sortable_text "-", "paper", @search_text, @display_as, "desc" %></th>
+						<th style="width:30%">Details</th>
+					</tr>
+					<% @findings.each do |finding| %>
+						<tr>
+							<td><%= finding.finding %></b></td>
+							<td><center><%= finding.experiment.paper.year.strftime("%Y") %></center></td>
+							<td><center><%= finding.experiment.paper.authors.first.last_name + " et al" %></center></td>
+							<td><center><%= finding.experiment.paper.title %></center></td>
+							<td><i>Task: </i><% finding.tasks.each do |task| %>
+								<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
+							<% end %><br>
+							<i>Component(s) of immersion: </i><% finding.comps.each do |comp| %>
+								<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
+							<% end %><br>
+							<i>Metric(s): </i><% finding.metrics.each do |metric| %>
+								<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
+							<% end %><br>
+							<i>System(s): </i><% finding.systems.each do |system| %>
+								<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
+							<% end %>
+							<div align="right"><%= button_to "More", paper_experiment_finding_path(finding.experiment.paper,finding.experiment,finding) %></div></td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		
+		<% elsif @display_as == "Experiments" %>
+			<div id="search_experiments">
+				<center><small>Display results as:</small><br>
+				<%= link_to 'Findings', :search_text => @search_text, :display_as => 'Findings', :sort => @sort, :direction => @direction %> | Experiments | <%= link_to 'Papers', :search_text => @search_text, :display_as => 'Papers', :sort => @sort, :direction => @direction %></center>
+				<h1>Results:</h1>
+				
+				<table cellspacing="0" cellpadding="0">
+					<tr><th style="width:25%"><%= sortable_text "+", "experiments.comp_desc", @search_text, @display_as, "asc" %> Task Description <%= sortable_text "-", "experiments.comp_desc", @search_text, @display_as, "desc" %></th>
+						<th style="width:10%"><%= sortable_text "+", "papers.year", @search_text, @display_as, "asc" %> Year <%= sortable_text "-", "papers.year", @search_text, @display_as, "desc" %></th>
+						<th style="width:15%"><%= sortable_text "+", "author", @search_text, @display_as, "asc" %> Author <%= sortable_text "-", "author", @search_text, @display_as, "desc" %></th>
+						<th style="width:20%"><%= sortable_text "+", "papers.title", @search_text, @display_as, "asc" %> Paper <%= sortable_text "-", "papers.title", @search_text, @display_as, "desc" %></th>
+						<th style="width:30%">Details</th>
+					</tr>
+					<% @experiments.each do |exp| %>
+						<tr>
+							<td><%= exp.title %><br><%= exp.task_desc %></td>
+							<td><center><%= exp.paper.year.strftime("%Y") %></center></td>
+							<td><center><%= exp.paper.authors.first.last_name + " et al" %></center></td>
+							<td><%= exp.paper.title %></td>
+							<td>
+								<i>Task: </i><% exp.tasks.each do |task| %>
+									<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>
+								<% end %><br>
+								<i>Component(s) of immersion: </i><% exp.comps.each do |comp| %>
+									<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
+								<% end %><br>
+								<i>Metric(s): </i><% exp.metrics.each do |metric| %>
+									<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
+								<% end %><br>
+								<i>System(s): </i><% exp.systems.each do |system| %>
+									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
+								<% end %><br>
+								(<i># of Findings: </i><%= exp.findings.count %>)
+								<div align="right"><%= button_to "More", paper_experiment_path(exp.paper,exp) %></div>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		
+		<% else %>
+			<div id="search_papers">
+				<center><small>Display results as:</small><br>
+				<%= link_to 'Findings', :search_text => @search_text, :display_as => 'Findings', :sort => @sort, :direction => @direction %> | <%= link_to 'Experiments', :search_text => @search_text, :display_as => 'Experiments', :sort => @sort, :direction => @direction %>  | Papers</center>
+				<h1>Results:</h1>
+				
+				<table cellspacing="0" cellpadding="0">
+					<tr>
+						<th style="width:25%"><%= sortable_text "+", "title", @search_text, @display_as, "asc" %> Title <%= sortable_text "-", "title", @search_text, @display_as, "desc" %></th>
+						<th style="width:10%"><%= sortable_text "+", "year", @search_text, @display_as, "asc" %> Year <%= sortable_text "-", "year", @search_text, @display_as, "desc" %></th>
+						<th style="width:25%"><%= sortable_text "+", "authors.last_name", @search_text, @display_as, "asc" %> Authors <%= sortable_text "-", "authors.last_name", @search_text, @display_as, "desc" %></th>
+						<th style="width:40%">Details</th>
+					</tr>
+					<% @papers.each do |paper| %>
+						<tr>
+							<td><%= paper.title %></td>
+							<td><center><%= paper.year.strftime("%Y") %></center></td>
+							<td><% paper.authors.each do |author| %><%= author.last_name %>, <%= author.first_name %> <%= author.initials %>, <% end %></td>
+							<td>
+								<i>Task(s): </i><% Task.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |task| %>
+									<%= link_to task.task_tag, search_tasks_path(:search_task => task) %>, 
+								<% end %><br>
+								<i>Component(s) of immersion: </i><% Comp.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |comp| %>
+									<%= link_to comp.comp_tag, search_comps_path(:search_comp => comp) %>, 
+								<% end %><br>
+								<i>Metric(s): </i><% Metric.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |metric| %>
+									<%= link_to metric.metric_tag, search_metrics_path(:search_metric => metric) %>, 
+								<% end %><br>
+								<i>System(s): </i><% System.joins(:experiments).where(:experiments => {:id => paper.experiments}).each do |system| %>
+									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
+								<% end %><br>
+								(<i># of Experiments: </i><%= paper.experiments.count %>, 
+								<i># of Findings: </i><% count = 0 %><% paper.experiments.each do |exp| %><% count = count + exp.findings.count %><% end %><%= count %>)
+								<div align="right"><%= button_to "More", paper_path(paper) %></div>
+							</td>
+						</tr>
+					<% end %>
+				</table>
+			</div>
+		<% end %>
+	</div>

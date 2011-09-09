@@ -42,4 +42,8 @@ module ApplicationHelper
 		direction = column == sort_column && sort_direction == "asc" ? "desc" : "asc"
 		link_to title, :search_comp => search_comp, :sort => column, :direction => direction, :filter_comps => filter_comps, :filter_tasks => filter_tasks, :filter_metrics => filter_metrics, :display_as => display_as
 	end
+	
+	def sortable_text(title, column, search_text, display_as, direction)
+		link_to title, :search_text => search_text, :sort => column, :direction => direction, :display_as => display_as
+	end
 end

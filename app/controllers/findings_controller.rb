@@ -110,5 +110,5 @@ class FindingsController < ApplicationController
 		redirect_to paper_experiment_path(@experiment), :notice => 'Finding was successfully deleted.'
 	end
   end
-  
+
 end
