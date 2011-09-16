@@ -1,19 +1,23 @@
 class Paper < ActiveRecord::Base
-	acts_as_indexed :fields => [:title, :year, :journal, :paper_auths, :exp_task, :exp_details, :paper_exp_finds, :exp_comps, :exp_tasks, :exp_systems, :exp_metrics]
-	has_and_belongs_to_many			:authors
+	acts_as_indexed :fields => [:title, :year, :journal, :exp_task, :exp_details, :paper_exp_finds, :exp_comps, :exp_tasks, :exp_systems, :exp_metrics]
+	has_many						:author_papers
+	has_many						:authors, :through => :author_papers
 	belongs_to						:user
 	has_many						:experiments, :dependent => :destroy
-	accepts_nested_attributes_for	:authors, :reject_if => :all_blank, :allow_destroy => true;
+	accepts_nested_attributes_for	:authors, :reject_if => :all_blank, :allow_destroy => true
+	accepts_nested_attributes_for	:author_papers
 	
-	def paper_auths
-		authors.each do |a|
-			a.last_name + ' ' + a.first_name + ' '
-		end
-	end
+	##def paper_auths
+	##	authors.each do |a|
+	##		a.last_name + ' ' + a.first_name + ' '
+	##	end
+	##end
 	
 	def exp_task
 		experiments.each do |e|
-			e.task_desc + ' '
+			if !e.task_desc.nil?
+				e.task_desc + ' '
+			end
 		end
 	end
 	
@@ -55,7 +59,9 @@ class Paper < ActiveRecord::Base
 	def paper_exp_finds
 		experiments.each do |e|
 			e.findings.each do |f|
-				f.finding + ' '
+				if !f.finding.nil?
+					f.finding + ' '
+				end
 			end
 		end
 	end

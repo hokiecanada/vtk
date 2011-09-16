@@ -118,11 +118,13 @@
 				<h1>Results:</h1>
 				
 				<table cellspacing="0" cellpadding="0">
-					<tr><th style="width:25%"><%= sortable_comp "+", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Finding <%= sortable_comp "-", "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:10%"><%= sortable_comp "+", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Year <%= sortable_comp "-", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:15%"><%= sortable_comp "+", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Author <%= sortable_comp "-", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:20%"><%= sortable_comp "+", "paper", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Paper <%= sortable_comp "-", "paper", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+					<tr><div id="table_headers">
+						<th style="width:25%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Finding <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "finding", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:10%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Year <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:15%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Author <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:20%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "paper", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Paper <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "paper", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
 						<th style="width:30%">Details</th>
+					   </div>
 					</tr>
 					<% @findings.each do |finding| %>
 						<tr>
@@ -142,7 +144,7 @@
 							<i>System(s): </i><% finding.systems.each do |system| %>
 								<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
 							<% end %>
-							<div align="right"><%= button_to "More", paper_experiment_finding_path(finding.experiment.paper,finding.experiment,finding) %></div></td>
+							<div align="right"><%= link_to image_tag("10.gif",{:border=>"0"}), paper_experiment_finding_path(finding.experiment.paper,finding.experiment,finding) %></div></td>
 						</tr>
 					<% end %>
 				</table>
@@ -155,10 +157,10 @@
 				<h1>Results:</h1>
 				
 				<table cellspacing="0" cellpadding="0">
-					<tr><th style="width:25%"><%= sortable_comp "+", "experiments.task_desc", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Task Description <%= sortable_comp "-", "experiments.task_desc", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:10%"><%= sortable_comp "+", "papers.year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Year <%= sortable_comp "-", "papers.year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:15%"><%= sortable_comp "+", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Author <%= sortable_comp "-", "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:20%"><%= sortable_comp "+", "papers.title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Paper <%= sortable_comp "-", "papers.title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+					<tr><th style="width:25%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "experiments.task_desc", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Task Description <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "experiments.task_desc", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:10%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "papers.year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Year <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "papers.year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:15%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Author <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "author", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:20%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "papers.title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Paper <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "papers.title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
 						<th style="width:30%">Details</th>
 					</tr>
 					<% @experiments.each do |exp| %>
@@ -181,7 +183,7 @@
 									<%= link_to system.system_tag, search_systems_path(:search_system => system) %>, 
 								<% end %><br>
 								(<i># of Findings: </i><%= exp.findings.count %>)
-								<div align="right"><%= button_to "More", paper_experiment_path(exp.paper,exp) %></div>
+								<div align="right"><%= link_to image_tag("10.gif",{:border=>"0"}), paper_experiment_path(exp.paper,exp) %></div>
 							</td>
 						</tr>
 					<% end %>
@@ -196,9 +198,9 @@
 				
 				<table cellspacing="0" cellpadding="0">
 					<tr>
-						<th style="width:25%"><%= sortable_comp "+", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Title <%= sortable_comp "-", "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:10%"><%= sortable_comp "+", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Year <%= sortable_comp "-", "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
-						<th style="width:25%"><%= sortable_comp "+", "authors.last_name", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %> Authors <%= sortable_comp "-", "authors.last_name", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %></th>
+						<th style="width:25%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Title <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "title", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:10%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Year <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "year", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
+						<th style="width:25%"><%= sortable_comp image_tag("4.gif",{:border=>"0",:size=>"20x20"}), "authors.last_name", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "desc" %> Authors <%= sortable_comp image_tag("6.gif",{:border=>"0",:size=>"20x20"}), "authors.last_name", @search_comp, @filter_tasks, @filter_metrics, @filter_systems, @display_as, "asc" %></th>
 						<th style="width:40%">Details</th>
 					</tr>
 					<% @papers.each do |paper| %>
@@ -221,7 +223,7 @@
 								<% end %><br>
 								(<i># of Experiments: </i><%= paper.experiments.count %>, 
 								<i># of Findings: </i><% count = 0 %><% paper.experiments.each do |exp| %><% count = count + exp.findings.count %><% end %><%= count %>)
-								<div align="right"><%= button_to "More", paper_path(paper) %></div>
+								<div align="right"><%= link_to image_tag("10.gif",{:border=>"0"}), paper_path(paper) %></div>
 							</td>
 						</tr>
 					<% end %>

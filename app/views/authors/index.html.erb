@@ -1,35 +1,41 @@
+<div id="form_title">
+	<center><h1>Step 2: Add Authors</h2></center>
+</div>
 
-<%= form_for([@paper,@paper.authors.build]) do |g| %>
-	<% g.error_messages %>
-
-	<div class="field">
-		<%= g.label 'Last name:' %>
-		<%= g.text_field :last_name %>
-	</div>
-
-	<div class="field">
-		<%= g.label 'First name:' %>
-		<%= g.text_field :first_name %>
-	</div>
-
-	<div class="field">
-		<%= g.label 'Initials:' %>
-		<%= g.text_field :initials %>
-	</div>
-	
-	<div class="actions">
-		<%= g.submit "Add a new author" %>
-	</div>
-<% end %>
-
-<%= form_for @paper, :url => { :controller => "papers", :action => "confirm_authors" } do |f| %>
-	<div class="field">
-		<% @authors.each do |author| %>
-			<%= check_box_tag "paper[author_ids][]", author.id, @paper.authors.include?(author) %><%= author.last_name %>, <%= author.first_name %>, <%= author.initials %><br />
+<div id="form_body">
+	<center>
+	<table>
+		<% @paper_authors.each do |ap| %>	
+			<tr><td colspan="3">Author #<%= ap.order %>: <% a = Author.find(ap.author_id) %>
+				<%= a.last_name + ", " + a.first_name + " " + a.initials %>
+				<small><%= link_to 'Delete', ap, :confirm => 'Are you sure?', :method => :delete %></td></tr>
 		<% end %>
-	</div>
-	
-	<div class="actions">
-		<%= f.submit "Confirm authors" %>
-	</div>
-<% end %>
+		<tr><td colspan="3" align="left"><h2>Please enter the details for Author #<%= @paper_authors.size+1 %>:</h2></td></tr>
+		<tr>
+			<td align="left">
+				<i>Find an author already in the database:</i><br>
+				<%= form_for(@paper_author) do |g| %>
+					<%= g.error_messages %>
+					<%= g.hidden_field :order, :value=>@paper_authors.size+1 %>
+					<%= g.hidden_field :paper_id, :value=>@paper.id %>
+					Author #<%= @paper_authors.size+1 %>: <%= g.select :author_id, @authors.collect{|a| [a.last_name + ', ' + a.first_name + ' ' + a.initials,a.id]} %>
+					<%= g.submit "Confirm Author" %></td>
+				<% end %>
+			</td>
+			<td width="25%" align="center">-- OR --</td>
+			<td align="left">
+				<i>Add a new author:</i><br>
+				<%= form_for @paper_author do |f| %>
+					<%= f.error_messages %>
+					<%= f.hidden_field :order, :value => @paper_authors.size+1 %>
+					<%= f.hidden_field :paper_id, :value => @paper.id %>
+					<%= text_field_tag "last_name", "Last Name" %>, <%= text_field_tag "first_name", "First Name" %> <%= text_field_tag "initials", "Initials", :size => "8" %>
+					<%= f.submit "Add New Author" %></td>
+				<% end %>
+			</td>
+		</tr>
+		
+		<tr><td></td><td></td><td align="right"><%= link_to "Next", paper_experiments_path(@paper) %></td></tr>
+	</table>
+	</center>	
+</div>

@@ -1,3 +1,4 @@
 class Author < ActiveRecord::Base
-	has_and_belongs_to_many :papers
+	has_many	:author_papers
+	has_many 	:papers, :through => :author_papers
 end

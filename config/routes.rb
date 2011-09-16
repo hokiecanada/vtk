@@ -15,11 +15,13 @@ Vtk::Application.routes.draw do
 	resources :systems
 	resources :authors
 	resources :relationships
+	resources :author_papers
 	
 	match "admin" => "accounts#admin"
 	match "/papers/:paper_id/experiments" => "experiments#index"
 	match "papers/new" => "papers#new"
 	match "/papers/:id/edit" => "papers#edit"
+	match "/papers/:paper_id/experiments/" => "experiments#index"
 	match "/papers/:paper_id/experiments/:id" => "experiments#show"
 	match "/papers/:paper_id/experiments/:id/edit" => "experiments#edit"
 	match "/papers/:paper_id/experiments/:experiment_id/findings/:id" => "findings#show"
