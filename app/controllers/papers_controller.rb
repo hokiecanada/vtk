@@ -1,7 +1,7 @@
 class PapersController < ApplicationController
 
-  before_filter :authenticate_user!, 			:only => [:new, :create, :edit, :update, :destroy, :confirm_authors]
-  before_filter :authenticate_role, 			:only => [:edit, :update, :destroy]
+  before_filter :authenticate_user!, 			:only => [:new, :create, :edit, :update, :destroy, :confirm_authors, :num_experiments]
+  before_filter :authenticate_role, 			:only => [:edit, :update, :destroy, :confirm_authors, :num_experiments]
   
   def authenticate_role
 	@paper = Paper.find(params[:id])
@@ -14,80 +14,56 @@ class PapersController < ApplicationController
   
   def index
 	@papers = Paper.all
-    respond_to do |format|
-      format.html # index.html.erb
-    end
   end
 
   
   def show
 	@paper = Paper.find(params[:id])
 	@paper.num_views += 1
-	@paper.save #update_attributes(params[:id])
+	@paper.save
 	@experiments = @paper.experiments.all
-    respond_to do |format|
-      format.html # show.html.erb
-    end
   end
 
   
   def new
 	@paper = current_user.papers.build
-	#@authors = Author.all
-	respond_to do |format|
-		format.html # new.html.erb
-	end
   end
 
   def edit
     @authors = Author.all
-	#@paper.authors.build
   end
 
   
   def create
     @paper = current_user.papers.create(params[:paper])
 	@paper.num_views = 0
-	i = 1
-	1.upto(@paper.status) do
-		temp = @paper.experiments.build
-		temp.exp_type = 0
-		temp.status = 0
-		temp.num = i		#used as exp_num for now....
-		i = i+1
-	end
-	@paper.status = 0
-    respond_to do |format|
-      if @paper.save
-		#Emailer.entry_received(current_user.email, @entry).deliver
-		#Emailer.admin_entry_added("cstinson@vt.edu", @entry).deliver
-		#@authors = Author.all
-        format.html { redirect_to paper_authors_path(@paper), :notice => 'Paper was successfully added.' }
-      else
-        format.html { render :action => "new" }
-      end
+	@paper.status = 1
+    if @paper.save
+		redirect_to paper_authors_path(@paper), :notice => 'Paper was successfully added.'
+    else
+        render :action => "new"
     end
   end
 
 
   def update
-	#params[:paper][:author_ids] ||= []
-	#params[:paper][:author_ids].collect{|s| s.to_i}
-
-    respond_to do |format|
-      if @paper.update_attributes(params[:paper])
-		#Emailer.entry_updated(current_user.email, @entry).deliver
-		#Emailer.admin_entry_updated("cstinson@vt.edu", @entry).deliver
-        format.html { redirect_to @paper, :notice => 'Paper was successfully updated.' }
-      else
-        format.html { render :action => "edit" }
-      end
+    if @paper.update_attributes(params[:paper])
+		redirect_to @paper, :notice => 'Paper was successfully updated.'
+    else
+        render :action => "edit"
     end
   end
   
 
   def destroy
-    @paper.destroy
+    authors = Author.where(:id => @paper.authors)
+	@paper.destroy
+	authors.each do |a|
+		if a.papers.size == 0
+			a.destroy
+		end
+	end
+	
 	if current_user.admin
 		redirect_to admin_path, :notice => 'Entry was successfully deleted.'
 	else
@@ -97,10 +73,35 @@ class PapersController < ApplicationController
 
   
   def confirm_authors
-    @paper = Paper.find(params[:paper_id])
-	params[:paper][:author_ids] ||= []
-	@paper.update_attributes(params[:paper])
-	redirect_to paper_experiments_path(@paper), :notice => 'Authors were successfully added.'
+	if @paper.authors.size > 0
+		if (@paper.status == 1)
+			@paper.status = 2
+			@paper.save
+			redirect_to num_experiments_path(:id => @paper), :notice => 'Authors were successfully added.'
+		else
+			redirect_to @paper, :notice => 'Authors were successfully updated.'
+		end
+	else
+		redirect_to paper_authors_path(@paper), :notice => 'There must be at least 1 author associated with the entry.'
+	end
+  end
+
+  def num_experiments
+	if @paper.experiments.size != 0
+		redirect_to paper_experiments_path(@paper), :notice => 'If you wish to change the number of experiments, please do so by adding/deleting individual records from the list below.'
+	elsif !params[:num_exps].nil?
+		i=1
+		1.upto(params[:num_exps].to_i) do
+			temp = @paper.experiments.build
+			temp.exp_type = 0
+			temp.status = 1
+			temp.num_views = 0
+			temp.num = i
+			i = i+1
+			temp.save
+		end
+		redirect_to paper_experiments_path(@paper.id)
+	end
   end
   
 end

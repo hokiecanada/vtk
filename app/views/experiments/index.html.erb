@@ -1,21 +1,40 @@
 <p id="notice"><%= notice %></p>
 <div id="form_title">
-	<center><h1>Step 3: Add Experiments Details</h1></center>
+	<center><h1>Step 3b: Add Experiments Details</h1></center>
 </div>
 
 <div id="form_body">
-	<% @experiments.each_with_index do |exp,i| %>
-		<% if exp.status == 1 %>
-			<%= "Experiment " + (i+1).to_s + " Complete!" %>
-			<%= link_to "Edit", edit_paper_experiment_path(exp.paper_id,exp) %> | 
-			<%= link_to 'Delete', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %><br><br>
-		<% else %>
-			<%= button_to "Experiment " + (i+1).to_s, edit_paper_experiment_path(exp.paper_id,exp) %><br>
+	<center>
+	<table>
+		<tr>
+			<td colspan="3">In this section, you will add the details for all the experiments conducted for this paper/journal.</td>
+		</tr>
+		
+		<% @experiments.each_with_index do |exp,i| %>
+			<tr>
+				<% if exp.status == 0 %>
+					<td><%= "Experiment #" + (i+1).to_s + " Complete!" %></td>
+					<td><%= link_to "Edit", edit_paper_experiment_path(exp.paper_id,exp) %></td> 
+					<td><%= link_to 'Delete', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %></td>
+				<% else %>
+					<td>Experiment #<%= (i+1).to_s %></td>
+					<td><%= button_to "Add Details", experiment_type_path(:paper_id => exp.paper_id, :id => exp) %></td>
+					<td><%= link_to 'Delete', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %></td>
+				<% end %>
+			</tr>
 		<% end %>
-	<% end %>
-
-	<% if @paper.status == 1 %>
-		<%= button_to 'Complete submission', paper_path(@paper), :method => :put %><br><br>
-	<% end %>
+		
+		<tr>
+			<td colspan="3"><h3>Add Experiment</h3><i>If you would like to add another experiment to this list, click the following link:</i><br>
+			<%= link_to "Add Experiment", new_paper_experiment_path(@paper) %></td>
+		</tr>
+		
+		<tr>
+			<td></td>
+			<td></td>
+			<td align="right"><%= button_to 'Complete submission', paper_path(@paper), :method => :put, :disabled => (@paper.status != 0) %></td>
+		</tr>
+	</table>
+	</center>
 </div>
 <%= link_to 'Back', paper_path(@paper) %>

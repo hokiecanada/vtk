@@ -63,7 +63,9 @@ class Experiment < ActiveRecord::Base
 	
 	def exp_finds
 		findings.each do |f|
-			f.finding + ' '
+			if !f.finding.nil?
+				f.finding + ' '
+			end
 		end
 	end
 	

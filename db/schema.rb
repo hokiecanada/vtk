@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110916054438) do
+ActiveRecord::Schema.define(:version => 20110925163959) do
 
   create_table "author_papers", :force => true do |t|
     t.integer "author_id"
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(:version => 20110916054438) do
     t.integer  "specificity"
     t.text     "issues"
     t.integer  "num_views"
-    t.string   "status"
+    t.integer  "status"
     t.integer  "experiment_id"
     t.datetime "created_at"
     t.datetime "updated_at"

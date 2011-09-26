@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+<div id="form_title">
+	<center><h1>Step 3b: Select Type for Experiment #<%= @experiment.num %></h1></center>
+</div>
+
+<div id="form_body">
+	<center>
+	<table>
+
+		<% form_tag experiment_type_path(:paper_id => @paper, :id => @experiment) do |f| %>
+
+			<tr><td>
+				<%= label_tag "How would you characterize this experiment?" %><br>
+				<%= radio_button_tag "exp_type", "0", @experiment.exp_type == 0 %>A controlled experiment varying individual components of immersion independently<br>
+				<%= radio_button_tag "exp_type", "1", @experiment.exp_type == 1 %>A practical comparison of multiple real-world VR displays
+			</td></tr>
+		  
+			<tr>
+				<td align="right"><%= submit_tag "Next" %></td>
+			</tr>
+		<% end %>
+		
+	</table>
+	</center>
+</div>

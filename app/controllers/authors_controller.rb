@@ -11,7 +11,7 @@ class AuthorsController < ApplicationController
   
   def index
 	@paper = Paper.find(params[:paper_id])
-	@paper_authors = @paper.author_papers.where(:paper_id => @paper)
+	@paper_authors = @paper.author_papers.all
 	@paper_author = @paper.author_papers.build
 	@authors = Author.all
   end
@@ -29,7 +29,7 @@ class AuthorsController < ApplicationController
 		author.initials = ""
 		author.save
 	end
-	redirect_to paper_authors_path(@paper), :notice => 'Author added successfully.'
+	redirect_to paper_authors_path(@paper)
   end
 
   

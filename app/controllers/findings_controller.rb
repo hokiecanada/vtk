@@ -15,9 +15,21 @@ class FindingsController < ApplicationController
   
   def index
 	@findings = @experiment.findings.all
-    respond_to do |format|
-      format.html # index.html.erb
-    end
+	if @experiment.status == 2
+		complete = true
+		if @findings.size == 0
+			complete = false
+		end
+		@findings.each do |f|
+			if f.status != 0
+				complete = false
+			end
+		end
+	end
+	if complete == true
+		@experiment.status = 0
+		@experiment.save
+	end
   end
 
   
@@ -39,15 +51,14 @@ class FindingsController < ApplicationController
   
   def new
 	@finding = @experiment.findings.build
-	@tasks = @experiment.tasks.all
-	@comps = @experiment.comps.all
-	@metrics = @experiment.metrics.all
-	@systems = @experiment.systems.all
-	@relationships = Relationship.all
-	
-	respond_to do |format|
-		format.html # new.html.erb
-	end
+	@finding.status = 1
+	@finding.num_views = 0
+	@finding.save
+	@experiment.status = 2
+	@experiment.save
+	@paper.status = 2
+	@paper.save
+	redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Finding was successfully added.'
   end
 
   
@@ -58,17 +69,23 @@ class FindingsController < ApplicationController
 	@metrics = @experiment.metrics.all
 	@systems = @experiment.systems.all
 	@relationships = Relationship.all
-	
-	respond_to do |format|
-		format.html # edit.html.erb
-	end
   end
 
   
   def create
 	@finding = @experiment.findings.create(params[:finding])
-	@finding.tasks = Experiment.find(@finding.experiment_id).tasks
-	@finding.status = 1
+	#@finding.tasks = Experiment.find(@finding.experiment_id).tasks
+	@finding.tasks = @experiment.tasks
+	
+	if @experiment.exp_type == 0
+		#@finding.systems = Experiment.find(@finding.experiment_id).systems
+		@finding.systems = @experiment.systems
+	else
+		#@finding.comps = Experiment.find(@finding.experiment_id).comps
+		@finding.comps = @experiment.comps
+	end
+	
+	@finding.status = 0
 	@finding.num_views = 0
 	
     respond_to do |format|
@@ -83,20 +100,23 @@ class FindingsController < ApplicationController
   
   def update
 	@finding = @experiment.findings.find(params[:id])
-	params[:finding][:system_ids] ||= []
-	params[:finding][:comp_ids] ||= []
+	@finding.tasks = @experiment.tasks
+	if @experiment.exp_type == 0
+		params[:finding][:comp_ids] ||= []
+		@finding.systems = @experiment.systems
+	else
+		params[:finding][:system_ids] ||= []
+		@finding.comps = @experiment.comps
+	end
 	params[:finding][:metric_ids] ||= []
-	#params[:finding][:task_ids] ||= []
-	#@finding.tasks = Experiment.find(@finding.experiment_id).tasks
-	#params[:finding][:relationship_ids] ||= []
-	@finding.status = 1
+	@finding.save
 	
-    respond_to do |format|
-      if @finding.update_attributes(params[:finding])
-        format.html { redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Finding details were successfully updated.' }
-      else
-        format.html { render :action => "edit" }
-      end
+    if @finding.update_attributes(params[:finding])
+		@finding.status = 0
+		@finding.save
+        redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Finding details were successfully updated.'
+    else
+        render :action => "edit"
     end
   end
   
@@ -104,10 +124,10 @@ class FindingsController < ApplicationController
   def destroy
     @finding = @experiment.findings.find(params[:id])
 	@finding.destroy
-	if current_user.admin
+	if current_user.admin && @paper.status == 0
 		redirect_to user_root_path, :notice => 'Finding was successfully deleted.'
 	else
-		redirect_to paper_experiment_path(@experiment), :notice => 'Finding was successfully deleted.'
+		redirect_to paper_experiment_findings_path(@paper,@experiment), :notice => 'Finding was successfully deleted.'
 	end
   end
 

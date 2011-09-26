@@ -1,3 +1,4 @@
+<p id="notice"><%= notice %></p>
 <div id="form_title">
 	<center><h1>Step 2: Add Authors</h2></center>
 </div>
@@ -34,8 +35,10 @@
 				<% end %>
 			</td>
 		</tr>
-		
-		<tr><td></td><td></td><td align="right"><%= link_to "Next", paper_experiments_path(@paper) %></td></tr>
+
+		<tr><td></td><td></td><td align="right">
+			<%= button_to "Confirm Authors", confirm_authors_path(:id => @paper), :method => 'put', :disabled => (@paper.authors.size == 0) %>
+		</td></tr>
 	</table>
 	</center>	
 </div>

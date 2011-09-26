@@ -1,20 +1,41 @@
 <p id="notice"><%= notice %></p>
+<div id="form_title">
+	<center><h1>Step 4: Add Findings for Experiment #<%= @experiment.num %></h1></center>
+</div>
+<div id="form_body">
+	<center>
+	<table>
+		<tr>
+			<td colspan="3">In this section, you will add the details for all the findings associated with this experiment.</td>
+		</tr>
+		
+		<% @findings.each_with_index do |finding,i| %>
+			<tr>
+				<% if finding.status == 0 %>
+					<td><%= "Finding #" + (i+1).to_s + " Complete!" %></td>
+					<td><%= link_to "Edit", edit_paper_experiment_finding_path(@paper,@experiment,finding) %></td>
+					<td><%= link_to 'Delete', [@paper,@experiment,finding], :confirm => 'Are you sure?', :method => :delete %></td>
+				<% else %>
+					<td><%= "Finding #" + (i+1).to_s %></td>
+					<td><%= button_to "Add Details", edit_paper_experiment_finding_path(@paper,@experiment,finding) %></td>
+					<td><%= link_to 'Delete', [@paper,@experiment,finding], :confirm => 'Are you sure?', :method => :delete %></td>
+				<% end %>
+			</tr>
+		<% end %>
+		
+		<tr>
+			<td colspan="3"><h3>Add Finding</h3><i>If you would like to add another finding to this list, click the following link:</i><br>
+			<%= link_to 'Add New Finding', new_paper_experiment_finding_path(@paper,@experiment) %></td>
+		</tr>
 
-<h1>Experiment Findings:</h1>
-
-<% @findings.each_with_index do |finding,i| %>
-	<% if finding.status == 1 %>
-		<%= "Finding " + (i+1).to_s + " Complete!" %>
-		<%= link_to "Edit", edit_paper_experiment_finding_path(@paper,@experiment,finding) %> | 
-		<%= link_to 'Destroy', [@paper,@experiment,finding], :confirm => 'Are you sure?', :method => :delete %><br><br>
-	<% else %>
-		<%= button_to "Finding " + (i+1).to_s, edit_paper_experiment_finding_path(@paper,@experiment,finding) %><br>
-	<% end %>
-<% end %>
-
-<%= link_to 'Add New Finding', new_paper_experiment_finding_path(@paper,@experiment) %><br><br>
-
-<%= button_to "Confirm findings", paper_experiments_path(@paper), :method => :put %><br><br>
-
+		<tr>
+			<td></td>
+			<td></td>
+			<td align="right"><%= button_to "Confirm findings", paper_experiments_path(@paper), :method => :put, :disabled => (@experiment.status !=0) %></td>
+		</tr>
+		
+	</table>
+	</center>
+</div>
 
 <%= link_to 'Back', paper_path(@paper) %>

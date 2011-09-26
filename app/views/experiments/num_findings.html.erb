@@ -1,0 +1,13 @@
+<p id="notice"><%= notice %></p>
+<div id="form_title">
+	<center><h1>Step 3d: Add Findings to Experiment #<%= @experiment.num %></h1></center>
+</div>
+
+<div id="form_body">
+	<% form_tag num_findings_path(:paper_id => @paper, :id => @experiment) do |f| %>
+		How many findings are there for this experiment?
+		<%= select_tag "num_findings", options_for_select([[1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]]) %>
+		<%= submit_tag "Next" %>
+	<% end %>
+</div>
+<%= link_to 'Back', paper_experiment_path(@paper,@experiment) %>

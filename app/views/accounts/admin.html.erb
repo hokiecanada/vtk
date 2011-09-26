@@ -66,28 +66,52 @@
 	<%= task.task_tag %>
 	<%= link_to 'Delete', task, :confirm => 'This action will delete the task from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
-<%= render '/forms/task' %>
+<%= form_for Task.new do |f| %> 
+  <% f.error_messages %>
+  <div class="field">
+    <%= f.text_field :task_tag, :size => 50 %>
+    <%= f.submit "Add new task" %>
+  </div>
+<% end %>
 
 <h1>Comps</h1>
 <% @comps.each do |comp| %>
 	<%= comp.comp_tag %>
 	<%= link_to 'Delete', comp, :confirm => 'This action will delete the component from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
-<%= render '/forms/comp' %>
+<%= form_for Comp.new do |f| %> 
+  <% f.error_messages %>
+  <div class="field">
+    <%= f.text_field :comp_tag, :size => 50 %>
+    <%= f.submit "Add new component" %>
+  </div>
+<% end %>
 
 <h1>Metrics</h1>
 <% @metrics.each do |metric| %>
 	<%= metric.metric_tag %>
 	<%= link_to 'Delete', metric, :confirm => 'This action will delete the metric from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
-<%= render '/forms/metric' %>
+<%= form_for Metric.new do |f| %> 
+  <% f.error_messages %>
+  <div class="field">
+    <%= f.text_field :metric_tag, :size => 50 %>
+    <%= f.submit "Add new metric" %>
+  </div>
+<% end %>
 
 <h1>Systems</h1>
 <% @systems.each do |system| %>
 	<%= system.system_tag %>
 	<%= link_to 'Delete', system, :confirm => 'This action will delete the system from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
-<%= render '/forms/system' %>
+<%= form_for System.new do |f| %> 
+  <% f.error_messages %>
+  <div class="field">
+    <%= f.text_field :system_tag, :size => 50 %>
+    <%= f.submit "Add new system" %>
+  </div>
+<% end %>
 
 <h1>Relationships</h1>
 <% @relationships.each do |relationship| %>
@@ -95,6 +119,12 @@
 	<%= link_to 'Edit', edit_relationship_path(relationship) %> | 
 	<%= link_to 'Delete', relationship, :confirm => 'This action will delete the relationship from all associated records. Are you sure you want to delete?', :method => :delete %><br />
 <% end %>
-<%= render '/forms/relationship' %>
+<%= form_for Relationship.new do |f| %> 
+  <% f.error_messages %>
+  <div class="field">
+    <%= f.text_field :rel_tag, :size => 50 %>
+    <%= f.submit "Add new relationship" %>
+  </div>
+<% end %>
 	
 <%= link_to 'Add New Entry', new_paper_path %>

@@ -1,7 +1,12 @@
 <p id="notice"><%= notice %></p>
-
-<h1>Edit Finding:</h1>
-
-<%= render '/forms/finding' %>
-
+<div id="form_title">
+	<center><h1>Add Finding Details</h1></center>
+</div>
+<div id="form_body">
+	<% if @experiment.exp_type == 0 %>
+		<%= render '/forms/controlled_finding' %>
+	<% else %>
+		<%= render '/forms/practical_finding' %>
+	<% end %>
+</div>
 <%= link_to 'Back', paper_experiment_path(@paper,@experiment) %>

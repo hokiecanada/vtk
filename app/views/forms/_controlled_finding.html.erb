@@ -1,0 +1,57 @@
+<center>
+<table>
+	<tr><td>
+		<h3>Instructions:</h3>
+		<ul>
+			<li>If it is a DIRECT/INVERSE/NO RELATIONSHIP, pick ONE component and ONE metric</li>
+			<li>If it is an INTERACTION, pick the TWO (or more) components involved in the interaction and ONE metric</li>
+		</ul>
+	</tr></td>
+	
+	<%= form_for [@paper,@experiment,@finding] do |f| %>
+		<tr><td>
+			<h3>Relationship:</h3>
+			<% @relationships.each do |relationship| %>
+				<%= f.radio_button :rel_id, relationship.id %><%= relationship.rel_tag %><br>
+			<% end %>
+		</tr></td>
+		
+		<tr><td>
+			<h3>Components of immersion involved:</h3>
+			<% @comps.each do |comp| %>
+				<%= check_box_tag "finding[comp_ids][]", comp.id, @finding.comps.include?(comp) %><%= comp.comp_tag %><br>
+			<% end %>
+		</tr></td>
+
+		<tr><td>
+			<h3>Metric involved:</h3>
+			<% @metrics.each do |metric| %>
+				<%= radio_button_tag "finding[metric_ids][]", metric.id, @finding.metrics.include?(metric) %><%= metric.metric_tag %><br>
+			<% end %>
+		</tr></td>
+		
+		<tr><td>
+			<h3>Finding (one sentence):</h3>
+			<%= f.text_area :finding, :cols => 75, :rows => 6  %><br>
+		</tr></td>
+
+		<tr><td>
+			<h3>Specificity:</h3>
+			<%= f.radio_button :specificity, "0" %>Highly specific<br>
+			<%= f.radio_button :specificity, "1" %>Somewhat specific<br>
+			<%= f.radio_button :specificity, "2" %>Neither<br>
+			<%= f.radio_button :specificity, "3" %>Somewhat general<br>
+			<%= f.radio_button :specificity, "4" %>Highly general<br>
+		</tr></td>
+
+		<tr><td>
+			<h3>Issues:</h3>
+			<%= f.text_area :issues, :cols => 75, :rows => 6  %><br>
+		</tr></td>
+		
+		<tr><td align="right">
+			<%= f.submit "Save Finding" %>
+		</tr></td>
+	<% end %>
+</table>
+</center>

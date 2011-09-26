@@ -1,6 +1,6 @@
 class Paper < ActiveRecord::Base
 	acts_as_indexed :fields => [:title, :year, :journal, :exp_task, :exp_details, :paper_exp_finds, :exp_comps, :exp_tasks, :exp_systems, :exp_metrics]
-	has_many						:author_papers
+	has_many						:author_papers, :dependent => :destroy
 	has_many						:authors, :through => :author_papers
 	belongs_to						:user
 	has_many						:experiments, :dependent => :destroy

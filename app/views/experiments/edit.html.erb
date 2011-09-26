@@ -1,7 +1,14 @@
 <p id="notice"><%= notice %></p>
+<div id="form_title">
+	<center><h1>Step 3c: Add Details for Experiment #<%= @experiment.num %></h1></center>
+</div>
 
-<h1>Edit Experiment Details</h1>
-
-<%= render '/forms/experiment' %>
+<div id="form_body">
+	<% if @experiment.exp_type == 0 %>
+		<%= render '/forms/controlled' %>
+	<% else %>
+		<%= render '/forms/practical' %>
+	<% end %>
+</div>
 
 <%= link_to 'Back', paper_path(@paper) %>

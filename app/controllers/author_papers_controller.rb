@@ -7,7 +7,7 @@ class AuthorPapersController < ApplicationController
 		redirect_to root_path, :notice => 'Access denied.'
 	end
   end
-  
+
   
   def create
 	ap = AuthorPaper.create(params[:author_paper])
@@ -24,17 +24,15 @@ class AuthorPapersController < ApplicationController
   end
 
   
-  def update
-	#Author.find(params[:id]).update_attributes(params[:author])
-	#redirect_to admin_path, :notice => 'Author successfully updated.'
-  end
-  
-  
   def destroy
 	ap = AuthorPaper.find(params[:id])
+	author = Author.find(ap.author_id)
     ap.destroy
-	##maybe check to see if all records for a specific author are gone
-	##and if so delete the author too
+	
+	if author.papers.size == 0
+		author.destroy
+	end
+
 	redirect_to paper_authors_path(ap.paper_id), :notice => 'Author deleted successfully.'
   end
   

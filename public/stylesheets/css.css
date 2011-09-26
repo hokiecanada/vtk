@@ -60,6 +60,7 @@ div.field, div.actions {
 }
 
 #body {
+	clear: both;
 	padding: 0px;
 }
 
@@ -86,9 +87,10 @@ div.field, div.actions {
 }
 
 #navigation {
-	width: 100%;
+	width: 65%;
 	height: 60px;
 	text-align: center;
+	float: left;
 }
 
 #navigation ul {
@@ -216,6 +218,12 @@ div.field, div.actions {
 	color: #fff;
 	padding: 10px;
 	text-align: center;
+}
+
+#full_text_search {
+	width: 30%;
+	float: right;
+	padding: 5px;
 }
 
 .pretty th .current {
