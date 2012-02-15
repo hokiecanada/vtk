@@ -24,12 +24,23 @@ class AuthorsController < ApplicationController
   
   def create
 	@paper = Paper.find(params[:paper_id])
-	author = @paper.authors.create(params[:author])
-	if author.initials.nil?
-		author.initials = ""
-		author.save
+	@author = Author.create(params[:author])
+	
+	if @author.save
+		AuthorPaper.create(:paper_id => @paper.id, :author_id => @author.id, :order => params[:order])
+		#author = @paper.authors.create(params[:author])
+		if @author.initials.nil?
+			@author.initials = ""
+			@author.save
+		end
+		redirect_to edit_paper_path(@paper), :notice => 'Author added successfully.'
+	else
+		@paper_authors = @paper.author_papers.all
+		@paper_author = @paper.author_papers.build
+		@authors = Author.all - Author.find(@paper_authors.map{|a| a.author_id})
+		@authors = @authors.sort_by(&:last_name)
+		render :template => "papers/edit"
 	end
-	redirect_to paper_authors_path(@paper)
   end
 
   

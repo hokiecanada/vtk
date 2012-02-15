@@ -1,11 +1,35 @@
 class Paper < ActiveRecord::Base
-	acts_as_indexed :fields => [:title, :year, :journal, :exp_task, :exp_details, :paper_exp_finds, :exp_comps, :exp_tasks, :exp_systems, :exp_metrics]
+	acts_as_indexed :fields => [:title, :year, :journal]#, :exp_details, :paper_exp_finds, :exp_comps, :exp_tasks, :exp_systems, :exp_metrics]
 	has_many						:author_papers, :dependent => :destroy
 	has_many						:authors, :through => :author_papers
 	belongs_to						:user
 	has_many						:experiments, :dependent => :destroy
-	accepts_nested_attributes_for	:authors, :reject_if => :all_blank, :allow_destroy => true
+	#accepts_nested_attributes_for	:authors, :reject_if => :all_blank, :allow_destroy => true
 	accepts_nested_attributes_for	:author_papers
+	
+	validates_presence_of :title, :year#, :author
+	validate :correct_doi
+	
+	def correct_doi
+		require 'rubygems'
+		require 'hpricot'
+		require 'open-uri'
+		
+		if !doi.nil?
+			doc = Hpricot(open("http://www.crossref.org/openurl/?pid=cstinson@vt.edu&id=doi:" + doi + "&noredirect=true"))
+			str = doc.at("body").inner_html
+			if str.include?("Malformed DOI")
+				errors.add(:doi,"is invalid")
+			end
+		end
+	end
+	
+	#def author
+	#	if author_papers.size == 0
+	#		#flash[:notice] => 'Need to include at least one author'
+	#		return false
+	#	end
+	#end
 	
 	##def paper_auths
 	##	authors.each do |a|
@@ -13,14 +37,15 @@ class Paper < ActiveRecord::Base
 	##	end
 	##end
 	
-	def exp_task
-		experiments.each do |e|
-			if !e.task_desc.nil?
-				e.task_desc + ' '
-			end
-		end
-	end
+	#def exp_task
+	#	experiments.each do |e|
+	#		if !e.task_desc.nil?
+	#			e.task_desc + ' '
+	#		end
+	#	end
+	#end
 	
+=begin
 	def exp_details
 		experiments.each do |experiment|
 			if !experiment.interface_desc.nil?
@@ -97,4 +122,6 @@ class Paper < ActiveRecord::Base
 			end
 		end
 	end
+=end
+
 end

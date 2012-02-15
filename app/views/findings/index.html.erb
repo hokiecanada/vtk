@@ -1,41 +1,90 @@
-<p id="notice"><%= notice %></p>
 <div id="form_title">
-	<center><h1>Step 4: Add Findings for Experiment #<%= @experiment.num %></h1></center>
+	<center><h1>ADD NEW PUBLICATION</h1></center>
 </div>
+	
 <div id="form_body">
-	<center>
-	<table>
-		<tr>
-			<td colspan="3">In this section, you will add the details for all the findings associated with this experiment.</td>
-		</tr>
-		
-		<% @findings.each_with_index do |finding,i| %>
-			<tr>
-				<% if finding.status == 0 %>
-					<td><%= "Finding #" + (i+1).to_s + " Complete!" %></td>
-					<td><%= link_to "Edit", edit_paper_experiment_finding_path(@paper,@experiment,finding) %></td>
-					<td><%= link_to 'Delete', [@paper,@experiment,finding], :confirm => 'Are you sure?', :method => :delete %></td>
-				<% else %>
-					<td><%= "Finding #" + (i+1).to_s %></td>
-					<td><%= button_to "Add Details", edit_paper_experiment_finding_path(@paper,@experiment,finding) %></td>
-					<td><%= link_to 'Delete', [@paper,@experiment,finding], :confirm => 'Are you sure?', :method => :delete %></td>
-				<% end %>
-			</tr>
-		<% end %>
-		
-		<tr>
-			<td colspan="3"><h3>Add Finding</h3><i>If you would like to add another finding to this list, click the following link:</i><br>
-			<%= link_to 'Add New Finding', new_paper_experiment_finding_path(@paper,@experiment) %></td>
-		</tr>
 
-		<tr>
-			<td></td>
-			<td></td>
-			<td align="right"><%= button_to "Confirm findings", paper_experiments_path(@paper), :method => :put, :disabled => (@experiment.status !=0) %></td>
-		</tr>
-		
-	</table>
-	</center>
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_inactive">
+			<div id="heading_left"><h2>Publication Details</h2></div><div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+		</div>
+	</div>
+
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_active">
+			<h2>Experiment Details:</h2>
+		</div>
+		<div id="medium_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"35x35" %>
+		</div>
+		<div id="medium_heading_inactive">
+			<div id="heading_left"><h3>Basic Experiment Details</h3></div>
+			<div id="heading_right"><%= button_to "Edit", edit_paper_experiment_path(@paper,@experiment) %></div>
+		</div>
+		<div id="medium_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"35x35" %>
+		</div>
+		<div id="medium_heading_active">
+			<h3>User Task Details:</h3>
+		</div>
+		<div id="small_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"20x20" %>
+		</div>
+		<div id="small_heading_inactive">
+			<div id="heading_left"><h3>Basic User Task Details</h3></div>
+			<div id="heading_right"><%= button_to "Edit", edit_paper_experiment_exp_task_path(@paper,@experiment,@exp_task) %></div>
+		</div>
+		<div id="small_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"20x20" %>
+		</div>
+		<div id="small_heading_active">
+			<h3>User Task Findings:</h3>
+		</div>
+	</div>
+
+	<div id="inner">
+		<div id="inner_title"><h3>FINDINGS FOR USER TASK</h3></div>
+		<div id="inner_table">	
+			<div id="outer_section">
+				<div id="notice"><%= flash[:notice] %></div>
+				<div id="inner_section">
+					<div id="field">Here are the current findings you have saved for this user task. You can add more, edit the ones you have already enterred, or move on.</div>
+					
+					<div><i>(<%= @findings.count %> findings(s) saved for this user task)</i></div>
+					
+					<% if @findings.count > 0 %>
+						<div><h3>Findings:</h3></div>
+						<div style="margin:0 0 20px 75px">
+							<% @findings.each_with_index do |finding,i| %>
+								<div>Finding #<%= i+1 %>: <%= link_to "Edit", edit_paper_experiment_exp_task_finding_path(@paper,@experiment,@exp_task,finding) %> | <%= link_to 'Delete', [@paper,@experiment,@exp_task,finding], :confirm => 'Are you sure?', :method => :delete %></div>
+							<% end %>
+						</div>
+					<% end %>
+					
+					<div id="field">
+						<center><%= button_to 'Add New Finding', new_paper_experiment_exp_task_finding_path(@paper,@experiment,@exp_task) %></center>
+					</div>
+				</div>
+			
+				<div id="field">
+					<div id="submit"><%= button_to 'Confirm User Task Findings', paper_experiment_exp_tasks_path(@paper,@experiment), :disabled => (@findings.count == 0), :method => :put %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_disabled">
+			<h2>Review & Submit</h2>
+		</div>
+	</div>
 </div>
-
-<%= link_to 'Back', paper_path(@paper) %>

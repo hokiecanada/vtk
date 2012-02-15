@@ -1,0 +1,55 @@
+<div id="form_title">
+	<center><h1>ADD NEW PUBLICATION</h1></center>
+</div>
+	
+<div id="form_body">
+	<div id="heading">
+		<% link_to edit_paper_path(@paper) do %>
+			<div id="large_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_inactive">
+				<div id="heading_left"><h2>Publication Details</h2></div>
+				<div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+			</div>
+		<% end %>
+		<% link_to paper_experiments_path(@paper) do %>
+			<div id="large_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_inactive">
+				<div id="heading_left"><h2>Experiment Details</h2></div>
+				<div id="heading_right"><%= button_to "Edit", paper_experiments_path(@paper), :method => :put %></div>
+			</div>
+		<% end %>
+		<div id="large_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_active">
+			<h2>Review & Submit:</h2>
+		</div>
+	</div>
+
+	<div id="inner">
+		<div id="inner_title"><h3>REVIEW & SUBMIT</h3></div>
+		<div id="inner_table">	
+			<div id="outer_section">					
+				<div id="inner_section">
+					<div id="field">Publication Details:</div>
+					<% @paper.experiments.each_with_index do |exp,i| %>
+						<div id="field">Experiment Details:</div>
+						<% exp.exp_tasks.each_with_index do |task,j| %>
+							<div id="field">User Tasks:</div>
+							<% task.findings.each_with_index do |find,k| %>
+								<div id="field">Findings:</div>
+							<% end %>
+						<% end %>
+					<% end %>
+				</div>
+				<div id="field">
+					<div id="submit"><%= button_to "Complete Submission", confirm_path(:id => @paper.id) %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

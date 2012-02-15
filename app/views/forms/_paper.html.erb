@@ -1,47 +1,187 @@
-<%= form_for @paper do |f| %> 
-  <%= f.error_messages %>
-  <center>
-  <table>
-	<tr>
-		<td>Title:</td>
-		<td><%= f.text_field :title, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>Year:</td>
-    	<td><%= f.date_select :year, :start_year => Time.now.year - 50, :end_year => Time.now.year, :discard_day => true, :discard_month => true %></td>
-	</tr>
-	<tr>
-		<td>Journal:</td>
-		<td><%= f.text_field :journal, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>Volume:</td>
-    	<td><%= f.text_field :volume, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>Issue:</td>
-    	<td><%= f.text_field :number, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>First page:</td>
-    	<td><%= f.text_field :first_page, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>Last page:</td>
-    	<td><%= f.text_field :last_page, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>DOI:</td>
-		<td><%= f.text_field :doi, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td>Paper URL:</td>
-    	<td><%= f.text_field :paper_url, :size => 100 %></td>
-	</tr>
-	<tr>
-		<td></td>
-		<td align="right"><%= f.submit "Next" %></td>
-	</tr>
-  </table>
-  </center>
-<% end %>
+<div id="heading">
+	<div id="large_check_box">
+		<% if @paper.status <= 1 %>
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+		<% else %>
+			<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+		<% end %>
+	</div>
+	<div id="large_heading_active">
+		<h2>Publication Details:</h2>
+	</div>
+</div>
+
+<div id="inner">
+	<div id="inner_title"><h3>BASIC ENTRY DETAILS</h3></div>
+	<div id="inner_table">	
+		<div id="outer_section">
+			<%= render "shared/error_messages", :target => @paper %> 
+			<%= render "shared/error_messages", :target => @paper_author %> 
+			<%= render "shared/error_messages", :target => @author %>
+			<div id="notice"><%= flash[:notice] %></div>
+				
+			<div id="inner_section">
+				<div><u><b>Instructions:</b></u></div>
+				<div id="field">Enter information about the article you would like to add. Begin by entering the author details. Please try to find authors that are already in the database to avoid duplicating author details. After adding the authors, continue to add the remaining entry details. If your publication has a DOI, you can enter that first to automatically fill the remaining fields. Otherwise enter in the publication details manually.<br><span style='color:red'><i>(* denotes a required field)</i><span></div>
+			</div>
+		</div>
+		
+		<div id="outer_section">
+			<div id="inner_section">
+				<div style="width:50px;float:left"><b><span style='color:red'>*</span>Authors:</b></div>
+				<div style="width:600px;float:right"><i>Please enter authors one at a time in the order they appear in the publication. To avoid duplicate authors, please first search the database for authors, and only add new authors if needed.</i>
+					
+					<% if @paper_authors.size > 0 %>
+						<div id="field">
+							<% @paper_authors.each do |ap| %>
+								<% a = Author.find(ap.author_id) %>
+								<div><b><%= ap.order %><% if ap.order % 10 == 1 %>st<% elsif ap.order % 10 == 2 %>nd<% elsif ap.order % 10 == 3 %>rd<% else %>th<% end %> Author: </b>
+									<%= a.last_name + ", " + a.first_name + " " + a.initials %>
+									<small><%= link_to 'Remove', ap, :confirm => 'Are you sure?', :method => :delete %></small></div>
+							<% end %>
+						</div>
+					<% end %>
+					
+					<div id="field">
+						<div style="float:left"><b><%= @paper_authors.size+1 %><% if (@paper_authors.size+1) % 10 == 1 %>st<% elsif (@paper_authors.size+1) % 10 == 2 %>nd<% elsif (@paper_authors.size+1) % 10 == 3 %>rd<% else %>th<% end %> Author:</b></div>
+						
+						<div style="float:left;padding: 0 20px 0 20px">
+							<%= form_for(@paper_author) do |g| %>
+								<div style="float:left;padding:0 20px 0 0;">
+									<%= g.hidden_field :order, :value=>@paper_authors.size+1 %>
+									<%= g.hidden_field :paper_id, :value=>@paper.id %>
+									<%= g.select :author_id, @authors.collect{|a| [a.last_name + ', ' + a.first_name + ' ' + a.initials,a.id]}, {}, :onchange => "$(author_paper_submit1).disabled=(this.value == '')", :size => 10, :style => 'width: 300px;' %>
+								</div>
+								<div style="float:left;">
+									<%= g.submit "Confirm Author", :id => "author_paper_submit1", :disabled => true %></td>
+								</div>
+							<% end %>
+							<br>
+							<div style="clear:both;float:left;padding-bottom:20px;">Author not in the database? <% if !@author.errors.any? %><%= button_to_function "Click here", "$('add_author').show();this.hide();" %><% end %>
+								<div id="add_author" <% if !@author.errors.any? %>style="display:none"<% end %>>
+									<%= form_for @author do |f| %>
+										<%= hidden_field_tag :order, @paper_authors.size+1 %>
+										<%= hidden_field_tag :paper_id, @paper.id %>
+										<%= f.text_field :last_name, :placeholder => 'Last name', :size => 17 %>
+										<%= f.text_field :first_name, :placeholder => 'First name', :size => 17 %>
+										<%= f.text_field :initials, :placeholder => 'Initials', :size => 4 %>
+										<%= f.submit "Add New Author" %>
+									<% end %>
+								</div>
+							</div>				
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="outer_section">
+			<div id="inner_section">
+				<%= form_for @paper do |f| %>
+					<div style="width:50px;float:left;clear:both"><b>DOI:</b></div>
+					<div style="width:600px;float:right"><i>If you know the DOI for this entry, simply type it here and hit 'Submit DOI' to automatically populate the remaining fields.<br><span style="color:red">(Format: 10.1016/j.ijhcs.2008.10.003)</span></i>
+						<div id="field">
+							<%= f.text_field :doi, :size => 70 %>
+							<%= f.submit "Submit DOI" %>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+		
+		<div id="outer_section">
+			
+			<%= form_for @paper do |f| %> 
+				<div id="inner_section">	
+					<div id="field">
+						<div id="form_heading"><span style="color:red">*</span>Title:</div>
+						<div id="form_text"><% if @paper.title == "new_entry" %><% @paper.title = "" %><% end %><%= f.text_field :title, :size => 80 %></div>
+					</div>
+					
+					<div id="field">
+						<div id="form_heading"><span style="color:red">*</span>Year:</div>
+						<div id="form_text"><%= f.date_select :year, :start_year => Time.now.year - 50, :end_year => Time.now.year + 1, :discard_day => true, :discard_month => true %></div>
+					</div>
+					
+					<div id="field">
+						<div id="form_heading">Journal/Conference/Other:</div>
+						<div id="form_text"><%= f.text_field :journal, :size => 80 %></div>
+					</div>
+
+					<div id="field">
+						<div id="form_heading">Volume:</div>
+						<div id="form_text"><%= f.text_field :volume, :size => 80 %></div>
+					</div>
+					
+					<div id="field">
+						<div id="form_heading">Issue:</div>
+						<div id="form_text"><%= f.text_field :number, :size => 80 %></div>
+					</div>
+					
+					<div id="field">
+						<div id="form_heading">Pages <i>(e.g. 118-123)</i>:</div>
+						<div id="form_text"><%= f.text_field :first_page, :size => 80 %></div>
+					</div>
+					
+					<div id="field">
+						<div id="form_heading">Paper URL:</div>
+						<div id="form_text"><%= f.text_field :paper_url, :size => 80 %></div>
+					</div>
+				</div>
+				
+				<div id="field">
+					<div id="submit"><%= f.submit "Confirm Publication Details" %></div>
+				</div>			
+			<% end %>
+		</div>
+	</div>
+</div>
+
+<div id="heading">
+	<% if @paper.status <= 1 %>
+		<div id="large_check_box">
+			<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_disabled">
+			<h2>Experiment Details</h2>
+		</div>
+		<div id="large_check_box">
+			<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>	
+		</div>
+		<div id="large_heading_disabled">
+			<h2>Review & Submit</h2>
+		</div>
+	<% elsif @paper.status == 2 %>
+		<% link_to paper_experiments_path(@paper) do %>
+			<div id="large_check_box">
+				<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_inactive">
+				<h2>Experiment Details</h2>
+			</div>
+		<% end %>
+		<div id="large_check_box">
+			<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>	
+		</div>
+		<div id="large_heading_disabled">
+			<h2>Review & Submit</h2>
+		</div>
+	<% elsif @paper.status == 3 %>
+		<% link_to paper_experiments_path(@paper) do %>
+			<div id="large_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_inactive">
+				<h2>Experiment Details</h2>
+			</div>
+		<% end %>
+		<% link_to review_path(:id => @paper.id) do %>
+			<div id="large_check_box">
+				<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>	
+			</div>
+			<div id="large_heading_inactive">
+				<h2>Review & Submit</h2>
+			</div>	
+		<% end %>
+	<% end %>
+</div>

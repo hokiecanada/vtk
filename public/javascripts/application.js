@@ -26,6 +26,5 @@ function display_as(option)
 		document.getElementById("search_experiments").style.display = 'none';
 		document.getElementById("search_papers").style.display = 'block';
 		document.getElementById("display_as").value = 'Papers';
-
 	}
 }

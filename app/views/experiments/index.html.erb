@@ -1,40 +1,83 @@
-<p id="notice"><%= notice %></p>
 <div id="form_title">
-	<center><h1>Step 3b: Add Experiments Details</h1></center>
+	<center><h1>ADD NEW PUBLICATION</h1></center>
 </div>
-
+	
 <div id="form_body">
-	<center>
-	<table>
-		<tr>
-			<td colspan="3">In this section, you will add the details for all the experiments conducted for this paper/journal.</td>
-		</tr>
-		
-		<% @experiments.each_with_index do |exp,i| %>
-			<tr>
-				<% if exp.status == 0 %>
-					<td><%= "Experiment #" + (i+1).to_s + " Complete!" %></td>
-					<td><%= link_to "Edit", edit_paper_experiment_path(exp.paper_id,exp) %></td> 
-					<td><%= link_to 'Delete', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %></td>
-				<% else %>
-					<td>Experiment #<%= (i+1).to_s %></td>
-					<td><%= button_to "Add Details", experiment_type_path(:paper_id => exp.paper_id, :id => exp) %></td>
-					<td><%= link_to 'Delete', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %></td>
-				<% end %>
-			</tr>
+	<div id="heading">
+		<% link_to edit_paper_path(@paper) do %>
+			<div id="large_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_inactive">
+				<div id="heading_left"><h2>Publication Details</h2></div>
+				<div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+			</div>
 		<% end %>
-		
-		<tr>
-			<td colspan="3"><h3>Add Experiment</h3><i>If you would like to add another experiment to this list, click the following link:</i><br>
-			<%= link_to "Add Experiment", new_paper_experiment_path(@paper) %></td>
-		</tr>
-		
-		<tr>
-			<td></td>
-			<td></td>
-			<td align="right"><%= button_to 'Complete submission', paper_path(@paper), :method => :put, :disabled => (@paper.status != 0) %></td>
-		</tr>
-	</table>
-	</center>
+	</div>
+
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_active">
+			<h2>Experiment Details:</h2>
+		</div>
+	</div>
+
+	<div id="inner">
+		<% if @experiments.size == 0 %>
+			<div id="field"><%= button_to "<< Skip adding EXPERIMENTS >>", review_path(:id => @paper.id) %></div>
+		<% end %>
+		<div id="inner_title"><h3>EXPERIMENTS OVERVIEW</h3></div>
+		<div id="inner_table">	
+			<div id="outer_section">
+				<div id="notice"><%= flash[:notice] %></div>
+				<div id="inner_section">
+					<div id="field">In this section, you will add the details for all the experiments conducted for this paper/journal. All experiments are classified as either CONTROLLED or PRACTICAL. CONTROLLED EXPERIMENTS refer to experiments varying independent components of immersion. PRACTICAL COMPARISONS refer to experiments comparing multiple components of immersion simultaneously or system comparision experiments.</div>
+
+					<div><i>(<%= @experiments.size %> experiment(s) saved in this entry)</i></div>
+					
+					<% if @experiments.count > 0 %>
+						<div><h3>Experiments:</h3></div>
+						<div style="margin:0 0 20px 75px">
+							<% @experiments.each_with_index do |exp,i| %>
+								<div><b><%= "Experiment #" + (i+1).to_s %></b> <%= link_to "Edit", edit_paper_experiment_path(exp.paper_id,exp) %> | <%= link_to 'Delete', [exp.paper,exp], :confirm => 'Are you sure?', :method => :delete %></div>
+							<% end %>
+						</div>
+					<% end %>
+					
+					<div id="field">
+						<center><table>
+							<tr><td><%= button_to "Add Controlled Experiment", controlled_path(:paper_id => @paper.id) %></td>
+							<td><%= button_to "Add Practical Comparison", practical_path(:paper_id => @paper.id) %></td></tr>
+						</table></center>
+					</div>
+				</div>
+			
+				<div id="field">
+					<div id="submit"><%= button_to 'Confirm Experiments Details', review_path(:id => @paper.id), :disabled => (@experiments.count == 0) %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div id="heading">
+		<% if @paper.status <= 2 %>
+			<div id="large_check_box">
+				<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>	
+			</div>
+			<div id="large_heading_disabled">
+				<h2>Review & Submit</h2>
+			</div>
+		<% elsif @paper.status == 3 %>
+			<% link_to review_path(:id => @paper.id) do %>
+				<div id="large_check_box">
+					<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>	
+				</div>
+				<div id="large_heading_inactive">
+					<h2>Review & Submit</h2>
+				</div>	
+			<% end %>
+		<% end %>
+	</div>
 </div>
-<%= link_to 'Back', paper_path(@paper) %>

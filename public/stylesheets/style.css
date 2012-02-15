@@ -1,13 +1,212 @@
 #form_title {
-	margin:25px 50px 0 50px;
-	padding:15px;
+	width: 1000px;
+	padding:20px;
 	background:grey;
 	color:white;
+	border:2px solid grey;
+	margin: auto;
 }
 
 #form_body {
-	margin:0 50px 25px 50px;
+	width: 1000px;
 	padding:20px;
 	text-align:center;
 	border:2px solid grey;
+	margin: auto;
+	margin-bottom: 30px;
+}
+
+#heading {
+	width: 1000px;
+	overflow: auto;
+}
+
+#large_check_box {
+	float: left;
+	width: 50px;
+	clear: both;
+}
+
+#medium_check_box {
+	float: left;
+	width: 35px;
+	margin: 5px 0 0 60px;
+	clear: both;
+}
+
+#small_check_box {
+	float: left;
+	width: 20px;
+	margin: 15px 0 0 100px;
+	clear: both;
+}
+
+#large_heading_active {
+	float: right;
+	width: 920px;
+	padding: 0 0 0 20px;
+	background:#E0FFFF;
+	text-align:left;
+}
+
+#large_heading_inactive {
+	float: right;
+	width: 920px;
+	padding: 0 0 0 20px;
+	text-align:left;
+}
+
+#large_heading_disabled {
+	float: right;
+	width: 920px;
+	padding: 0 0 0 20px;
+	background:#fff;
+	text-align:left;
+	color:grey;
+}
+
+#medium_heading_active {
+	float: right;
+	width: 880px;
+	padding: 0 0 0 20px;
+	background:#E0FFFF;
+	text-align:left;
+}
+
+#medium_heading_inactive {
+	float: right;
+	width: 880px;
+	padding: 0 0 0 20px;
+	text-align:left;
+}
+
+#medium_heading_disabled {
+	float: right;
+	width: 880px;
+	padding: 0 0 0 20px;
+	background:#fff;
+	text-align:left;
+	color:grey;
+}
+
+#small_heading_active {
+	float: right;
+	width: 840px;
+	padding: 0 0 0 20px;
+	background:#E0FFFF;
+	text-align:left;
+}
+
+#small_heading_inactive {
+	float: right;
+	width: 840px;
+	padding: 0 0 0 20px;
+	text-align:left;
+}
+
+#small_heading_disabled {
+	float: right;
+	width: 840px;
+	padding: 0 0 0 20px;
+	background:#fff;
+	text-align:left;
+	color:grey;
+}
+
+#inner {
+	width:800px;
+	padding:20px;
+	margin: auto;
+}
+
+#inner_title {
+	padding: 0 20px 0 20px;
+	background-color: #FAFAD2;
+	border: 2px solid grey;
+	color: #grey;
+	width: 750px;
+	margin: auto;
+}
+
+#inner_table {
+	padding: 20px;
+	background: #fff;
+	border-top: 0;
+	border-bottom: 2px solid grey;
+	border-right: 2px solid grey;
+	border-left: 2px solid grey;
+	text-align:left;
+	width: 750px;
+	margin: auto;
+	overflow: auto;
+}
+
+#form_heading {
+	float: left;
+	width: 175px;
+	font-weight: bold;
+}
+
+#form_text {
+	float: left;
+	width: 500px;
+	text-align: left;
+}
+
+#submit {
+	clear: both;
+	text-align: right;
+}
+
+#field {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	clear: both;
+}
+
+#outer_section {
+	padding: 10px;
+	overflow:auto;
+}
+
+#inner_section {
+	padding: 20px;
+	background:#F0FFF0;
+	border: 1px solid #D3D3D3;
+	overflow: auto;
+}
+
+#checkbox {
+	width: 50%;
+	float: left;
+}
+#checkbox_right {
+	width: 50%;
+	float: left;
+}
+
+#heading_left {
+	width: 25%;
+	float: left;
+}
+
+#heading_right {
+	width: 75%;
+	float: left;
+	padding-top: 10px;
+}
+
+#heading a:link {
+	color: black;
+	text-decoration: none;
+}
+
+#heading a:hover {
+	color: black;
+	text-decoration: underline;
+}
+
+#heading a:visited {
+	color: black;
+	text-decoration: none;
 }

@@ -1,156 +1,147 @@
-<center>
-<table width="75%">
-	<tr><td>
-		<h3>Experiment Type:</h3><i>A practical comparison of multiple real-world VR displays</i>
-		<%= link_to "Edit", experiment_type_path(:paper_id => @paper, :id => @experiment) %>
-	</td></tr>
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_inactive">
+		<div id="heading_left"><h2>Publication Details</h2></div>
+		<div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+	</div>
+</div>
+
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_active">
+		<h2>Experiments Details:</h2>
+	</div>
+	<div id="medium_check_box">
+		<%= image_tag "unchecked.png", :border=>"0", :size=>"30x30" %>
+	</div>
+	<div id="medium_heading_active">
+		<h3>Basic Experiment Details:</h3>
+	</div>
+</div>
+
+<div id="inner">
+	<div id="inner_title"><h3>BASIC EXPERIMENT DETAILS</h3></div>
+	<%= render "shared/error_messages", :target => @experiment %> 
+	<div id="inner_table">	
+		<div id="outer_section">
+			<div id="inner_section">
+				<% form_for [@paper,@experiment] do |f| %>		
+					<%= f.hidden_field :exp_type, :value => 1 %>
+					
+					<div id="field">
+						<h3>Research Questions and Goals - Describe the research questions and goals that motivated this experiment:</h3>
+						<%= f.text_area :goals, :cols => 80, :rows => 6 %>
+					</div>
+						
+					<div id="field">
+						<h3>Participants - Number of participants in this experiment:</h3>
+						<%= f.radio_button :part_num, "0" %>1-5<br>
+						<%= f.radio_button :part_num, "1" %>6-10<br>
+						<%= f.radio_button :part_num, "2" %>11-20<br>
+						<%= f.radio_button :part_num, "3" %>21-50<br>
+						<%= f.radio_button :part_num, "4" %>50+<br>
+						<%= f.radio_button :part_num, "5" %>None<br>
+					</div>
+
+					<div id="field">
+						<h3>Participants - Gender balance of the participants in this experiment:</h3>
+						<%= f.radio_button :part_gender, "0" %>Female only<br>
+						<%= f.radio_button :part_gender, "1" %>Mostly female<br>
+						<%= f.radio_button :part_gender, "2" %>Balanced gender<br>
+						<%= f.radio_button :part_gender, "3" %>Mostly male<br>
+						<%= f.radio_button :part_gender, "4" %>Male only<br>
+						<%= f.radio_button :part_gender, "5" %>Not reported<br>
+					</div>
+
+					<div id="field">
+						<h3>Participants - Age range of the participants in this experiment:</h3>
+						<%= f.text_field :part_age, :size => 50 %>
+					</div>
+
+					<div id="field">
+						<h3>Participants - Technical background of the participants in this experiment:</h3>
+						<%= f.text_area :part_background, :cols => 80, :rows => 6 %>
+					</div>
+
+					<div id="field">
+						<h3>Participants - Provide any other relevant information about the participants in this experiment:</h3>
+						<%= f.text_area :part_other, :cols => 80, :rows => 6 %>
+					</div>
+
+					<div id="field">
+						<h3>Displays - Select the displays that were compared in this experiment:</h3>
+						<% @systems.each do |system| %>
+							<div style="width:33%;float:left">
+								<%= check_box_tag "experiment[system_ids][]", system.id, @experiment.systems.include?(system) %><%= system.system_tag %><br>
+							</div>
+						<% end %>
+					</div>
+
+					<div id="field">
+						<h3>Displays - Provide as much detail as you can on the technical specifications of the displays compared in this experiment:</h3>
+						<%= f.text_area :systems_tech, :cols => 80, :rows => 6 %>
+					</div>
+					
+					<div id="field">
+						<h3>Hardware/Software - Provide as much detail as you can on the harware/software used in this experiment (dislays, input devices, tracking systems, computers, etc.):</h3>
+						<%= f.text_area :systems_desc, :cols => 80, :rows => 6 %>
+					</div>
+
+					<div id="field">
+						<h3>Components of Immersion - ?? Select all components of immersion involved in this experiment:</h3>
+						<% @comps.each do |comp| %>
+							<div style="width:33%;float:left">
+								<%= check_box_tag "experiment[comp_ids][]", comp.id, @experiment.comps.include?(comp) %><%= comp.comp_tag %><br>
+							</div>
+						<% end %>
+					</div>
+					
+					<div id="field">
+						<h3>Components of Immersion - ?? Description of how the components of immersion impacted this experiment ??:</h3>
+						<%= f.text_area :comps_desc, :cols => 80, :rows => 6 %>
+					</div>
+					
+					<div id="field">
+						<h3>Additional Variables - Describe any additional independent variables (not components of immersion) and their levels:</h3>
+						<%= f.text_area :variables_desc, :cols => 80, :rows => 6 %>
+					</div>
+				  
+					<div id="field">
+						<h3>Constants - Describe other factors that were held constant in this experiment:</h3>
+						<%= f.text_area :constants, :cols => 80, :rows => 6 %>
+					</div>
+
+					<div id="field">
+						<h3>Other - Additional information about this experiment not captured by this form:</h3>
+						<%= f.text_area :other, :cols => 80, :rows => 6 %>
+					</div>
+				</div>
+				<div id="field">
+					<div id="submit"><%= f.submit "Submit Experiment Details" %></div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
 	
-	<% form_for [@paper,@experiment] do |f| %>
-		<% f.error_messages %>
-		
-		<tr><td>
-			<h3>Task - Select the option that best represents the task participants performed in this experiment:</h3>
-			<% @tasks.each do |task| %>
-				<%= radio_button_tag "experiment[task_ids][]", task.id, @experiment.tasks.include?(task) %><%= task.task_tag %><br />
-			<% end %>
-		</td></tr>
-		
-		<tr><td>
-			<h3>Task - Provide a detailed description of the task participants performed in this experiment:</h3>
-			<%= f.text_area :task_desc, :cols => 100, :rows => 6 %>
-		</td></tr>
+<div id="heading">
+	<div id="medium_check_box">
+		<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"30x30" %>
+	</div>
+	<div id="medium_heading_disabled">
+		<h3>User Tasks Details</h3>
+	</div>
+</div>
 
-		<tr><td>
-			<h3>Interface - If participants interacted with the system, describe the user interface and interaction techniques used:</h3>
-			<%= f.text_area :interface_desc, :cols => 100, :rows => 6 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Environment - Characterize the dimensionality of the environment used in this experiment:</h3>
-			<%= f.radio_button :env_dim, "0" %>2.5D (3D environment where everything is on a ground plane or a terrain)"<br>
-			<%= f.radio_button :env_dim, "1" %>3D (the parts of the environment and the user's movements are in all three dimensions)<br>
-			<%= f.radio_button :env_dim, "2" %>Not reported<br>
-		</td></tr>
-
-		<tr><td>
-			<h3>Environment - Characterize the scale of the environment used in this experiment:</h3>
-			<%= f.radio_button :env_scale, "0" %>Small (0-10 meters on a side)<br>
-			<%= f.radio_button :env_scale, "1" %>Medium (10-100 meters on a side)<br>
-			<%= f.radio_button :env_scale, "2" %>Large (>100 meters on a side)<br>
-			<%= f.radio_button :env_scale, "3" %>Not reported<br>
-		</td></tr>
-
-		<tr><td>
-			<h3>Environment - Characterize the density of the environment used in this experiment:</h3>
-			<%= f.radio_button :env_density, "0" %>Low (sparse, mostly empty space)<br>
-			<%= f.radio_button :env_density, "1" %>Medium<br>
-			<%= f.radio_button :env_density, "2" %>High (dense, little empty space)<br>
-			<%= f.radio_button :env_density, "3" %>Not reported<br>
-		</td></tr>
-
-		<tr><td>
-			<h3>Environment - Characterize the visual realism of the environment used in this experiment:</h3>
-			<%= f.radio_button :env_realism, "0" %>Low (abstract, cartoony, simple)<br>
-			<%= f.radio_button :env_realism, "1" %>Medium<br>
-			<%= f.radio_button :env_realism, "2" %>High (looks highly realistic)<br>
-			<%= f.radio_button :env_realism, "3" %>Not reported<br>
-		</td></tr>
-
-		<tr><td>
-			<h3>Environment - Provide a detailed description of the environment used in this experiment:</h3>
-			<%= f.text_area :env_desc, :cols => 100, :rows => 6 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Participants - Number of participants in this experiment:</h3>
-			<%= f.radio_button :part_num, "0" %>1-5<br>
-			<%= f.radio_button :part_num, "1" %>6-10<br>
-			<%= f.radio_button :part_num, "2" %>11-20<br>
-			<%= f.radio_button :part_num, "3" %>21-50<br>
-			<%= f.radio_button :part_num, "4" %>50+<br>
-			<%= f.radio_button :part_num, "5" %>None<br>
-		</td></tr>
-
-		<tr><td>
-			<h3>Participants - Gender balance of the participants in this experiment:</h3>
-			<%= f.radio_button :part_gender, "0" %>Female only<br>
-			<%= f.radio_button :part_gender, "1" %>Mostly female<br>
-			<%= f.radio_button :part_gender, "2" %>Balanced gender<br>
-			<%= f.radio_button :part_gender, "3" %>Mostly male<br>
-			<%= f.radio_button :part_gender, "4" %>Male only<br>
-			<%= f.radio_button :part_gender, "5" %>Not reported<br>
-		</td></tr>
-
-		<tr><td>
-			<h3>Participants - Age range of the participants in this experiment:</h3>
-			<%= f.text_field :part_age, :size => 50 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Participants - Technical background of the participants in this experiment:</h3>
-			<%= f.text_area :part_background, :cols => 100, :rows => 6 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Participants - Provide any other relevant information about the participants in this experiment:</h3>
-			<%= f.text_area :part_other, :cols => 100, :rows => 6 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Displays - Select the displays that were compared in this experiment:</h3>
-			<% @systems.each do |system| %>
-				<%= check_box_tag "experiment[system_ids][]", system.id, @experiment.systems.include?(system) %><%= system.system_tag %><br>
-			<% end %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Displays - Provide as much detail as you can on the technical specifications of the displays compared in this experiment:</h3>
-			<%= f.text_area :systems_tech, :cols => 100, :rows => 6 %>
-		</td></tr>
-		
-		<tr><td>
-			<h3>Hardware/Software - Provide as much detail as you can on the harware/software used in this experiment (input devices, tracking systems, computers, etc.):</h3>
-			<%= f.text_area :systems_desc, :cols => 100, :rows => 6 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Components of Immersion - Select all components of immersion relevant to this experiment:</h3>
-			<% @comps.each do |comp| %>
-				<%= check_box_tag "experiment[comp_ids][]", comp.id, @experiment.comps.include?(comp) %><%= comp.comp_tag %><br>
-			<% end %>
-		</td></tr>
-		
-		<tr><td>
-			<h3>Components of Immersion - ?? Description of how the components of immersion impacted this experiment ??:</h3>
-			<%= f.text_area :comps_desc, :cols => 100, :rows => 6 %>
-		</td></tr>
-		
-		<tr><td>
-			<h3>Additional Variables - Describe any additional independent variables (not displays) and their levels:</h3>
-			<%= f.text_area :variables_desc, :cols => 100, :rows => 6 %>
-		</td></tr>
-	  
-		<tr><td>
-			<h3>Constants - Describe other factors that were held constant in this experiment:</h3>
-			<%= f.text_area :constants, :cols => 100, :rows => 6 %>
-		</td></tr>
-
-		<tr><td>
-			<h3>Metrics - Select all the metrics used for evaluation in this experiment:</h3>
-			<% @metrics.each do |metric| %>
-				<%= check_box_tag "experiment[metric_ids][]", metric.id, @experiment.metrics.include?(metric) %><%= metric.metric_tag %><br>
-			<% end %>
-		</td></tr>
-		
-		<tr><td>
-			<h3>Other - Additional information about this experiment not captured by this form:</h3>
-			<%= f.text_area :other, :cols => 100, :rows => 6 %>
-		</td></tr>
-	  
-		<tr>
-			<td align="right"><%= f.submit "Next" %></td>
-		</tr>
-	<% end %>
-	
-</table>
-</center>
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_disabled">
+		<h2>Review & Submit</h2>
+	</div>
+</div>

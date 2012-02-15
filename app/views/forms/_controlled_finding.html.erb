@@ -1,57 +1,126 @@
-<center>
-<table>
-	<tr><td>
-		<h3>Instructions:</h3>
-		<ul>
-			<li>If it is a DIRECT/INVERSE/NO RELATIONSHIP, pick ONE component and ONE metric</li>
-			<li>If it is an INTERACTION, pick the TWO (or more) components involved in the interaction and ONE metric</li>
-		</ul>
-	</tr></td>
-	
-	<%= form_for [@paper,@experiment,@finding] do |f| %>
-		<tr><td>
-			<h3>Relationship:</h3>
-			<% @relationships.each do |relationship| %>
-				<%= f.radio_button :rel_id, relationship.id %><%= relationship.rel_tag %><br>
-			<% end %>
-		</tr></td>
-		
-		<tr><td>
-			<h3>Components of immersion involved:</h3>
-			<% @comps.each do |comp| %>
-				<%= check_box_tag "finding[comp_ids][]", comp.id, @finding.comps.include?(comp) %><%= comp.comp_tag %><br>
-			<% end %>
-		</tr></td>
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_inactive">
+		<div id="heading_left"><h2>Publication Details</h2></div>
+		<div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+	</div>
+</div>
 
-		<tr><td>
-			<h3>Metric involved:</h3>
-			<% @metrics.each do |metric| %>
-				<%= radio_button_tag "finding[metric_ids][]", metric.id, @finding.metrics.include?(metric) %><%= metric.metric_tag %><br>
-			<% end %>
-		</tr></td>
-		
-		<tr><td>
-			<h3>Finding (one sentence):</h3>
-			<%= f.text_area :finding, :cols => 75, :rows => 6  %><br>
-		</tr></td>
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_active">
+		<h2>Experiments Details:</h2>
+	</div>
+	<div id="medium_check_box">
+		<%= image_tag "checked.png", :border=>"0", :size=>"35x35" %>
+	</div>
+	<div id="medium_heading_inactive">
+		<div id="heading_left"><h3>Basic Experiment Details</h3></div>
+		<div id="heading_right"><%= button_to "Edit", edit_paper_experiment_path(@paper,@experiment) %></div>
+	</div>
+	<div id="medium_check_box">
+		<%= image_tag "unchecked.png", :border=>"0", :size=>"35x35" %>
+	</div>
+	<div id="medium_heading_active">
+		<h3>User Tasks Details:</h3>
+	</div>
+	<div id="small_check_box">
+		<%= image_tag "checked.png", :border=>"0", :size=>"20x20" %>
+	</div>
+	<div id="small_heading_inactive">
+		<div id="heading_left"><h3>Basic User Task Details</h3></div>
+		<div id="heading_right"><%= button_to "Edit", edit_paper_experiment_exp_task_path(@paper,@experiment,@exp_task) %></div>
+	</div>
+	<div id="small_check_box">
+		<%= image_tag "unchecked.png", :border=>"0", :size=>"20x20" %>
+	</div>
+	<div id="small_heading_active">
+		<h3>Findings Details:</h3>
+	</div>
+</div>
 
-		<tr><td>
-			<h3>Specificity:</h3>
-			<%= f.radio_button :specificity, "0" %>Highly specific<br>
-			<%= f.radio_button :specificity, "1" %>Somewhat specific<br>
-			<%= f.radio_button :specificity, "2" %>Neither<br>
-			<%= f.radio_button :specificity, "3" %>Somewhat general<br>
-			<%= f.radio_button :specificity, "4" %>Highly general<br>
-		</tr></td>
-
-		<tr><td>
-			<h3>Issues:</h3>
-			<%= f.text_area :issues, :cols => 75, :rows => 6  %><br>
-		</tr></td>
-		
-		<tr><td align="right">
-			<%= f.submit "Save Finding" %>
-		</tr></td>
+<div id="inner">
+	<% if @exp_task.findings.count == 0 %>
+		<div id="field"><%= button_to "<< Skip adding FINDINGS >>", paper_experiment_exp_tasks_path(@paper,@experiment), :method => :put %></div>
 	<% end %>
-</table>
-</center>
+	<div id="inner_title"><h3>ADD NEW FINDING</h3></div>
+	<%= render "shared/error_messages", :target => @finding %> 
+	
+	<div id="inner_table">		
+		<%= form_for [@paper,@experiment,@exp_task,@finding] do |f| %>
+			<div id="outer_section">
+				<div id="inner_section">							
+					<div><h3><u>Instructions:</u></h3></div>
+					<div id="field">In this section you will add findings for this specific user task. Some more info to describe them.</div>
+					<div id="field">
+						<ul>
+							<li>If it is a DIRECT/INVERSE/NO RELATIONSHIP, pick ONE component and ONE metric</li>
+							<li>If it is an INTERACTION, pick the TWO (or more) components involved in the interaction and ONE metric</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<div id="outer_section">
+				<div id="inner_section">
+					<div id="field">
+						<div><h3><u>Relationship:</u></h3></div>
+						<% @relationships.each do |relationship| %>
+							<%= f.radio_button :rel_id, relationship.id %><%= relationship.rel_tag %><br>
+						<% end %>
+					</div>
+
+					<div id="field">
+						<div><h3><u>Components of immersion involved:</u></h3></div>
+						<% @comps.each do |comp| %>
+							<%= check_box_tag "finding[comp_ids][]", comp.id, @finding.comps.include?(comp) %><%= comp.comp_tag %><br>
+						<% end %>
+					</div>
+
+					<div id="field">
+						<div><h3><u>Metric:</u></h3></div>
+						<% @metrics.each do |metric| %>
+							<%= radio_button_tag "finding[metric_ids][]", metric.id, @finding.metrics.include?(metric) %><%= metric.metric_tag %><br>
+						<% end %>
+					</div>
+
+					<div id="field">
+						<div><h3><u>Finding (one sentence):</u></h3></div>
+						<%= f.text_area :finding, :cols => 80, :rows => 6  %>
+					</div>
+
+					<div id="field">
+						<div><h3><u>Specificity:</u></h3></div>
+						<%= f.radio_button :specificity, "0" %>Highly specific<br>
+						<%= f.radio_button :specificity, "1" %>Somewhat specific<br>
+						<%= f.radio_button :specificity, "2" %>Neither<br>
+						<%= f.radio_button :specificity, "3" %>Somewhat general<br>
+						<%= f.radio_button :specificity, "4" %>Highly general<br>
+					</div>
+					
+					<div id="field">
+						<div><h3><u>Issues:</u></h3></div>
+						<%= f.text_area :issues, :cols => 80, :rows => 6  %>
+					</div>
+				</div>
+				
+				<div id="field">
+					<div id="submit"><%= f.submit "Submit Finding Details" %></div>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</div>
+	
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_disabled">
+		<h2>Review & Submit</h2>
+	</div>
+</div>

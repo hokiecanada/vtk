@@ -1,0 +1,81 @@
+<div id="heading">
+	<div id="check_box">
+		<%= image_tag "checkbox-unchecked.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="heading_active">
+		<h2>Citation Details:</h2>
+	</div>
+</div>
+
+<div id="inner">
+	<div id="inner_title"><h3>AUTHOR DETAILS</h3></div>
+	<div id="inner_table">	
+		<%= form_for @paper do |f| %> 
+			<%= f.error_messages %>
+			<div id="field">Please enter authors in the order they appear in the publication. To avoid duplicate authors, please first search the database for authors, and only add new authors if needed.</div>
+			
+			<% if @paper_authors.size > 0 %>
+				<div id="field">
+					<% @paper_authors.each do |ap| %>	
+						Author #<%= ap.order %>: <% a = Author.find(ap.author_id) %>
+							<%= a.last_name + ", " + a.first_name + " " + a.initials %>
+							<small><%= link_to 'Delete', ap, :confirm => 'Are you sure?', :method => :delete %></small>
+					<% end %>
+				</div>
+			<% end %>
+			
+			<div id="field">
+				<h3>Author #<%= @paper_authors.size+1 %>:</h3>
+			</div>
+			
+			<div id="field">
+				<i>Find an author already in the database:</i><br>
+				<%= form_for(@paper_author) do |g| %>
+					<%= g.error_messages %>
+					<%= g.hidden_field :order, :value=>@paper_authors.size+1 %>
+					<%= g.hidden_field :paper_id, :value=>@paper.id %>
+					<%= g.select :author_id, @authors.collect{|a| [a.last_name + ', ' + a.first_name + ' ' + a.initials,a.id]}, :size => 10, :style => 'width: 500px;' %>
+					<%= g.submit "Confirm Author" %></td>
+				<% end %>
+			</div>
+			
+			<div id="field">
+				<%= form_for @paper_author do |f| %>
+					<%= f.error_messages %>
+					<%= f.hidden_field :order, :value => @paper_authors.size+1 %>
+					<%= f.hidden_field :paper_id, :value => @paper.id %>
+					<%= text_field_tag :last_name, "Last name", :onFocus => "if(this.value==this.defaultValue) this.value='';", :onBlur => "if(this.value=='') this.value=this.defaultValue;" %>, 
+					<%= text_field_tag :first_name, "First name", :onFocus => "if(this.value==this.defaultValue) this.value='';", :onBlur => "if(this.value=='') this.value=this.defaultValue;" %>
+					<%= text_field_tag :initials, "Initials", :size => 8, :onFocus => "if(this.value==this.defaultValue) this.value='';" %>
+					<%= f.submit "Add New Author" %>
+				<% end %>
+			</div>
+
+			<div id="field">
+				<%= button_to "Save and Continue", confirm_authors_path(:id => @paper), :method => 'put', :disabled => (@paper.authors.size == 0) %>
+			</div>
+			
+			<div id="field">
+				<div id="submit"><%= f.submit "Save & Continue" %></div>
+			</div>
+		<% end %>		
+	</div>
+</div>
+
+<div id="heading">
+	<div id="check_box">
+		<%= image_tag "checkbox-unchecked-gray.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="heading_inactive">
+		<h2>Experiment Details:</h2>
+	</div>
+</div>
+
+<div id="heading">
+	<div id="check_box">
+		<%= image_tag "checkbox-unchecked-gray.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="heading_inactive">
+		<h2>Review & Submit:</h2>
+	</div>
+</div>

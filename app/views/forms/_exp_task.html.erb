@@ -1,0 +1,188 @@
+<div id="heading">
+	<% link_to edit_paper_path(@paper) do %>
+		<div id="large_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_inactive">
+			<div id="heading_left"><h2>Publication Details</h2></div>
+			<div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+		</div>
+	<% end %>
+</div>
+
+<div id="heading">
+	<% link_to paper_experiments_path(@paper) do %>
+		<% if @paper.status == 3 %>
+			<div id="large_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_active">
+				<h2>Experiments Details:</h2>
+			</div>
+		<% else %>
+			<div id="large_check_box">
+				<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+			</div>
+			<div id="large_heading_active">
+				<h2>Experiments Details:</h2>
+			</div>		
+		<% end %>
+	<% end %>
+	<% link_to paper_experiment_path(@paper,@experiment) do %>
+		<div id="medium_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"35x35" %>
+		</div>
+		<div id="medium_heading_inactive">
+			<div id="heading_left"><h3>Basic Experiment Details</h3></div>
+			<div id="heading_right"><%= button_to "Edit", edit_paper_experiment_path(@paper,@experiment) %></div>
+		</div>
+	<% end %>
+	<% link_to paper_experiment_exp_tasks_path(@paper,@experiment) %>
+		<% if @experiment.status == 0 %>
+			<div id="medium_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"35x35" %>
+			</div>
+			<div id="medium_heading_active">
+				<h3>User Tasks Details:</h3>
+			</div>
+		<% else %>
+			<div id="medium_check_box">
+				<%= image_tag "unchecked.png", :border=>"0", :size=>"35x35" %>
+			</div>
+			<div id="medium_heading_active">
+				<h3>User Tasks Details:</h3>
+			</div>
+		<% end %>
+	<% end %>
+	<div id="small_check_box">
+		<%= image_tag "unchecked.png", :border=>"0", :size=>"20x20" %>
+	</div>
+	<div id="small_heading_active">
+		<h3>Basic User Task Details:</h3>
+	</div>
+</div>
+
+<div id="inner">
+	<% if @experiment.exp_tasks.count == 0 %>
+		<div id="field"><%= button_to "<< Skip adding USER TASKS >>", paper_experiments_path(@paper), :method => :put %></div>
+	<% end %>
+	<div id="inner_title"><h3>ADD NEW USER TASK</h3></div>
+	<%= render "shared/error_messages", :target => @exp_task %> 
+	
+	<div id="inner_table">		
+		<% form_for [@paper,@experiment,@exp_task] do |f| %>
+			<div id="outer_section">
+				<div id="inner_section">							
+					<div><h3><u>Instructions:</u></h3></div>
+					<div id="field">In this section you will add details on the user tasks performed in this experiment. Some more info to describe them.</div>
+				</div>
+			</div>
+			<div id="outer_section">
+				<div id="inner_section">							
+					<div><h3><u>Task Categories:</u></h3></div>
+
+					<div id="field">
+						<div><i><b>What task categories were involved? (typically only one box will be checked)</b></i></div>
+						<% @tasks.each do |task| %>
+							<div style="width:50%;float:left">
+								<%= check_box_tag "exp_task[task_ids][]", task.id, @exp_task.tasks.include?(task) %><%= task.task_tag %><br />
+							</div>
+						<% end %>
+					</div>
+					<div id="field">
+						<div><i><b>Detailed description of the task users performed:</b></i></div>
+						<%= f.text_area :task_desc, :cols => 80, :rows => 6 %>
+					</div>
+				</div>
+			</div>
+			<div id="outer_section">	
+				<div id="inner_section">
+					<div><h3><u>Interface/Environment Details:</u></h3></div>
+
+					<% if @experiment.exp_tasks.count > 0 %>
+						<div id="field">
+							<%= check_box_tag "same_as_previous", "1", false, :onchange => "if (this.checked == true) { $('interface').hide(); } else { $('interface').show(); }" %> Interface/environment the same as the previous user task?
+						</div>
+					<% end %>
+					
+					<div id="interface">
+						<div id="field">
+							<div><i><b>If participants interacted with the system, describe the user interface and interaction techniques used:</b></i></div>
+							<%= f.text_area :interface_desc, :cols => 80, :rows => 6 %>
+						</div>
+						
+						<div id="field">
+							<div><i><b>Characterize the dimensionality of the environment used:</b></i></div>
+							<%= f.radio_button :env_dim, "0" %>2.5D (3D environment where everything is on a ground plane or a terrain)"<br>
+							<%= f.radio_button :env_dim, "1" %>3D (the parts of the environment and the user's movements are in all three dimensions)<br>
+							<%= f.radio_button :env_dim, "2" %>Not reported<br>
+						</div>
+
+						<div id="field">
+							<div><i><b>Characterize the scale of the environment used:</b></i></div>
+							<%= f.radio_button :env_scale, "0" %>Small (0-10 meters on a side)<br>
+							<%= f.radio_button :env_scale, "1" %>Medium (10-100 meters on a side)<br>
+							<%= f.radio_button :env_scale, "2" %>Large (>100 meters on a side)<br>
+							<%= f.radio_button :env_scale, "3" %>Not reported<br>
+						</div>
+
+						<div id="field">
+							<div><i><b>Characterize the density of the environment used:</b></i></div>
+							<%= f.radio_button :env_density, "0" %>Low (sparse, mostly empty space)<br>
+							<%= f.radio_button :env_density, "1" %>Medium<br>
+							<%= f.radio_button :env_density, "2" %>High (dense, little empty space)<br>
+							<%= f.radio_button :env_density, "3" %>Not reported<br>
+						</div>
+
+						<div id="field">
+							<div><i><b>Characterize the visual realism of the environment used:</b></i></div>
+							<%= f.radio_button :env_realism, "0" %>Low (abstract, cartoony, simple)<br>
+							<%= f.radio_button :env_realism, "1" %>Medium<br>
+							<%= f.radio_button :env_realism, "2" %>High (looks highly realistic)<br>
+							<%= f.radio_button :env_realism, "3" %>Not reported<br>
+						</div>
+
+						<div id="field">
+							<div><i><b>Provide a detailed description of the environment used:</b></i></div>
+							<%= f.text_area :env_desc, :cols => 80, :rows => 6 %>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="outer_section">
+				<div id="inner_section">
+					<div><h3><u>Metrics</u></h3></div>
+					<div id="field">
+						<div><i><b>Select all the metrics used for evaluation:</b></i></div>
+						<% @metrics.each do |metric| %>
+							<div style="width:33%;float:left">
+								<%= check_box_tag "exp_task[metric_ids][]", metric.id, @exp_task.metrics.include?(metric) %><%= metric.metric_tag %><br>
+							</div>
+						<% end %>
+					</div>
+				</div>
+				<div id="field">
+					<div id="submit"><%= f.submit "Submit User Task Details" %></div>
+				</div>
+			</div>
+		<% end %>
+	</div>
+</div>
+	
+<div id="heading">
+	<div id="small_check_box">
+		<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"20x20" %>
+	</div>
+	<div id="small_heading_disabled">
+		<h3>Findings Details</h3>
+	</div>
+</div>
+
+<div id="heading">
+	<div id="large_check_box">
+		<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>
+	</div>
+	<div id="large_heading_disabled">
+		<h2>Review & Submit</h2>
+	</div>
+</div>

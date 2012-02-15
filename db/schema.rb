@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110925163959) do
+ActiveRecord::Schema.define(:version => 20120212215253) do
 
   create_table "author_papers", :force => true do |t|
     t.integer "author_id"
@@ -38,16 +38,35 @@ ActiveRecord::Schema.define(:version => 20110925163959) do
     t.datetime "updated_at"
   end
 
-  create_table "experiments", :force => true do |t|
-    t.integer  "exp_type"
-    t.string   "title"
-    t.text     "task_desc"
+  create_table "exp_tasks", :force => true do |t|
+    t.string   "task_desc"
+    t.integer  "task_id"
+    t.integer  "experiment_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text     "interface_desc"
     t.integer  "env_dim"
     t.integer  "env_scale"
     t.integer  "env_density"
     t.integer  "env_realism"
     t.text     "env_desc"
+    t.integer  "status"
+  end
+
+  create_table "exp_tasks_metrics", :id => false, :force => true do |t|
+    t.integer "exp_task_id"
+    t.integer "metric_id"
+  end
+
+  create_table "exp_tasks_tasks", :id => false, :force => true do |t|
+    t.integer "exp_task_id"
+    t.integer "task_id"
+  end
+
+  create_table "experiments", :force => true do |t|
+    t.integer  "exp_type"
+    t.string   "title"
+    t.text     "task_desc"
     t.integer  "part_num"
     t.integer  "part_gender"
     t.integer  "part_age"
@@ -65,6 +84,7 @@ ActiveRecord::Schema.define(:version => 20110925163959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "num"
+    t.text     "goals"
   end
 
   create_table "experiments_comps", :id => false, :force => true do |t|
@@ -97,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20110925163959) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "rel_id"
+    t.integer  "exp_task_id"
   end
 
   create_table "findings_comps", :id => false, :force => true do |t|
@@ -131,8 +152,7 @@ ActiveRecord::Schema.define(:version => 20110925163959) do
     t.date     "year"
     t.integer  "volume"
     t.integer  "number"
-    t.integer  "first_page"
-    t.integer  "last_page"
+    t.string   "first_page"
     t.string   "doi"
     t.string   "paper_url"
     t.integer  "num_views"

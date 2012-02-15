@@ -1,0 +1,78 @@
+<div id="form_title">
+	<center><h1>ADD NEW PUBLICATION</h1></center>
+</div>
+	
+<div id="form_body">
+
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_inactive">
+			<div id="heading_left"><h2>Publication Details</h2></div><div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
+		</div>
+	</div>
+
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_active">
+			<h2>Experiment Details:</h2>
+		</div>
+		<div id="medium_check_box">
+			<%= image_tag "checked.png", :border=>"0", :size=>"35x35" %>
+		</div>
+		<div id="medium_heading_inactive">
+			<div id="heading_left"><h3>Basic Experiment Details</h3></div>
+			<div id="heading_right"><%= button_to "Edit", edit_paper_experiment_path(@paper,@experiment) %></div>
+		</div>
+		<div id="medium_check_box">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"35x35" %>
+		</div>
+		<div id="medium_heading_active">
+			<h3>User Task Details:</h3>
+		</div>
+	</div>
+
+	<div id="inner">
+		<div id="inner_title"><h3>USER TASKS</h3></div>
+		<div id="inner_table">	
+			<div id="outer_section">
+				<div id="notice"><%= flash[:notice] %></div>
+				<div id="inner_section">
+					<div id="field">Here are the current user tasks you have for this experiment. You can add more, edit the ones you have already enterred, or move on.</div>
+					
+					<div><i>(<%= @exp_tasks.count %> user task(s) saved for this experiment)</i></div>
+					
+					<% if @exp_tasks.count > 0 %>
+						<div><h3>User Tasks:</h3></div>
+						<div style="margin:0 0 20px 75px">
+							<% @exp_tasks.each_with_index do |exp_task,i| %>
+								<div>User Task #<%= i+1 %>: <%= link_to "Edit", edit_paper_experiment_exp_task_path(@paper,@experiment,exp_task) %> | <%= link_to 'Delete', [@paper,@experiment,exp_task], :confirm => 'Are you sure?', :method => :delete %></div>
+							<% end %>
+						</div>
+					<% end %>
+					
+					<div id="field">
+						<center><%= button_to 'Add User Task', new_paper_experiment_exp_task_path(@paper,@experiment) %></center>
+					</div>
+				</div>
+
+				<div id="field">
+					<div id="submit"><%= button_to 'Confirm User Tasks Details', paper_experiments_path(@paper), :disabled => (@experiment.exp_tasks.count == 0), :method => :put %></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+					
+	<div id="heading">
+		<div id="large_check_box">
+			<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"50x50" %>
+		</div>
+		<div id="large_heading_disabled">
+			<h2>Review & Submit</h2>
+		</div>
+	</div>
+</div>

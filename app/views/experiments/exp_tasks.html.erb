@@ -1,0 +1,51 @@
+<p id="notice"><%= notice %></p>
+<div id="form_title">
+	<center><h1>Step 3c: Describe the Task(s) for Experiment #<%= @experiment.num %></h1></center>
+</div>
+
+<div id="form_body">
+	<center>
+	<table>
+		<tr><td>
+			Please provide details about the task(s) participants performed in this experiment.
+			<ul>
+				<li>Select the list that best describes the task type</li>
+				<li>Provide a detailed description about the task</li>
+			</ul>
+		</tr></td>
+		
+		<tr><td>
+		<% @exp_tasks.each_with_index do |exp_task,i| %>
+			<h3>Task #<%= i %>:</h3>
+			Task type: <%= Task.find(exp_task.task_id).task_tag %><br>
+			Task description: <%= exp_task.task_desc %>
+		<% end %>
+		</tr></td>
+		
+		<% if @exp_tasks.size >= 0 %>
+			<%= button_to "Continue" paper_experiment_path(@paper,@experiment) %>
+		<% end %>
+		
+		<tr><td>
+		
+		</tr></td>
+		
+		<%= form_for [@paper,@experiment,@experiment.exp_tasks.build] do |f| %>
+
+			<tr><td>
+				<h3>Please provide a detailed description of the task(s) participants performed in this experiment:</h3>
+				<%= f.label "Task #"%><%= i %>:<br>
+				<% @tasks.each do |task| %>
+					<%= f.radio_button :task_id, task.id %><%= task.task_tag %><br />
+				<% end %>
+				<%= f.text_area :task_desc, :cols => 75, :rows => 6 %>
+			</td></tr>	
+		  
+			<tr>
+				<td align="right"><%= f.submit "Next" %></td>
+			</tr>
+		<% end %>
+		
+	</table>
+	</center>
+</div>

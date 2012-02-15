@@ -20,20 +20,32 @@ class AuthorPapersController < ApplicationController
 		ap.author_id = author.id
 		ap.save
 	end
-	redirect_to paper_authors_path(ap.paper_id), :notice => 'Author added successfully.'
+	redirect_to edit_paper_path(:id => ap.paper_id), :notice => 'Author added successfully.'
+	#redirect_to add_authors_path(:id => ap.paper_id), :notice => 'Author added successfully.'
   end
 
   
   def destroy
 	ap = AuthorPaper.find(params[:id])
 	author = Author.find(ap.author_id)
+	author_papers = Paper.find(ap.paper_id).author_papers
+	order = ap.order
+	
     ap.destroy
 	
 	if author.papers.size == 0
 		author.destroy
 	end
-
-	redirect_to paper_authors_path(ap.paper_id), :notice => 'Author deleted successfully.'
+	
+	author_papers.each do |a|
+		if a.order > order
+			a.order = a.order - 1
+			a.save
+		end
+	end
+	
+	redirect_to edit_paper_path(ap.paper_id), :notice => 'Author deleted successfully.'
+	#redirect_to add_authors_path(ap.paper_id), :notice => 'Author deleted successfully.'
   end
   
 end

@@ -1,5 +1,5 @@
 class Finding < ActiveRecord::Base
-	acts_as_indexed :fields => [:finding, :issues, :paper_title, :paper_year, :authors,  :exp_task, :find_comps, :find_tasks, :find_systems, :find_metrics, :exp_details, :paper_journal]
+	acts_as_indexed :fields => [:finding, :issues, :paper_title, :paper_year, :authors, :find_comps, :find_tasks, :find_systems, :find_metrics, :exp_details, :paper_journal]
 		
 	has_and_belongs_to_many :tasks,
 							:join_table => :findings_tasks
@@ -10,6 +10,7 @@ class Finding < ActiveRecord::Base
 	has_and_belongs_to_many :systems,
 							:join_table => :findings_systems
 	belongs_to :experiment
+	belongs_to :exp_task
 
 	def find_comps
 		comps.each do |c|
@@ -35,57 +36,59 @@ class Finding < ActiveRecord::Base
 		end
 	end
 
-	def exp_task
-		experiment.task_desc
-	end
+	#def find_exp_tasks
+	#	experiment.exp_tasks.each do |t|
+	#		t.task_desc + ' '
+	#	end
+	#end
 	
 	def exp_details
-		if !experiment.interface_desc.nil?
-			experiment.interface_desc + ' '
+		if !exp_task.interface_desc.nil?
+			exp_task.interface_desc + ' '
 		end
-		if !experiment.env_desc.nil?
-			experiment.env_desc + ' '
+		if !exp_task.env_desc.nil?
+			exp_task.env_desc + ' '
 		end
-		if !experiment.part_background.nil?
-			experiment.part_background + ' '
+		if !exp_task.experiment.part_background.nil?
+			exp_task.experiment.part_background + ' '
 		end
-		if !experiment.part_other.nil?
-			experiment.part_other + ' '
+		if !exp_task.experiment.part_other.nil?
+			exp_task.experiment.part_other + ' '
 		end
-		if !experiment.systems_desc.nil?
-			experiment.systems_desc + ' '
+		if !exp_task.experiment.systems_desc.nil?
+			exp_task.experiment.systems_desc + ' '
 		end
-		if !experiment.systems_tech.nil?
-			experiment.systems_tech + ' '
+		if !exp_task.experiment.systems_tech.nil?
+			exp_task.experiment.systems_tech + ' '
 		end
-		if !experiment.comps_desc.nil?
-			experiment.comps_desc + ' '
+		if !exp_task.experiment.comps_desc.nil?
+			exp_task.experiment.comps_desc + ' '
 		end
-		if !experiment.variables_desc.nil?
-			experiment.variables_desc + ' '
+		if !exp_task.experiment.variables_desc.nil?
+			exp_task.experiment.variables_desc + ' '
 		end
-		if !experiment.constants.nil?
-			experiment.constants + ' '
+		if !exp_task.experiment.constants.nil?
+			exp_task.experiment.constants + ' '
 		end
-		if !experiment.other.nil?
-			experiment.other
+		if !exp_task.experiment.other.nil?
+			exp_task.experiment.other
 		end
 	end
 	
 	def paper_title
-		Paper.find(experiment.paper_id).title
+		Paper.find(exp_task.experiment.paper_id).title
 	end
 	
 	def paper_journal
-		Paper.find(experiment.paper_id).journal
+		Paper.find(exp_task.experiment.paper_id).journal
 	end
 	
 	def paper_year
-		Paper.find(experiment.paper_id).year.strftime("%Y")
+		Paper.find(exp_task.experiment.paper_id).year.strftime("%Y")
 	end
 	
 	def authors
-		Paper.find(experiment.paper_id).authors.each do |a|
+		Paper.find(exp_task.experiment.paper_id).authors.each do |a|
 			a.last_name + ' ' + a.first_name + ' '
 		end
 	end
