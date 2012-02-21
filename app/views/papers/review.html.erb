@@ -4,52 +4,106 @@
 	
 <div id="form_body">
 	<div id="heading">
-		<% link_to edit_paper_path(@paper) do %>
-			<div id="large_check_box">
-				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
-			</div>
-			<div id="large_heading_inactive">
-				<div id="heading_left"><h2>Publication Details</h2></div>
-				<div id="heading_right"><%= button_to "Edit", edit_paper_path(@paper) %></div>
-			</div>
-		<% end %>
-		<% link_to paper_experiments_path(@paper) do %>
-			<div id="large_check_box">
-				<%= image_tag "checked.png", :border=>"0", :size=>"50x50" %>
-			</div>
-			<div id="large_heading_inactive">
-				<div id="heading_left"><h2>Experiment Details</h2></div>
-				<div id="heading_right"><%= button_to "Edit", paper_experiments_path(@paper), :method => :put %></div>
-			</div>
-		<% end %>
 		<div id="large_check_box">
-			<%= image_tag "unchecked.png", :border=>"0", :size=>"50x50" %>
+			<%= image_tag "checked.png", :border=>"0", :size=>"40x40" %>
 		</div>
-		<div id="large_heading_active">
-			<h2>Review & Submit:</h2>
+		<div id="large_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">
+			<div style="float:left">Publication Details</div>
+			<div id="hidden_links"><div style="float:left;padding-left:40px;"><%= link_to "Edit", edit_paper_path(@paper) %> | <%= link_to "Delete", @paper, :confirm => 'This will permananently delete the entry and all associated experiments, user tasks and findings. Are you sure you want to continue?', :method => :delete %></div></div>
 		</div>
+		<% @paper.experiments.each_with_index do |exp,i| %>
+			<div id="large_check_box">
+				<%= image_tag "checked.png", :border=>"0", :size=>"40x40" %>
+			</div>
+			<div id="large_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">
+				<div style="float:left"><%= link_to "", :onclick => "$('experiment_#{i}').toggle();$('exp_links_#{i}').toggle();", :remote => true do %>Experiment #<%= i+1 %> - "<%= exp.title %>"<% end %></div>
+				<div id="hidden_links"><div id="exp_links_<%= i %>" style="display:none;float:left;padding-left:40px;"><%= link_to "Add User Task", new_paper_experiment_exp_task_path(@paper,exp) %> | <%= link_to "Delete", [@paper,exp], :confirm => 'This will permananently delete the experiment and all associated user tasks and findings. Are you sure you want to continue?', :method => :delete %></div></div>
+			</div>
+			
+			<div id="experiment_<%= i %>" style="display:none">
+				<div id="medium_check_box">
+					<%= image_tag "checked.png", :border=>"0", :size=>"30x30" %>
+				</div>
+				<div id="medium_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">
+					<div style="float:left">Experiment Details</div>
+					<div id="hidden_links"><div style="float:left;padding-left:40px;"><%= link_to "Edit", edit_paper_experiment_path(@paper,exp) %></div></div>
+				</div>
+					
+				<% exp.exp_tasks.each_with_index do |exp_task,j| %>
+					<div id="medium_check_box">
+						<%= image_tag "checked.png", :border=>"0", :size=>"30x30" %>
+					</div>
+					<div id="medium_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">
+						<div style="float:left"><%= link_to "", :onclick => "$('exp_#{i}_task_#{j}').toggle();$('exp_#{i}_task_#{j}_links').toggle();", :remote => true do %>User Task #<%= j+1 %> - "<%= exp_task.title %>"<% end %></div>
+						<div id="hidden_links"><div id="exp_<%= i %>_task_<%= j %>_links" style="display:none;float:left;padding-left:40px;"><%= link_to "Add Finding", new_paper_experiment_exp_task_finding_path(@paper,exp,exp_task) %> | <%= link_to "Delete", [@paper,exp,exp_task], :confirm => 'This will permananently delete the user task and all associated findings. Are you sure you want to continue?', :method => :delete %></div></div>
+					</div>
+					
+					<div id="exp_<%= i %>_task_<%= j %>" style="display:none">
+						<div id="small_check_box">
+							<%= image_tag "checked.png", :border=>"0", :size=>"20x20" %>
+						</div>
+						<div id="small_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">
+							<div style="float:left">User Task Details</div>
+							<div id="hidden_links"><div style="float:left;padding-left:40px;"><%= link_to "Edit", edit_paper_experiment_exp_task_path(@paper,exp,exp_task) %></div></div>
+						</div>
+
+						<% exp_task.findings.each_with_index do |finding,k| %>
+							<div id="small_check_box">
+								<%= image_tag "checked.png", :border=>"0", :size=>"20x20" %>
+							</div>
+							<div id="small_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">
+								<div style="float:left">Finding #<%= k+1 %> - "<%= finding.title %>"</div>
+								<div id="hidden_links"><div style="float:left;padding-left:40px;"><%= link_to "Edit", edit_paper_experiment_exp_task_finding_path(@paper,exp,exp_task,finding) %> | <%= link_to "Delete", [@paper,exp,exp_task,finding], :confirm => 'This will permananently delete the finding. Are you sure you want to continue?', :method => :delete %></div></div>
+							</div>
+						<% end %>
+					</div>
+				<% end %>
+			</div>
+		<% end %>
+		<%= link_to paper_experiments_path(@paper) do %>
+			<div id="large_check_box">
+				<%= image_tag "unchecked.png", :border=>"0", :size=>"40x40" %>	
+			</div>
+			<div id="large_heading_inactive" onmouseover="this.style.background='#DEDEDE'" onmouseout="this.style.background='#fff'">Add Experiment</div>
+		<% end %>
+		<div id="large_check_box_active">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"40x40" %>	
+		</div>
+		<div id="large_heading_active">Review & Submit:</div>	
 	</div>
 
 	<div id="inner">
+		<%= render "shared/notice_messages" %>
 		<div id="inner_title"><h3>REVIEW & SUBMIT</h3></div>
 		<div id="inner_table">	
+			
 			<div id="outer_section">					
 				<div id="inner_section">
-					<div id="field">Publication Details:</div>
+					<div id="field">
+						<div id="form_heading">Publication Details:</div>
+						<div id="form_text"><div><%= @paper.authors.first.last_name %><% if @paper.authors.count > 1 %> et al<% end %>, <%= @paper.title %><% if !@paper.journal.nil? %>, <i><%= @paper.journal %></i><% end %>, <%= @paper.year.strftime("%Y") %><% if !@paper.volume.nil? %>, <%= @paper.volume %><% end %><% if !@paper.number.nil? %>, <%= @paper.number %><% end %><% if !@paper.first_page.nil? %>, <%= @paper.first_page %><% end %>.</div><div><a href="<%= @paper.paper_url %>"><%= @paper.paper_url %></a></div>
+					</div>
+
 					<% @paper.experiments.each_with_index do |exp,i| %>
-						<div id="field">Experiment Details:</div>
-						<% exp.exp_tasks.each_with_index do |task,j| %>
-							<div id="field">User Tasks:</div>
-							<% task.findings.each_with_index do |find,k| %>
-								<div id="field">Findings:</div>
-							<% end %>
-						<% end %>
+						<div id="field">
+							<div id="form_heading">Experiment #<%= i+1 %>:</div>
+							<div id="form_text">
+								<div><b>"<%= exp.title %>"</b></div>
+								<% if exp.exp_tasks.count == 0 %>
+									<div><i>0 user tasks, 0 findings.</i></div>
+								<% end %>
+								<% exp.exp_tasks.each_with_index do |exp_task,j| %>
+									<div><i>User Task #<%= j+1 %> - "<%= exp_task.title %>", <%= exp_task.findings.count %> finding(s).</i></div>
+								<% end %>
+							</div>
+						</div>
 					<% end %>
 				</div>
+			</div>
 				<div id="field">
 					<div id="submit"><%= button_to "Complete Submission", confirm_path(:id => @paper.id) %></div>
 				</div>
-			</div>
+			
 		</div>
 	</div>
 </div>

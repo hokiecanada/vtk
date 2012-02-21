@@ -1,0 +1,119 @@
+<div id="form_title">
+	<center><h1>ADD NEW ENTRY</h1></center>
+</div>
+	
+<div id="form_body">
+	<div id="heading">
+		<div id="large_check_box_active">
+			<%= image_tag "unchecked.png", :border=>"0", :size=>"40x40" %>
+		</div>
+		<div id="large_heading_active">Publication Details:</div>
+	</div>
+
+	<div id="inner">
+		<%= render "shared/notice_messages" %> 
+		<div id="inner_title"><h3>ADD PUBLICATION DETAILS</h3></div>
+		<div id="inner_table">	
+			<div id="outer_section">
+				<%= render "shared/error_messages", :target => @paper %> 
+				<%= render "shared/error_messages", :target => @paper_author %> 
+				<%= render "shared/error_messages", :target => @author %>
+					
+				<div id="inner_section">
+					<div><u><b>Instructions:</b></u></div>
+					<div id="field">Enter information about the article you would like to add. Begin by entering the author details. Please try to find authors that are already in the database to avoid duplicating author details. After adding the authors, continue to add the remaining entry details. If your publication has a DOI, you can enter that first to automatically fill the remaining fields. Otherwise enter in the publication details manually.<br><span style='color:red'><i>(* denotes a required field)</i><span></div>
+				</div>
+			</div>
+			
+			<%= render '/forms/paper' %>
+		
+		</div>
+	</div>
+
+	<div id="heading">
+		<% if @paper.status <= 1 %>
+			<div id="large_check_box">
+				<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"40x40" %>
+			</div>
+			<div id="large_heading_disabled">Add Experiment</div>	
+			<div id="large_check_box">
+				<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"40x40" %>	
+			</div>
+			<div id="large_heading_disabled">Review & Submit</div>
+		<% else %>
+			<% @paper.experiments.each_with_index do |exp,i| %>
+				<%= link_to "", :onclick => "$('experiment_#{i}').toggle()", :remote => true do %>
+					<div id="large_check_box">
+						<%= image_tag "checked.png", :border=>"0", :size=>"40x40" %>
+					</div>
+					<div id="large_heading_inactive">Experiment #<%= i+1 %> - "<%= exp.title %>"</div>
+				<% end %>
+				<div id="experiment_<%= i %>" style="display:none">
+					<%= link_to edit_paper_experiment_path(@paper,exp) do %>
+						<div id="medium_check_box">
+							<%= image_tag "checked.png", :border=>"0", :size=>"30x30" %>
+						</div>
+						<div id="medium_heading_inactive">Basic Experiment Details</div>
+					<% end %>
+
+					<% exp.exp_tasks.each_with_index do |exp_task,j| %>
+						<%= link_to "", :onclick => "$('exp_task_#{j}').toggle()", :remote => true do %>
+							<div id="medium_check_box">
+								<%= image_tag "checked.png", :border=>"0", :size=>"30x30" %>
+							</div>
+							<div id="medium_heading_inactive">User Task #<%= j+1 %> - "<%= exp_task.title %>"</div>
+						<% end %>
+						<div id="exp_task_<%= j %>" style="display:none">
+							<%= link_to edit_paper_experiment_exp_task_path(@paper,exp,exp_task) do %>
+								<div id="small_check_box">
+									<%= image_tag "checked.png", :border=>"0", :size=>"20x20" %>
+								</div>
+								<div id="small_heading_inactive">Basic User Task Details</div>
+							<% end %>
+							<% exp_task.findings.each_with_index do |finding,k| %>
+								<%= link_to edit_paper_experiment_exp_task_finding_path(@paper,exp,exp_task,finding) do %>
+									<div id="small_check_box">
+										<%= image_tag "checked.png", :border=>"0", :size=>"20x20" %>
+									</div>
+									<div id="small_heading_inactive">Finding #<%= k+1 %> - "<%= finding.title %>"</div>
+								<% end %>
+							<% end %>
+							<%= link_to new_paper_experiment_exp_task_finding_path(@paper,exp,exp_task) do %>
+								<div id="small_check_box">
+									<%= image_tag "unchecked.png", :border=>"0", :size=>"20x20" %>
+								</div>
+								<div id="small_heading_inactive">Add Finding</div>
+							<% end %>
+						</div>
+					<% end %>
+					
+					<%= link_to new_paper_experiment_exp_task_path(@paper,exp) do %>
+						<div id="medium_check_box">
+							<%= image_tag "unchecked.png", :border=>"0", :size=>"30x30" %>
+						</div>
+						<div id="medium_heading_inactive">Add User Task</div>
+					<% end %>
+				</div>
+			<% end %>
+			<%= link_to paper_experiments_path(@paper) do %>
+				<div id="large_check_box">
+					<%= image_tag "unchecked.png", :border=>"0", :size=>"40x40" %>
+				</div>
+				<div id="large_heading_inactive">Add Experiment</div>
+			<% end %>
+			<% if @paper.status != 3 %>
+				<div id="large_check_box">
+					<%= image_tag "unchecked-grey.png", :border=>"0", :size=>"40x40" %>	
+				</div>
+				<div id="large_heading_disabled">Review & Submit</div>	
+			<% else %>
+				<%= link_to review_path(:id => @paper.id) do %>
+					<div id="large_check_box">
+						<%= image_tag "unchecked.png", :border=>"0", :size=>"40x40" %>	
+					</div>
+					<div id="large_heading_inactive">Review & Submit</div>	
+				<% end %>
+			<% end %>
+		<% end %>
+	</div>		
+</div>

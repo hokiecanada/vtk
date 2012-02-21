@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120212215253) do
+ActiveRecord::Schema.define(:version => 20120217180521) do
 
   create_table "author_papers", :force => true do |t|
     t.integer "author_id"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20120212215253) do
     t.integer  "env_realism"
     t.text     "env_desc"
     t.integer  "status"
+    t.string   "title"
   end
 
   create_table "exp_tasks_metrics", :id => false, :force => true do |t|
@@ -118,6 +119,7 @@ ActiveRecord::Schema.define(:version => 20120212215253) do
     t.datetime "updated_at"
     t.integer  "rel_id"
     t.integer  "exp_task_id"
+    t.string   "title"
   end
 
   create_table "findings_comps", :id => false, :force => true do |t|

@@ -20,6 +20,7 @@ Vtk::Application.routes.draw do
 	resources :relationships
 	resources :author_papers
 	resources :exp_tasks
+	resources :experiments
 	
 	match "admin" => "accounts#admin"
 	match "/papers/:paper_id/experiments" => "experiments#index"

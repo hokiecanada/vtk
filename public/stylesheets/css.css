@@ -68,39 +68,59 @@ div.field, div.actions {
 	background-color: #680000;
 	color: #fff;
 	padding: 10px;
+	height: 60px;
+	margin: auto;
+}
+
+#inner_banner {
+	width:1020px;
+	margin: auto;
+}
+
+#banner_left {
+	text-align: left;
+	font-family: impact, fantasy, serif;
+	color: #fff;
+	font-size: 48px;
+	padding: 20px 0px 20px 0px;
+	float:left;
 }
 
 #banner a {
 	color: #fff;
 }
 
-#sign_in {
+#banner_right {
 	text-align: right;
+	color: #fff;
 }
 
-#title {
-	text-align: left;
-	font-family: impact, fantasy, serif;
-	color: #fff;
-	font-size: 48px;
-	padding: 15px 0px 15px 15px;
+#sign_in {
+	padding-bottom: 10px;
+}
+
+#full_text_search {
+	padding-top: 10px;
 }
 
 #navigation {
-	width: 65%;
-	height: 60px;
+	width: 1020px;
+	margin: auto;
 	text-align: center;
-	float: left;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	overflow: auto;
 }
 
 #navigation ul {
 	list-style-type: none;
 	margin: 0;
+	padding: 0;
 }
 
 #navigation li {
 	float: left;
-	padding: 5px;
+	padding: 0 10px 0 0;
 }
 
 #navigation a {
@@ -220,11 +240,6 @@ div.field, div.actions {
 	text-align: center;
 }
 
-#full_text_search {
-	width: 30%;
-	float: right;
-	padding: 5px;
-}
 
 .pretty th .current {
   padding-right: 12px;

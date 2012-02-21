@@ -1,7 +1,7 @@
 class ExpTasksController < ApplicationController
 
-  before_filter :authenticate_user!, 			:only => [:index, :new, :edit, :create, :update, :destroy]
-  before_filter :authenticate_role, 			:only => [:index, :new, :edit, :create, :update, :destroy]
+  before_filter :authenticate_user!, 			:only => [:index, :new, :edit, :create, :update, :destroy, :show]
+  before_filter :authenticate_role, 			:only => [:index, :new, :edit, :create, :update, :destroy, :show]
   
   def authenticate_role
 	@paper = Paper.find(params[:paper_id])
@@ -19,18 +19,7 @@ class ExpTasksController < ApplicationController
 
   
   def show
-	@paper = Paper.find(params[:paper_id])
-	@experiment = @paper.experiments.find(params[:experiment_id])
-	@finding = @experiment.findings.find(params[:id])
-	if @finding.num_views.nil?
-		@finding.num_views = 1
-	else
-		@finding.num_views += 1
-	end
-	@finding.save
-    respond_to do |format|
-      format.html # show.html.erb
-    end
+	@exp_task = @experiment.exp_tasks.find(params[:id])
   end
 
   
@@ -38,6 +27,9 @@ class ExpTasksController < ApplicationController
 	@exp_task = @experiment.exp_tasks.build
 	@tasks = Task.all
 	@metrics = Metric.all
+	if !params[:title].nil?
+		flash[:notice] = 'The details for USER TASK "' + params[:title] + '" are now complete. If there is another user task to add to this experiment do so now. Otherwise click the button below to complete the experiment.'
+	end
 	#@experiment.status = 2
 	#@experiment.save
 	#@paper.status = 2
@@ -50,6 +42,7 @@ class ExpTasksController < ApplicationController
     @exp_task = @experiment.exp_tasks.find(params[:id])
 	@tasks = Task.all
 	@metrics = Metric.all
+	flash[:notice] = 'Here you can edit details for the user task.'
   end
 
   
@@ -71,7 +64,7 @@ class ExpTasksController < ApplicationController
 	end
 	
     if @exp_task.save
-        redirect_to new_paper_experiment_exp_task_finding_path(@paper,@experiment,@exp_task), :notice => 'User task was successfully added.'
+        redirect_to new_paper_experiment_exp_task_finding_path(@paper,@experiment,@exp_task), :notice => 'The basic user task details were added successfully. Now it is time to describe the different findings relevant to this user task. {more}'
     else
         render :action => "edit"
     end
@@ -85,7 +78,8 @@ class ExpTasksController < ApplicationController
 	#@exp_task.save
 	
     if @exp_task.update_attributes(params[:exp_task])
-        redirect_to paper_experiment_exp_task_findings_path(@paper,@experiment,@exp_task), :notice => 'User task details were successfully updated.'
+        redirect_to paper_experiments_path(@paper), :notice => 'The user task details were successfully updated. If you are finished adding details for this entry you can click the button below to proceed to the review stage. Otherwise continue adding/editing details.'
+		#redirect_to paper_experiment_exp_task_findings_path(@paper,@experiment,@exp_task), :notice => 'User task details were successfully updated.'
     else
         render :action => "edit"
     end
@@ -95,11 +89,7 @@ class ExpTasksController < ApplicationController
   def destroy
     @exp_task = @experiment.exp_tasks.find(params[:id])
 	@exp_task.destroy
-	if current_user.admin && @paper.status == 0
-		redirect_to user_root_path, :notice => 'User task was successfully deleted.'
-	else
-		redirect_to paper_experiment_exp_tasks_path(@paper,@experiment), :notice => 'User task was successfully deleted.'
-	end
+	redirect_to paper_experiments_path(@paper), :notice => 'The experiment details were successfully updated. If you are finished adding details for this entry you can click the button below to proceed to the review stage. Otherwise continue adding/editing details.'
   end
   
 end

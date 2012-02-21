@@ -8,40 +8,38 @@
 </head>
 <body>
 	<div id="banner">
-		<div id="sign_in">
-			<% if user_signed_in? %>
-				Signed in as <%= current_user.email %>. Not you?
-				<%= link_to "Sign out", destroy_user_session_path %>.
-			<% else %>
-				<%= link_to "Sign Up", new_user_registration_path %> or 
-				<%= link_to "Sign In", new_user_session_path %>
-			<% end %>
+		<div id="inner_banner">
+			<div id="banner_left">Immersion Knowledgebase</div>
+			<div id="banner_right">
+				<div id="sign_in">
+					<% if user_signed_in? %>
+						Signed in as <%= current_user.email %>. Not you?
+						<%= link_to "Sign out", destroy_user_session_path %>.
+					<% else %>
+						<%= link_to "Sign Up", new_user_registration_path %> or 
+						<%= link_to "Sign In", new_user_session_path %>
+					<% end %>
+				</div>
+				<div id="full_text_search">
+					<%= form_tag full_text_search_path, :method => :get do %>
+						<%= text_field_tag :search_text, @search_text, :size => 40 %>
+						<%= submit_tag "Search", :name => nil %>
+					<% end %>
+				</div>
+			</div>
 		</div>
-		
-		<div id="title">
-			Immersion Knowledgebase
-		</div>
-		
-		<div id="new_entry">
-			<%= link_to '+ Add New Entry', new_paper_path %>
-		</div>
-	
 	</div>
 
 	<div id="navigation">
-		<ul>
-			<li><%= link_to 'Search', search_path %></li>
-			<li><a href="#">About</a></li>
-			<li><a href="#">Help</a></li>
-			<li><a href="#">Contact</a></li>
-		</ul>
-	</div>
-	
-	<div id="full_text_search">
-		<%= form_tag full_text_search_path, :method => 'get' do %>
-			<%= text_field_tag :search_text, @search_text, :size => 40 %>
-			<%= submit_tag "Search", :name => nil %>
-		<% end %>
+		<div style="float:left">
+			<ul>
+				<li><%= link_to 'Search', search_path %></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">Help</a></li>
+				<li><a href="#">Contact</a></li>
+			</ul>
+		</div>
+		<div style="float:right"><%= button_to 'Add New Entry', new_paper_path %></div>
 	</div>
 	
 	<div id="body">

@@ -68,7 +68,7 @@ class FindingsController < ApplicationController
 	@finding.num_views = 0
 	
     if @finding.save
-        redirect_to paper_experiment_exp_task_findings_path(@paper,@experiment,@exp_task), :notice => 'Finding was successfully added.'
+        redirect_to new_paper_experiment_exp_task_finding_path(@paper,@experiment,@exp_task), :notice => 'The finding was successfully added. If you have more findings to add continue in same manner. If you are done adding findings click the button below to complete this user task.'
     else
         render :action => "edit"
     end
@@ -94,21 +94,22 @@ class FindingsController < ApplicationController
 	end
 	
 	if @finding.save
-        redirect_to paper_experiment_exp_task_findings_path(@paper,@experiment,@exp_task), :notice => 'Finding details were successfully updated.'
-    else
+        #redirect_to paper_experiment_exp_task_findings_path(@paper,@experiment,@exp_task), :notice => 'Finding details were successfully updated.'
+		redirect_to paper_experiments_path(@paper), :notice => 'The finding was successfully updated. If you are finished adding details for this entry you can click the button below to proceed to the review stage. Otherwise continue adding/editing details.'
+	else
         render :action => "edit"
     end
   end
   
 
   def destroy
-    @finding = @experiment.findings.find(params[:id])
+    @finding = @exp_task.findings.find(params[:id])
 	@finding.destroy
-	if current_user.admin && @paper.status == 0
-		redirect_to user_root_path, :notice => 'Finding was successfully deleted.'
-	else
-		redirect_to paper_experiment_exp_task_findings_path(@paper,@experiment,@exp_task), :notice => 'Finding was successfully deleted.'
-	end
+	#if current_user.admin && @paper.status == 0
+	#	redirect_to user_root_path, :notice => 'Finding was successfully deleted.'
+	#else
+	redirect_to paper_experiments_path(@paper), :notice => 'The finding was successfully deleted. If you are finished adding details for this entry you can click the button below to proceed to the review stage. Otherwise continue adding/editing details.'
+	#end
   end
 
 end

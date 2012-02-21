@@ -1,6 +1,6 @@
 #form_title {
-	width: 1000px;
-	padding:20px;
+	width: 1010px;
+	padding:0 5px 0px 5px;
 	background:grey;
 	color:white;
 	border:2px solid grey;
@@ -9,7 +9,7 @@
 
 #form_body {
 	width: 1000px;
-	padding:20px;
+	padding:10px;
 	text-align:center;
 	border:2px solid grey;
 	margin: auto;
@@ -23,90 +23,163 @@
 
 #large_check_box {
 	float: left;
-	width: 50px;
+	width: 40px;
+	clear: both;
+}
+
+#large_check_box_active {
+	float: left;
+	width: 40px;
+	padding: 5px 0 5px 0;
 	clear: both;
 }
 
 #medium_check_box {
 	float: left;
-	width: 35px;
-	margin: 5px 0 0 60px;
+	width: 30px;
+	margin: 0 0 0 50px;
+	clear: both;
+}
+
+#medium_check_box_active {
+	float: left;
+	width: 30px;
+	margin: 0 0 0 50px;
+	padding: 10px 0 10px 0;
 	clear: both;
 }
 
 #small_check_box {
 	float: left;
 	width: 20px;
-	margin: 15px 0 0 100px;
+	margin: 0 0 0 90px;
+	padding-top: 3px;
+	clear: both;
+}
+
+#small_check_box_active {
+	float: left;
+	width: 20px;
+	margin: 0 0 0 90px;
+	padding: 10px 0 10px 0;
+	clear: both;
+}
+
+#mini_check_box {
+	float: left;
+	width: 20px;
+	margin: 15px 0 0 140px;
 	clear: both;
 }
 
 #large_heading_active {
 	float: right;
-	width: 920px;
-	padding: 0 0 0 20px;
-	background:#E0FFFF;
+	width: 940px;
+	padding: 15px 10px 15px 10px;
+	background:#BFEFFF;
 	text-align:left;
+	font-size:20px;
+	font-weight:bold;
 }
 
 #large_heading_inactive {
 	float: right;
-	width: 920px;
-	padding: 0 0 0 20px;
+	width: 940px;
+	padding: 10px;
 	text-align:left;
+	font-size:20px;
+	font-weight:bold;
 }
 
 #large_heading_disabled {
 	float: right;
-	width: 920px;
-	padding: 0 0 0 20px;
+	width: 940px;
+	padding: 10px;
 	background:#fff;
 	text-align:left;
 	color:grey;
+	font-size:20px;
+	font-weight:bold;
 }
 
 #medium_heading_active {
 	float: right;
-	width: 880px;
-	padding: 0 0 0 20px;
-	background:#E0FFFF;
+	width: 900px;
+	padding: 15px 10px 15px 10px;
+	background:#BFEFFF;
 	text-align:left;
+	font-size:16px;
+	font-weight:bold;
 }
 
 #medium_heading_inactive {
 	float: right;
-	width: 880px;
-	padding: 0 0 0 20px;
+	width: 900px;
+	padding: 5px 10px 5px 10px;
 	text-align:left;
+	font-size:16px;
+	font-weight:bold;
 }
 
 #medium_heading_disabled {
 	float: right;
-	width: 880px;
-	padding: 0 0 0 20px;
+	width: 900px;
+	padding: 5px 10px 5px 10px;
 	background:#fff;
 	text-align:left;
 	color:grey;
+	font-size:16px;
+	font-weight:bold;
 }
 
 #small_heading_active {
 	float: right;
-	width: 840px;
-	padding: 0 0 0 20px;
-	background:#E0FFFF;
+	width: 870px;
+	padding: 15px 10px 15px 10px;
+	background:#BFEFFF;
 	text-align:left;
+	font-size:14px;
+	font-weight:bold;
 }
 
 #small_heading_inactive {
 	float: right;
-	width: 840px;
-	padding: 0 0 0 20px;
+	width: 870px;
+	padding: 5px 10px 5px 10px;
 	text-align:left;
+	font-size:14px;
+	font-weight:bold;
 }
 
 #small_heading_disabled {
 	float: right;
-	width: 840px;
+	width: 870px;
+	padding: 0px 10px 0px 10px;
+	background:#fff;
+	text-align:left;
+	color:grey;
+	font-size:14px;
+	font-weight:bold;
+}
+
+#mini_heading_active {
+	float: right;
+	width: 800px;
+	padding: 0 0 0 20px;
+	background:#BFEFFF;
+	text-align:left;
+}
+
+#mini_heading_inactive {
+	float: right;
+	width: 800px;
+	padding: 0 0 0 20px;
+	text-align:left;
+}
+
+#mini_heading_disabled {
+	float: right;
+	width: 800px;
 	padding: 0 0 0 20px;
 	background:#fff;
 	text-align:left;
@@ -115,12 +188,12 @@
 
 #inner {
 	width:800px;
-	padding:20px;
+	padding:10px;
 	margin: auto;
 }
 
 #inner_title {
-	padding: 0 20px 0 20px;
+	padding: 0px 20px 0 20px;
 	background-color: #FAFAD2;
 	border: 2px solid grey;
 	color: #grey;
@@ -129,14 +202,14 @@
 }
 
 #inner_table {
-	padding: 20px;
+	padding: 5px;
 	background: #fff;
 	border-top: 0;
 	border-bottom: 2px solid grey;
 	border-right: 2px solid grey;
 	border-left: 2px solid grey;
 	text-align:left;
-	width: 750px;
+	width: 780px;
 	margin: auto;
 	overflow: auto;
 }
@@ -209,4 +282,28 @@
 #heading a:visited {
 	color: black;
 	text-decoration: none;
+}
+
+#hidden_links a:link {
+	color: blue;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#hidden_links a:hover {
+	color: blue;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#hidden_links a:visited {
+	color: blue;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#hidden_links {
+	font-size: 14px;
+	font-weight: normal;
+	float: right;
 }

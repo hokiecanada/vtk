@@ -21,7 +21,7 @@ div.field, div.actions {
 }
 
 #notice {
-  color: green;
+  color: black;
 }
 
 .field_with_errors {
@@ -33,10 +33,10 @@ div.field, div.actions {
 #error_explanation {
   width: 450px;
   border: 2px solid red;
-  padding: 7px;
   padding-bottom: 0;
-  margin-bottom: 20px;
-  background-color: #f0f0f0;
+  margin-bottom: 10px;
+  background-color: #fff;
+  text-align: left;
 }
 
 #error_explanation h2 {
@@ -44,7 +44,6 @@ div.field, div.actions {
   font-weight: bold;
   padding: 5px 5px 5px 15px;
   font-size: 12px;
-  margin: -7px;
   margin-bottom: 0px;
   background-color: #c00;
   color: #fff;
@@ -55,7 +54,30 @@ div.field, div.actions {
   list-style: square;
 }
 
+#notice_explanation {
+  width: 790px;
+  border: 2px solid green;
+  margin: auto;
+  margin-bottom: 5px;
+  background-color: #fff;
+  text-align: left;
+}
 
+#notice_title {
+  text-align: left;
+  font-weight: bold;
+  padding: 10px;
+  font-size: 14px;
+  background-color: green;
+  color: #fff;
+}
+
+#notice_message {
+  text-align: left;
+  font-size: 14px;
+  padding: 10px;
+  color: black;
+}
 
 #cloud {
 	background-color: #66DDEE;

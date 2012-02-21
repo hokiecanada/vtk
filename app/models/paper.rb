@@ -8,21 +8,21 @@ class Paper < ActiveRecord::Base
 	accepts_nested_attributes_for	:author_papers
 	
 	validates_presence_of :title, :year#, :author
-	validate :correct_doi
+	#validate :correct_doi
 	
-	def correct_doi
-		require 'rubygems'
-		require 'hpricot'
-		require 'open-uri'
+	#def correct_doi
+	#	require 'rubygems'
+	#	require 'hpricot'
+	#	require 'open-uri'
 		
-		if !doi.nil?
-			doc = Hpricot(open("http://www.crossref.org/openurl/?pid=cstinson@vt.edu&id=doi:" + doi + "&noredirect=true"))
-			str = doc.at("body").inner_html
-			if str.include?("Malformed DOI")
-				errors.add(:doi,"is invalid")
-			end
-		end
-	end
+	#	if !doi.nil?
+	#		doc = Hpricot(open("http://www.crossref.org/openurl/?pid=cstinson@vt.edu&id=doi:" + doi + "&noredirect=true"))
+	#		str = doc.at("body").inner_html
+	#		if str.include?("Malformed DOI")
+	#			errors.add(:doi,"is invalid")
+	#		end
+	#	end
+	#end
 	
 	#def author
 	#	if author_papers.size == 0
