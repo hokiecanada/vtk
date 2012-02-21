@@ -1,37 +1,29 @@
-<p id="notice"><%= notice %></p>
+<%= render "shared/notice_messages" %>
 
-<h1>Title: <%= @paper.title %></h1>
-<p>
-	Authors:<br />
-	<% @paper.authors.each do |author| %>
-		<%= author.last_name %>, <%= author.first_name %> <%= author.initials %><br />
-	<% end %>
-	Journal: <%= @paper.journal %><br>
-	Year: <%= @paper.year %><br>
-	Volume: <%= @paper.volume %><br>
-	Number: <%= @paper.number %><br>
-	Pages: <%= @paper.first_page %>
-	DOI: <%= @paper.doi %><br>
-	URL: <%= @paper.paper_url %><br>
-	Times viewed: <%= @paper.num_views %><br>
-	<% if user_signed_in? && (current_user.id == @paper.user_id || current_user.admin) %>
-	   <%= button_to 'Edit paper details', edit_paper_path(@paper) %>
-	<% end %>
-	
-	<% @experiments.each_with_index do |exp,i| %>
-		<h2>Experiment #<%= i+1 %>:	<%= exp.title %></h2>
-		<% if user_signed_in? && (current_user.id == @paper.user_id || current_user.admin) %>
-			<%= link_to 'Edit experiment details', edit_paper_experiment_path(@paper,exp) %>
-		<% end %>
-		
-		<% exp.findings.each_with_index do |finding,j| %>
-			<h3>Finding #<%= j+1 %>:</h3>
-			<%= finding.finding %><br>
-		<% end %>
-	<% end %>
+<div id="show_title">
+	<center><h1>ENTRY DETAILS</h1></center>
+</div>
 
-	
-	<br><br>
-
-</p>
-<%= link_to 'Back', papers_path %>
+<div id="show_body">
+	<div id="field">
+		<div id="form_heading">Publication Details:</div>
+		<div id="form_text">
+			<div><%= @paper.authors.first.last_name %><% if @paper.authors.count > 1 %> et al<% end %>, <%= @paper.title %><% if !@paper.journal.nil? %>, <i><%= @paper.journal %></i><% end %>, <%= @paper.year.strftime("%Y") %><% if !@paper.volume.nil? %>, <%= @paper.volume %><% end %><% if !@paper.number.nil? %>, <%= @paper.number %><% end %><% if !@paper.first_page.nil? %>, <%= @paper.first_page %><% end %>.</div>
+			<div><a href="<%= @paper.paper_url %>"><%= @paper.paper_url %></a></div>
+		</div>
+	</div>
+	<% @paper.experiments.each_with_index do |exp,i| %>
+		<div id="field">
+			<div id="form_heading">Experiment #<%= i+1 %>:</div>
+			<div id="form_text">
+				<div><b>"<%= exp.title %>"</b></div>
+				<% if exp.exp_tasks.count == 0 %>
+					<div><i>0 user tasks, 0 findings.</i></div>
+				<% end %>
+				<% exp.exp_tasks.each_with_index do |exp_task,j| %>
+					<div><i>User Task #<%= j+1 %> - "<%= exp_task.title %>", <%= exp_task.findings.count %> finding(s).</i></div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+</div>

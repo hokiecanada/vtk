@@ -1,8 +1,8 @@
 class PapersController < ApplicationController
 
 	
-  before_filter :authenticate_user!, 			:only => [:new, :create, :edit, :update, :destroy, :confirm_authors, :num_experiments, :doi]
-  before_filter :authenticate_role, 			:only => [:edit, :update, :destroy, :confirm_authors, :num_experiments, :doi]
+  before_filter :authenticate_user!, 			:only => [:new, :create, :edit, :update, :destroy, :show, :confirm_authors, :num_experiments, :doi]
+  before_filter :authenticate_role, 			:only => [:edit, :update, :destroy, :show, :confirm_authors, :num_experiments, :doi]
   
   def authenticate_role
 	@paper = Paper.find(params[:id])
@@ -18,12 +18,11 @@ class PapersController < ApplicationController
   #end
 
   
-  #def show
-	#@paper = Paper.find(params[:id])
-	#@paper.num_views += 1
-	#@paper.save
-	#@experiments = @paper.experiments.all
-  #end
+  def show
+	@paper = Paper.find(params[:id])
+	@paper.num_views += 1
+	@paper.save
+  end
 
   
   def new
@@ -42,8 +41,8 @@ class PapersController < ApplicationController
 	@authors = @authors.sort_by(&:last_name)
 	if !params[:type].nil?
 		@type = "new"
-	else
-		flash[:notice] = 'Edit publication details as you wish.'
+	#else
+	#	flash[:notice] = 'Edit publication details as you wish.'
 	end
   end
 

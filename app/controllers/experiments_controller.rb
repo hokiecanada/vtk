@@ -16,8 +16,8 @@ class ExperimentsController < ApplicationController
 	@experiments = @paper.experiments
 	if !params[:title].nil?
 		flash[:notice] = 'The details for EXPERIMENT "' + params[:title] + '" are now complete. If there is another experiment to add to this entry do so now. Otherwise click the button below to move to the review stage.'
-	else
-		flash[:notice] = 'Here you can add another experiment, or browse already enterred info. Or submit if you are done.'
+	#else
+	#	flash[:notice] = 'Here you can add another experiment, or browse already enterred info. Or submit if you are done.'
 	end
 	#if @paper.status == 2
 	#	complete = true

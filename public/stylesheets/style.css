@@ -14,6 +14,7 @@
 	border:2px solid grey;
 	margin: auto;
 	margin-bottom: 30px;
+	overflow: auto;
 }
 
 #heading {
@@ -190,6 +191,7 @@
 	width:800px;
 	padding:10px;
 	margin: auto;
+	overflow: auto;
 }
 
 #inner_title {
@@ -215,6 +217,7 @@
 }
 
 #form_heading {
+	text-align: left;
 	float: left;
 	width: 175px;
 	font-weight: bold;
@@ -235,6 +238,7 @@
 	padding-top: 10px;
 	padding-bottom: 10px;
 	clear: both;
+	overflow: auto;
 }
 
 #outer_section {
@@ -306,4 +310,23 @@
 	font-size: 14px;
 	font-weight: normal;
 	float: right;
+}
+
+#show_title {
+	width: 780px;
+	padding:0 5px 0px 5px;
+	background:grey;
+	color:white;
+	border:2px solid grey;
+	margin: auto;
+}
+
+#show_body {
+	width: 750px;
+	padding:20px;
+	text-align:center;
+	border:2px solid grey;
+	margin: auto;
+	margin-bottom: 30px;
+	overflow: auto;
 }
